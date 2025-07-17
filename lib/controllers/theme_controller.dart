@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ThemeController extends GetxController {
-  final themeMode = ThemeMode.system.obs;
+  final themeMode = ThemeMode.light.obs;
 
   void setThemeMode(ThemeMode mode) {
-    themeMode.value = mode;
+    if (mode != themeMode.value) {
+      themeMode.value = mode;
+      update();
+    }
   }
 }

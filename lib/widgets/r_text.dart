@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import '../values/app_text_styles.dart';
 
@@ -86,14 +88,18 @@ class RText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: color != null ?
-        style.copyWith(color: color, decoration: TextDecoration.none) :
-        style.copyWith(color: AppColors.onSurface, decoration: TextDecoration.none),
-      textAlign: textAlign,
-      overflow: overflow,
-      maxLines: maxLines,
+    return GetBuilder<ThemeController>(
+        builder: (controller) {
+          return Text(
+            text,
+            style: color != null ?
+            style.copyWith(color: color, decoration: TextDecoration.none) :
+            style.copyWith(color: AppColors.onSurface, decoration: TextDecoration.none),
+            textAlign: textAlign,
+            overflow: overflow,
+            maxLines: maxLines,
+          );
+        }
     );
   }
 }
