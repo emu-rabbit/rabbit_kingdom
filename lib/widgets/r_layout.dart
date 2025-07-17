@@ -11,15 +11,13 @@ class RLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(
-        builder: (controller)  {
-          return ColoredBox(
-            color: AppColors.surface,
-            child: SafeArea(
-                child: child
-            ),
-          );
-        }
-    );
+    return Obx((){
+      return ColoredBox(
+        color: AppColors.surface,
+        child: SafeArea(
+            child: child
+        ),
+      );
+    });
   }
 }

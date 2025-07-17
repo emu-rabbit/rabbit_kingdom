@@ -19,7 +19,6 @@ class RText extends StatelessWidget {
         this.textAlign,
         this.overflow,
         this.maxLines,
-        super.key,
       });
 
   factory RText.displayLarge(String text, {
