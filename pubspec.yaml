@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   firebase_core: ^3.15.1
   firebase_auth: ^5.6.2
+  font_awesome_flutter: ^10.2.1
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,14 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - lib/assets/images/
+
+  fonts:
+    - family: JFHuninn
+      fonts:
+        - asset: lib/assets/fonts/jf-openhuninn-2.1.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

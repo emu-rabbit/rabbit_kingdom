@@ -1,81 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/helpers/app_colors.dart';
 
 enum RButtonType { primary, secondary, surface, danger }
 
+class RButtonAnimationController extends GetxController {
+  final scale = 1.0.obs;
+
+  void pressDown() => scale.value = 0.95;
+  void release() => scale.value = 1.0;
+}
+
 class RButton extends StatelessWidget {
   final VoidCallback? onPressed;
-  final String text;
+  final Widget Function(Color) child;
   final RButtonType type;
   final bool isDisabled;
   final double borderRadius;
+  final RButtonAnimationController _controller =
+  Get.put(RButtonAnimationController(), tag: UniqueKey().toString());
 
-  const RButton({
+  RButton({
     super.key,
     required this.onPressed,
-    required this.text,
+    required this.child,
     this.type = RButtonType.primary,
     this.isDisabled = false,
-    this.borderRadius = 16,
+    this.borderRadius = 9999,
   });
 
-
-  static RButton primary({
+  factory RButton.primary({
     required VoidCallback onPressed,
-    required String text,
+    required Widget Function(Color) child,
     bool isDisabled = false,
-  }) {
-    return RButton(
-      onPressed: onPressed,
-      text: text,
-      type: RButtonType.primary,
-      isDisabled: isDisabled,
-    );
-  }
+  }) => RButton(
+    onPressed: onPressed,
+    type: RButtonType.primary,
+    isDisabled: isDisabled,
+    child: child,
+  );
 
-  static RButton secondary({
+  factory RButton.secondary({
     required VoidCallback onPressed,
-    required String text,
+    required Widget Function(Color) child,
     bool isDisabled = false,
-  }) {
-    return RButton(
-      onPressed: onPressed,
-      text: text,
-      type: RButtonType.secondary,
-      isDisabled: isDisabled,
-    );
-  }
+  }) => RButton(
+    onPressed: onPressed,
+    type: RButtonType.secondary,
+    isDisabled: isDisabled,
+    child: child,
+  );
 
-  static RButton surface({
+  factory RButton.surface({
     required VoidCallback onPressed,
-    required String text,
+    required Widget Function(Color) child,
     bool isDisabled = false,
-  }) {
-    return RButton(
-      onPressed: onPressed,
-      text: text,
-      type: RButtonType.surface,
-      isDisabled: isDisabled,
-    );
-  }
+  }) => RButton(
+    onPressed: onPressed,
+    type: RButtonType.surface,
+    isDisabled: isDisabled,
+    child: child,
+  );
 
-  static RButton danger({
+  factory RButton.danger({
     required VoidCallback onPressed,
-    required String text,
+    required Widget Function(Color) child,
     bool isDisabled = false,
-  }) {
-    return RButton(
-      onPressed: onPressed,
-      text: text,
-      type: RButtonType.danger,
-      isDisabled: isDisabled,
-    );
-  }
+  }) => RButton(
+    onPressed: onPressed,
+    type: RButtonType.danger,
+    isDisabled: isDisabled,
+    child: child,
+  );
 
-  // 依據 type 決定配色
   Color _backgroundColor(ColorScheme colors) {
-    if (isDisabled) {
-      return colors.outline.withOpacity(0.3);
-    }
+    if (isDisabled) return colors.outline.withOpacity(0.3);
     switch (type) {
       case RButtonType.primary:
         return colors.primary;
@@ -89,9 +88,7 @@ class RButton extends StatelessWidget {
   }
 
   Color _foregroundColor(ColorScheme colors) {
-    if (isDisabled) {
-      return colors.onSurface.withOpacity(0.3);
-    }
+    if (isDisabled) return colors.onSurface.withOpacity(0.3);
     switch (type) {
       case RButtonType.primary:
         return colors.onPrimary;
@@ -106,27 +103,25 @@ class RButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
     return GestureDetector(
       onTap: isDisabled ? null : onPressed,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        decoration: BoxDecoration(
-          color: _backgroundColor(colors),
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: _foregroundColor(colors),
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+      onTapDown: (_) => _controller.pressDown(),
+      onTapUp: (_) => _controller.release(),
+      onTapCancel: _controller.release,
+      child: Obx(() => AnimatedScale(
+        scale: _controller.scale.value,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+        child: Container(
+          padding:
+          const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          decoration: BoxDecoration(
+            color: _backgroundColor(AppColors.colorScheme),
+            borderRadius: BorderRadius.circular(borderRadius),
           ),
-          textAlign: TextAlign.center,
+          child: child(_foregroundColor(AppColors.colorScheme)),
         ),
-      ),
+      )),
     );
   }
 }
-

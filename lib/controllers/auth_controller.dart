@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../pages/home_page.dart';
-import '../pages/loginPage.dart';
+import '../pages/login_page.dart';
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();

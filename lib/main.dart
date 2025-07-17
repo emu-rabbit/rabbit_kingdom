@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
-import 'package:rabbit_kingdom/pages/home_page.dart';
-import 'package:rabbit_kingdom/values/app_themes.dart';
+import 'package:rabbit_kingdom/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -34,10 +33,8 @@ class MyApp extends StatelessWidget {
     return Obx(() {
       return GetMaterialApp(
         title: '兔兔精華App',
-        theme: AppThemes.lightTheme,
-        darkTheme: AppThemes.darkTheme,
         themeMode: controller.themeMode.value,
-        home: const HomePage(),
+        home: const LoginPage(),
       );
     });
   }

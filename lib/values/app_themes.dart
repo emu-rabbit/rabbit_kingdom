@@ -18,18 +18,6 @@ class AppThemes {
     // onBackground: Color(0xFF000000),
   );
 
-  static final lightTheme = ThemeData(
-    useMaterial3: true,
-    colorScheme: light,
-    scaffoldBackgroundColor: light.surface,
-    appBarTheme: AppBarTheme(
-      backgroundColor: light.surfaceContainerHigh,
-      foregroundColor: light.onSurface,
-    ),
-    cardColor: light.surfaceContainerLow,
-    dividerColor: light.outline,
-  );
-
   static final dark = const ColorScheme(
     brightness: Brightness.dark,
     primary: Color(0xFFE1B7F2), // 淡紫星雲
@@ -45,17 +33,5 @@ class AppThemes {
     outline: Color(0xFF836B99), // 淺霧紫線條
     // background: Color(0xFF000000), // 已棄用
     // onBackground: Color(0xFFFFFFFF),
-  );
-
-  static final darkTheme = ThemeData(
-    useMaterial3: true,
-    colorScheme: dark,
-    scaffoldBackgroundColor: dark.surface,
-    appBarTheme: AppBarTheme(
-      backgroundColor: dark.surfaceContainerHigh,
-      foregroundColor: dark.onSurface,
-    ),
-    cardColor: dark.surfaceContainerLow,
-    dividerColor: dark.outline,
   );
 }
