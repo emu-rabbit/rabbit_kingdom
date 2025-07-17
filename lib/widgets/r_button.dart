@@ -74,7 +74,7 @@ class RButton extends StatelessWidget {
   );
 
   Color _backgroundColor(ColorScheme colors) {
-    if (isDisabled) return colors.outline.withOpacity(0.3);
+    if (isDisabled) return colors.outline.withAlpha((255 * 0.3).round());
     switch (type) {
       case RButtonType.primary:
         return colors.primary;
@@ -88,7 +88,7 @@ class RButton extends StatelessWidget {
   }
 
   Color _foregroundColor(ColorScheme colors) {
-    if (isDisabled) return colors.onSurface.withOpacity(0.3);
+    if (isDisabled) return colors.onSurface.withAlpha((255 * 0.3).round());
     switch (type) {
       case RButtonType.primary:
         return colors.onPrimary;
