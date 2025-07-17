@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "689030757641",
+    "project_id": "rabbit-kingdom-2759a",
+    "storage_bucket": "rabbit-kingdom-2759a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689030757641:android:b51e70d8a55d252ea4e7d8",
+        "android_client_info": {
+          "package_name": "io.github.emu_rabbit.rabbit_kingdom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689030757641-aeb04uu2cm5cik7t8tgpumk0kqm7006h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsFBsvg-DVmGUq8mBa6tZsEMFLGXxfXRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689030757641-aeb04uu2cm5cik7t8tgpumk0kqm7006h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "689030757641-d6lrag0c858j89nppoknbijmi50hv8do.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.github.emurabbit.rabbitKingdom"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
