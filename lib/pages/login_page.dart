@@ -6,6 +6,7 @@ import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
+import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
@@ -45,13 +46,26 @@ class LoginPage extends StatelessWidget {
                       _LoginButton(
                         text: "用Google登入",
                         icon: FontAwesomeIcons.google,
-                        onPressed: authController.loginWithGoogle,
+                        onPressed: () async {
+                          try {
+                            RLoading.start();
+                            await authController.loginWithGoogle();
+                          } catch(e) {
+                            // Pass
+                          } finally {
+                            RLoading.stop();
+                          }
+                        },
                       ),
                       RSpace(),
                       _LoginButton(
                         text: "使用信箱登入",
                         icon: FontAwesomeIcons.envelope,
-                        onPressed: (){},
+                        onPressed: () async {
+                          RLoading.start();
+                          await Future.delayed(Duration(seconds: 4));
+                          RLoading.stop();
+                        },
                       )
                     ],
                   ),

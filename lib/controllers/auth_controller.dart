@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'dart:developer';
 
 import '../pages/home_page.dart';
@@ -80,6 +81,7 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       log('Google SignIn error: $e', name: 'AuthController');
+      RSnackBar.error("Login Failed", e.toString());
       rethrow;
     }
   }

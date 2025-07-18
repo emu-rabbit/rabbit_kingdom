@@ -16,24 +16,22 @@ class RButton extends StatelessWidget {
   final Widget Function(Color) child;
   final RButtonType type;
   final bool isDisabled;
-  final double borderRadius;
   final RButtonAnimationController _controller =
   Get.put(RButtonAnimationController(), tag: UniqueKey().toString());
 
-  RButton({
+  RButton._({
     super.key,
     required this.onPressed,
     required this.child,
     this.type = RButtonType.primary,
     this.isDisabled = false,
-    this.borderRadius = 9999,
   });
 
   factory RButton.primary({
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
-  }) => RButton(
+  }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.primary,
     isDisabled: isDisabled,
@@ -44,7 +42,7 @@ class RButton extends StatelessWidget {
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
-  }) => RButton(
+  }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.secondary,
     isDisabled: isDisabled,
@@ -55,7 +53,7 @@ class RButton extends StatelessWidget {
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
-  }) => RButton(
+  }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.surface,
     isDisabled: isDisabled,
@@ -66,7 +64,7 @@ class RButton extends StatelessWidget {
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
-  }) => RButton(
+  }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.danger,
     isDisabled: isDisabled,
@@ -117,7 +115,7 @@ class RButton extends StatelessWidget {
           const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           decoration: BoxDecoration(
             color: _backgroundColor(AppColors.colorScheme),
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(9999),
           ),
           child: child(_foregroundColor(AppColors.colorScheme)),
         ),
