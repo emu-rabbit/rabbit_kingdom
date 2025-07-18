@@ -86,7 +86,7 @@ class LoginPage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text: '點擊登入表示您同意',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   children: [
                     TextSpan(
                       text: '《隱私政策》',
