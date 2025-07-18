@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
@@ -15,6 +16,8 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
+
     return RLayout(
       child: Stack(
         children: [
@@ -42,11 +45,13 @@ class LoginPage extends StatelessWidget {
                       _LoginButton(
                         text: "用Google登入",
                         icon: FontAwesomeIcons.google,
+                        onPressed: authController.loginWithGoogle,
                       ),
                       RSpace(),
                       _LoginButton(
                         text: "使用信箱登入",
                         icon: FontAwesomeIcons.envelope,
+                        onPressed: (){},
                       )
                     ],
                   ),
@@ -97,16 +102,17 @@ class _RabbitEmpireImage extends StatelessWidget {
 class _LoginButton extends StatelessWidget {
   final String text;
   final IconData icon;
+  final Function() onPressed;
 
   const _LoginButton({
     required this.text,
-    required this.icon
+    required this.icon, required this.onPressed
   });
 
   @override
   Widget build(BuildContext context) {
     return RButton.primary(
-        onPressed: (){},
+        onPressed: onPressed,
         child: (color) => Center(
           child: Row(
             mainAxisSize: MainAxisSize.min,

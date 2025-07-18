@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 
 import '../helpers/app_colors.dart';
 
