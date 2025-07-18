@@ -1,9 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/pages/privacy_page.dart';
+import 'package:rabbit_kingdom/pages/terms_page.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
@@ -74,7 +77,37 @@ class LoginPage extends StatelessWidget {
                 RText.bodySmall("~今天也要很可愛的入境~"),
               ],
             ),
-          )
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: '點擊登入表示您同意',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  children: [
+                    TextSpan(
+                      text: '《隱私政策》',
+                      style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        Get.to(PrivacyPage());
+                      },
+                    ),
+                    TextSpan(text: '與'),
+                    TextSpan(
+                      text: '《使用條款》',
+                      style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        Get.to(TermsPage());
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       )
     );

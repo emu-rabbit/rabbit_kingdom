@@ -85,6 +85,14 @@ class RText extends StatelessWidget {
   }) => RText._(text, AppTextStyle.bodySmall,
       color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
 
+  factory RText.labelLarge(String text, {
+    Color? color,
+    TextAlign? textAlign,
+    TextOverflow? overflow,
+    int? maxLines,
+  }) => RText._(text, AppTextStyle.labelLarge,
+      color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ThemeController>(
