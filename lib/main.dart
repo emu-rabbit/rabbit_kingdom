@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/pages/login_page.dart';
@@ -10,6 +11,11 @@ import 'controllers/theme_controller.dart';
 void main() async {
   // Ensure binding
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Lock screen orientation
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
 
   // Initialize firebase
   await Firebase.initializeApp(
