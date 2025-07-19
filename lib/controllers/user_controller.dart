@@ -13,7 +13,7 @@ class UserController extends GetxController {
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
-    final displayName = firebaseUser.displayName ?? '未知使用者';
+    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty ? '迷途旅人' : firebaseUser.displayName!;
     final docRef = FirebaseFirestore.instance.collection(CollectionNames.user).doc(uid);
     _userDocRef.value = docRef;
 

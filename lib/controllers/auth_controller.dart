@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/not_verified_page.dart';
+import 'package:rabbit_kingdom/pages/unknown_user_page.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'dart:developer';
@@ -36,7 +38,16 @@ class AuthController extends GetxController {
       RLoading.start();
       controller.initUser(firebaseUser.value!)
         .then((_){
-          Get.offAll(() => HomePage());
+          if (controller.user != null) {
+            if (controller.user!.group == KingdomUserGroup.unknown) {
+              Get.offAll(() => UnknownUserPage());
+            } else {
+              Get.offAll(() => HomePage());
+            }
+          } else {
+            throw Exception("User not in"
+                "itialized");
+          }
         })
         .catchError((e, stack) {
           log("Error initUser $e", name: "AuthController");
