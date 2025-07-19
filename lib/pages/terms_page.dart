@@ -7,6 +7,8 @@ import 'package:rabbit_kingdom/widgets/r_layout.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
+import '../widgets/r_icon_button.dart';
+
 class TermsPage extends StatelessWidget {
   const TermsPage({super.key});
 
@@ -24,13 +26,7 @@ class TermsPage extends StatelessWidget {
                 children: [
                   Align(
                       alignment: Alignment.centerLeft,
-                      child: GestureDetector(
-                          onTap: Get.back,
-                          child: FaIcon(
-                            FontAwesomeIcons.arrowLeft,
-                            color: AppColors.onSurface,
-                          )
-                      )
+                      child: RIconButton.back()
                   ),
                   Align(
                     alignment: Alignment.center,

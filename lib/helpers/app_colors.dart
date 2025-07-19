@@ -6,6 +6,8 @@ import '../controllers/theme_controller.dart';
 import '../values/app_themes.dart';
 
 class AppColors {
+  AppColors._();
+
   /// 快速取得目前 ColorScheme
   static ColorScheme get colorScheme {
     final controller = Get.find<ThemeController>();

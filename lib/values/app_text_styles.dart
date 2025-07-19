@@ -93,7 +93,6 @@ class AppTextStyle {
   static const TextStyle labelSmall = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w400,
-    fontFamily: 'JFHuninn',
-    color: Colors.grey,
+    fontFamily: 'JFHuninn'
   );
 }

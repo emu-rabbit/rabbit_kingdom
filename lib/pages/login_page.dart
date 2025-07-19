@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/pages/email_page.dart';
 import 'package:rabbit_kingdom/pages/privacy_page.dart';
 import 'package:rabbit_kingdom/pages/terms_page.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
@@ -64,10 +65,8 @@ class LoginPage extends StatelessWidget {
                       _LoginButton(
                         text: "使用信箱登入",
                         icon: FontAwesomeIcons.envelope,
-                        onPressed: () async {
-                          RLoading.start();
-                          await Future.delayed(Duration(seconds: 4));
-                          RLoading.stop();
+                        onPressed: () {
+                          Get.to(EmailPage());
                         },
                       )
                     ],
@@ -158,7 +157,7 @@ class _LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RButton.primary(
+    return RButton.surface(
         onPressed: onPressed,
         child: (color) => Center(
           child: Row(

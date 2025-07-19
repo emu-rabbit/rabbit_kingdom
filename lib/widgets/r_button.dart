@@ -16,8 +16,7 @@ class RButton extends StatelessWidget {
   final Widget Function(Color) child;
   final RButtonType type;
   final bool isDisabled;
-  final RButtonAnimationController _controller =
-  Get.put(RButtonAnimationController(), tag: UniqueKey().toString());
+  final RButtonAnimationController _controller = Get.put(RButtonAnimationController());
 
   RButton._({
     super.key,
@@ -103,9 +102,9 @@ class RButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: isDisabled ? null : onPressed,
-      onTapDown: (_) => _controller.pressDown(),
-      onTapUp: (_) => _controller.release(),
-      onTapCancel: _controller.release,
+      onTapDown: (_) => isDisabled ? null : _controller.pressDown(),
+      onTapUp: (_) => isDisabled ? null : _controller.release(),
+      onTapCancel: isDisabled ? null : _controller.release,
       child: Obx(() => AnimatedScale(
         scale: _controller.scale.value,
         duration: const Duration(milliseconds: 100),

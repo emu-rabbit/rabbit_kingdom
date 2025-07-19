@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rabbit_kingdom/pages/not_verified_page.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'dart:developer';
 
@@ -18,14 +19,16 @@ class AuthController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    firebaseUser.bindStream(_auth.authStateChanges());
+    firebaseUser.bindStream(_auth.userChanges());
     ever(firebaseUser, _setInitialScreen);
   }
 
   void _setInitialScreen(User? user) {
-    log("User: ${user?.email}", name: "AuthController");
+    log("User: ${user?.email}, verified: ${user?.emailVerified}", name: "AuthController");
     if (user == null) {
       Get.offAll(() => LoginPage());
+    } else if (!user.emailVerified) {
+      Get.offAll(() => NotVerifiedPage());
     } else {
       Get.offAll(() => HomePage());
     }
@@ -38,6 +41,7 @@ class AuthController extends GetxController {
 
   // 嘗試登入，失敗則自動註冊再登入 (email/password)
   Future<void> loginWithEmail(String email, String password) async {
+    log("email: $email password: $password");
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
@@ -46,8 +50,12 @@ class AuthController extends GetxController {
         await _registerWithEmail(email, password);
         // 註冊成功後，已自動登入
       } else {
+        RSnackBar.error("Login Failed", e.toString());
         rethrow;
       }
+    } catch (e) {
+      RSnackBar.error("Login Failed", e.toString());
+      rethrow;
     }
   }
 
@@ -90,5 +98,12 @@ class AuthController extends GetxController {
     // 也幫忙 signOut GoogleSignIn，避免殘留
     await _auth.signOut();
     await _googleSignIn.signOut();
+  }
+
+  Future<void> sendVerificationEmail() async {
+    if (firebaseUser.value != null && !firebaseUser.value!.emailVerified) {
+      await firebaseUser.value!.sendEmailVerification();
+      log("Send");
+    }
   }
 }
