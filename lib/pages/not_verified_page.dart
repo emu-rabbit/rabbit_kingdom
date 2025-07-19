@@ -73,11 +73,10 @@ class NotVerifiedPage extends StatelessWidget {
                       authController.firebaseUser.value?.reload();
                     },
                     child: (color) => RText.bodyLarge(
-                        "我剛剛認證過了！",
+                        "我剛剛認證了！",
                         textAlign: TextAlign.center
                     ),
                   ),
-                  RSpace(type: RSpaceType.large,),
                   RSpace(type: RSpaceType.large,),
                   RText.bodySmall("或是...", textAlign: TextAlign.center,),
                   RSpace(),
@@ -88,7 +87,7 @@ class NotVerifiedPage extends StatelessWidget {
                         RLoading.stop();
                       },
                       child: (color) =>
-                          RText.bodyLarge("返回城門（登出）", textAlign: TextAlign.center, color: color,)),
+                          RText.bodyLarge("返回城門", textAlign: TextAlign.center, color: color,)),
                 ],
               ),
             )
