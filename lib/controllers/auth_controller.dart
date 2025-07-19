@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/pages/not_verified_page.dart';
+import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'dart:developer';
 
@@ -30,7 +32,19 @@ class AuthController extends GetxController {
     } else if (!user.emailVerified) {
       Get.offAll(() => NotVerifiedPage());
     } else {
-      Get.offAll(() => HomePage());
+      final controller = Get.find<UserController>();
+      RLoading.start();
+      controller.initUser(firebaseUser.value!)
+        .then((_){
+          Get.offAll(() => HomePage());
+        })
+        .catchError((e, stack) {
+          log("Error initUser $e", name: "AuthController");
+          RSnackBar.error("Error initUser", "$e");
+        })
+        .whenComplete(() {
+          RLoading.stop();
+        });
     }
   }
 
@@ -103,7 +117,6 @@ class AuthController extends GetxController {
   Future<void> sendVerificationEmail() async {
     if (firebaseUser.value != null && !firebaseUser.value!.emailVerified) {
       await firebaseUser.value!.sendEmailVerification();
-      log("Send");
     }
   }
 }

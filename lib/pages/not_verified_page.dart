@@ -63,7 +63,7 @@ class NotVerifiedPage extends StatelessWidget {
                     },
                     child: (color) => RText.bodyLarge(
                         cooldown.value == 0
-                            ? "去吧紅燒雞"
+                            ? "去吧紅燒雞！"
                             : "請稍候 ${cooldown.value} 秒",
                         textAlign: TextAlign.center),
                   )),

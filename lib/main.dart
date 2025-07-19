@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -25,6 +26,7 @@ void main() async {
   // Put getx controllers
   Get.put(ThemeController());
   Get.put(AuthController());
+  Get.put(UserController());
 
   // Run app
   runApp(const MyApp());

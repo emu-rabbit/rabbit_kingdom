@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "689030757641-7s50b8fabhjsh1d9t2ivqedsn070kks0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.emu_rabbit.rabbit_kingdom",
+            "certificate_hash": "ff89d9c97396e50f04da64f3c3d7ec5698759a9f"
+          }
+        },
+        {
+          "client_id": "689030757641-85jc7anvg2779m5fs69frri4utorgnnn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.emu_rabbit.rabbit_kingdom",
+            "certificate_hash": "881b2db4d276bd54f20f0aac60ce0d9dbdd689f4"
+          }
+        },
+        {
           "client_id": "689030757641-aeb04uu2cm5cik7t8tgpumk0kqm7006h.apps.googleusercontent.com",
           "client_type": 3
         }
