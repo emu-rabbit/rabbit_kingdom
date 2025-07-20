@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
+import 'package:rabbit_kingdom/pages/empire_auth_unknown_users.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 
@@ -39,7 +40,7 @@ class BuildingTownHallPage extends StatelessWidget {
                       RButtonGroup(
                         "阿，是大帝！",
                         [
-                          RButtonData(text: "審查新入境者", onPress: (){})
+                          RButtonData(text: "審查新入境者", onPress: (){ Get.to(EmpireAuthUnknownUsers()); })
                         ]
                       ),
                       RSpace(type: RSpaceType.large,),

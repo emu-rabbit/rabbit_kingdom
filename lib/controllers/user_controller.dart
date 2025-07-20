@@ -13,7 +13,8 @@ class UserController extends GetxController {
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
-    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty ? '迷途旅人' : firebaseUser.displayName!;
+    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty ? '未命名' : firebaseUser.displayName!;
+    final email = firebaseUser.email ?? '';
     final docRef = FirebaseFirestore.instance.collection(CollectionNames.user).doc(uid);
     _userDocRef.value = docRef;
 
@@ -40,7 +41,7 @@ class UserController extends GetxController {
       }
     } else {
       // 建立新使用者
-      final newUser = KingdomUser.newUser(displayName);
+      final newUser = KingdomUser.newUser(displayName, email);
       await docRef.set(newUser.toJson());
       _user.value = newUser;
     }

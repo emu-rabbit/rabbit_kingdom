@@ -17,8 +17,10 @@ class RButtonGroup extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          RText.titleSmall(title),
-          RSpace(),
+          title.isNotEmpty ?
+            RText.titleSmall(title): SizedBox.shrink(),
+          title.isNotEmpty ?
+            RSpace(): SizedBox.shrink(),
           ...buttons.map((data) {
             child(Color color) {
               return RText.bodyLarge(data.text, textAlign: TextAlign.center, color: color,);

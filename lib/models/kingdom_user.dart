@@ -2,12 +2,14 @@ import 'package:rabbit_kingdom/extensions/string.dart';
 
 class KingdomUser {
   final String name;
+  final String email;
   final KingdomUserGroup group;
   final KingdomUserExp exp;
   final KingdomUserBudget budget;
 
   KingdomUser._({
     required this.name,
+    required this.email,
     required this.group,
     required this.exp,
     required this.budget
@@ -16,15 +18,17 @@ class KingdomUser {
   factory KingdomUser.fromJson(Map<String, dynamic> json) {
     return KingdomUser._(
       name: json['name'] ?? '',
+      email: json['email'] ?? '',
       group: KingdomUserGroup.fromString(json['group']),
       exp: KingdomUserExp.fromInt(json['exp']), 
       budget: KingdomUserBudget.fromJson(json['budget'])
     );
   }
 
-  factory KingdomUser.newUser(String name) {
+  factory KingdomUser.newUser(String name, String email) {
     return KingdomUser._(
       name: name,
+      email: email,
       group: KingdomUserGroup.unknown,
       exp: KingdomUserExp.fromInt(0),
       budget: KingdomUserBudget.fromJson(null)
@@ -34,6 +38,7 @@ class KingdomUser {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'email': email,
       'group': group.name,
       'exp': exp.raw,
       'budget': budget.toJson()
@@ -42,7 +47,22 @@ class KingdomUser {
 }
 
 enum KingdomUserGroup {
-  empire, unknown;
+  empire, girlfriend, dog, friend, unknown;
+
+  String toDisplay() {
+    switch(this) {
+      case KingdomUserGroup.empire:
+        return "兔兔大帝";
+      case KingdomUserGroup.girlfriend:
+        return "可愛女友";
+      case KingdomUserGroup.dog:
+        return "貪吃狗狗";
+      case KingdomUserGroup.friend:
+        return "要好朋朋";
+      case KingdomUserGroup.unknown:
+        return "迷途旅人";
+    }
+  }
 
   factory KingdomUserGroup.fromString(String? str) {
     return KingdomUserGroup.values.firstWhere(
