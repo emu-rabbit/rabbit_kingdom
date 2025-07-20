@@ -61,7 +61,6 @@ class NotVerifiedPage extends StatelessWidget {
                       await authController.sendVerificationEmail();
                       RLoading.stop();
                     },
-                    tag: "GoVerified",
                     child: (color) => RText.bodyLarge(
                         cooldown.value == 0
                             ? "去吧紅燒雞！"

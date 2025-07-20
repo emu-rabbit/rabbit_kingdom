@@ -30,13 +30,6 @@ class EmpireAuthUnknownUsers extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          RButtonGroup(
-              "",
-              [
-                RButtonData(text: "拉取新旅人", onPress: (){ controller.fetchUnknownUsers(); })
-              ]
-          ),
-          RSpace(),
           Obx(() {
             if (controller.unknownUsers.isEmpty) {
               return RText.titleMedium("目前沒有未知旅人");
@@ -83,6 +76,13 @@ class EmpireAuthUnknownUsers extends StatelessWidget {
               }).toList(),
             );
           }),
+          RSpace(),
+          RButtonGroup(
+            "",
+            [
+              RButtonData(text: "拉取新旅人", onPress: (){ controller.fetchUnknownUsers(); })
+            ]
+          ),
         ],
       )
     );
