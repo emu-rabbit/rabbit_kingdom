@@ -45,8 +45,7 @@ class AuthController extends GetxController {
               Get.offAll(() => HomePage());
             }
           } else {
-            throw Exception("User not in"
-                "itialized");
+            throw Exception("User not initialized");
           }
         })
         .catchError((e, stack) {

@@ -51,7 +51,6 @@ class UserController extends GetxController {
     _userStream = docRef.snapshots();
     _userStream!.listen((snapshot) {
       if (snapshot.exists && snapshot.data() != null) {
-        log("message");
         final newUser = KingdomUser.fromJson(snapshot.data()!);
         _user.value = newUser;
         update();

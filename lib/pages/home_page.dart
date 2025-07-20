@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
-import 'package:rabbit_kingdom/widgets/r_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -164,14 +163,7 @@ class _KingdomView extends StatelessWidget {
                     height: building.height * scaleY,
                   ),
                 );
-              }),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: RButton.primary(
-                    onPressed: () { themeController.setThemeMode(themeController.themeMode.value == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark); },
-                    child: (color) => Text("aa")
-                ),
-              ),
+              })
             ],
           ),
         );
@@ -187,7 +179,6 @@ class _KingdomViewBuilding extends StatefulWidget {
   final VoidCallback onTap;
 
   const _KingdomViewBuilding({
-    super.key,
     required this.name,
     required this.onTap,
     required this.phase,
