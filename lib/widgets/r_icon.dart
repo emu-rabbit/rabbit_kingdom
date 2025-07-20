@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 
 import '../helpers/app_colors.dart';
 
@@ -12,10 +14,14 @@ class RIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FaIcon(
-      icon,
-      color: color ?? AppColors.onSurface,
-      size: size,
+    return GetBuilder<ThemeController>(
+      builder: (_) {
+        return FaIcon(
+          icon,
+          color: color ?? AppColors.onSurface,
+          size: size,
+        );
+      }
     );
   }
 }

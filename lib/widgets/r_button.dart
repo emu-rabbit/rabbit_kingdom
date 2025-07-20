@@ -15,8 +15,9 @@ class RButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget Function(Color) child;
   final RButtonType type;
+  final String? tag;
   final bool isDisabled;
-  final RButtonAnimationController _controller = Get.put(RButtonAnimationController());
+  late final RButtonAnimationController _controller;
 
   RButton._({
     super.key,
@@ -24,50 +25,61 @@ class RButton extends StatelessWidget {
     required this.child,
     this.type = RButtonType.primary,
     this.isDisabled = false,
-  });
+    this.tag,
+  }) {
+    _controller = Get.put(RButtonAnimationController(), tag: tag ?? UniqueKey().toString());
+  }
 
   factory RButton.primary({
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
+    String? tag
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.primary,
     isDisabled: isDisabled,
     child: child,
+    tag: tag,
   );
 
   factory RButton.secondary({
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
+    String? tag
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.secondary,
     isDisabled: isDisabled,
     child: child,
+    tag: tag,
   );
 
   factory RButton.surface({
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
+    String? tag
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.surface,
     isDisabled: isDisabled,
     child: child,
+    tag: tag,
   );
 
   factory RButton.danger({
     required VoidCallback onPressed,
     required Widget Function(Color) child,
     bool isDisabled = false,
+    String? tag
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.danger,
     isDisabled: isDisabled,
     child: child,
+    tag: tag,
   );
 
   Color _backgroundColor(ColorScheme colors) {
