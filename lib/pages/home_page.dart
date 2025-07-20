@@ -4,6 +4,7 @@ import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/pages/building_house_page.dart';
+import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -246,7 +247,7 @@ final kingdomViewData = (
     height: 1288.0
   ),
   buildings: [
-    (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: (){}),
+    (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: (){ Get.to(BuildingTownHallPage()); }),
     (name: "Trading", x: 75.0, y: 328.0, width: 150.0, height: 150.0, onPress: (){}),
     (name: "House", x: 48.0, y: 470.0, width: 175.0, height: 250.0, onPress: (){ Get.to(BuildingHousePage()); }),
     (name: "Tavern", x: 283.0, y: 600.0, width: 196.0, height: 260.0, onPress: (){}),

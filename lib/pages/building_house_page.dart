@@ -37,7 +37,7 @@ class BuildingHousePage extends StatelessWidget {
                 return RButtonGroup(
                   "溫暖軟呼呼的床...",
                   [
-                    ButtonData(
+                    RButtonData(
                       text: "一覺到天${themeController.brightness == Brightness.light ? "黑": "亮"}" ,
                       onPress: () async {
                         RLoading.start();
@@ -57,7 +57,7 @@ class BuildingHousePage extends StatelessWidget {
             RButtonGroup(
               "滿地混亂的行李",
               [
-                ButtonData(
+                RButtonData(
                   text: "收拾行李並出境",
                   onPress: () async {
                     RLoading.start();

@@ -6,7 +6,7 @@ import 'package:rabbit_kingdom/widgets/r_text.dart';
 
 class RButtonGroup extends StatelessWidget {
   final String title;
-  final List<ButtonData> buttons;
+  final List<RButtonData> buttons;
   const RButtonGroup(this.title, this.buttons, {super.key});
 
   @override
@@ -36,10 +36,10 @@ class RButtonGroup extends StatelessWidget {
   }
 }
 
-class ButtonData {
+class RButtonData {
   final String text;
   final RButtonType type;
   final Function() onPress;
 
-  ButtonData({ required this.text, this.type = RButtonType.primary, required this.onPress });
+  RButtonData({ required this.text, this.type = RButtonType.primary, required this.onPress });
 }
