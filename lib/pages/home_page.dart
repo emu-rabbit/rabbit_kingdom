@@ -102,18 +102,22 @@ class _HeaderText extends StatelessWidget {
 class _HeaderMoney extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          'lib/assets/images/money_bag.png',
-          width: 30,
-          height: 30,
-        ),
-        SizedBox(width: 2,),
-        _HeaderText("13.4K", fontSize: 20,)
-      ],
+    return GetBuilder<UserController>(
+      builder: (userController) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'lib/assets/images/money_bag.png',
+              width: 25,
+              height: 25,
+            ),
+            SizedBox(width: 2,),
+            _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: 20,)
+          ],
+        );
+      }
     );
   }
 }
