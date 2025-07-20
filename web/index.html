@@ -24,13 +24,36 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="rabbit_kingdom">
+  <meta name="google-signin-client_id" content="689030757641-aeb04uu2cm5cik7t8tgpumk0kqm7006h.apps.googleusercontent.com" />
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>rabbit_kingdom</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json"><!-- Firebase App (核心 SDK) -->
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js"></script>
+
+  <script>
+    // 這是你剛剛複製的 firebaseConfig
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBik9H1oZPI42gYmoM0fX9Q9kzOzBqHfRY",
+      authDomain: "rabbit-kingdom-2759a.firebaseapp.com",
+      projectId: "rabbit-kingdom-2759a",
+      storageBucket: "rabbit-kingdom-2759a.firebasestorage.app",
+      messagingSenderId: "689030757641",
+      appId: "1:689030757641:web:fe66dc39be5fb4fea4e7d8",
+      measurementId: "G-6SY73Q2WEB"
+    };
+
+    // 初始化 Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
