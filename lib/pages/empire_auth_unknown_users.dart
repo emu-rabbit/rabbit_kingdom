@@ -38,40 +38,20 @@ class EmpireAuthUnknownUsers extends StatelessWidget {
             return Column(
               children: controller
                   .unknownUsers
-                  .asMap()
-                  .entries
-                  .map((entry) {
-                return Container(
-                  width: vw(80),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerHigh,
-                    border: Border.all(
-                      color: AppColors.outline,
-                      width: 2
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20))
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      RText.titleLarge(entry.value.name),
-                      RText.titleSmall(entry.value.email, maxLines: 2,),
-                      RSpace(),
-                      RButton.secondary(
-                        onPressed: () async {
-                          final result = await Get.to(() => AuthUnknownUserPopup(entry.value));
-                          if (result == true) {
-                            controller.popUser(entry.value);
-                          }
-                        },
-                        child: (color) {
-                          return RText.bodySmall("通過申請", color: color,);
+                  .map((user) {
+                return Column(
+                  children: [
+                    _UnknownUserCard(
+                      user: user,
+                      onPress: () async {
+                        final result = await Get.to(() => AuthUnknownUserPopup(user));
+                        if (result == true) {
+                          controller.popUser(user);
                         }
-                      ),
-                    ],
-                  ),
+                      }
+                    ),
+                    RSpace()
+                  ],
                 );
               }).toList(),
             );
@@ -85,6 +65,43 @@ class EmpireAuthUnknownUsers extends StatelessWidget {
           ),
         ],
       )
+    );
+  }
+}
+
+class _UnknownUserCard extends StatelessWidget {
+  final UnknownUserData user;
+  final Function() onPress;
+  const _UnknownUserCard({ required this.user, required this.onPress });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: vw(80),
+      padding: EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(
+          color: AppColors.surfaceContainerHigh,
+          border: Border.all(
+              color: AppColors.outline,
+              width: 2
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(20))
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RText.titleLarge(user.name),
+          RText.titleSmall(user.email, maxLines: 2,),
+          RSpace(),
+          RButton.secondary(
+              onPressed: onPress,
+              child: (color) {
+                return RText.bodySmall("通過申請", color: color,);
+              }
+          ),
+        ],
+      ),
     );
   }
 }
