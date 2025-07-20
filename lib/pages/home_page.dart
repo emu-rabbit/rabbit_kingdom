@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/widgets/r_blurred_overlay.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 
@@ -11,8 +13,107 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: _KingdomView(),
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: _KingdomView(),
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: SafeArea(child: _Header()),
+        )
+      ],
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    return GetBuilder<UserController>(
+        builder: (userController) {
+          final userName = userController.user?.name ?? 'Unknown';
+          final userLevel = 'Lv.${userController.user?.exp.level ?? 0}';
+
+          return Container(
+            height: 50,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _HeaderText('$userName $userLevel'),
+                _HeaderMoney(),
+              ],
+            ),
+          );
+        }
+    );
+  }
+}
+
+class _HeaderText extends StatelessWidget {
+  final String text;
+  final double fontSize;
+  const _HeaderText(this.text, { this.fontSize = 26 });
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<ThemeController>(
+        builder: (themeController) {
+          return Stack(
+            children: [
+              // 底層：描邊
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontFamily: 'JFHuninn',
+                  decoration: TextDecoration.none,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = fontSize / 26 * 4
+                    ..color = themeController.brightness == Brightness.light ?
+                        Color(0xffe6394d)
+                      : AppColors.surfaceContainerHigh,
+                ),
+              ),
+              // 上層：填色
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  decoration: TextDecoration.none,
+                  fontFamily: 'JFHuninn',
+                  color: themeController.brightness == Brightness.light ?
+                    Color(0xffffc1d5)
+                  : AppColors.onSurface,
+                ),
+              ),
+            ],
+          );
+        }
+    );
+  }
+}
+
+class _HeaderMoney extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset(
+          'lib/assets/images/money_bag.png',
+          width: 30,
+          height: 30,
+        ),
+        SizedBox(width: 2,),
+        _HeaderText("13.4K", fontSize: 20,)
+      ],
     );
   }
 }
@@ -72,20 +173,19 @@ class _KingdomView extends StatelessWidget {
                   ),
                 );
               }),
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: RButton.primary(
-              //       onPressed: () { themeController.setThemeMode(themeController.themeMode.value == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark); },
-              //       child: (color) => Text("aa")
-              //   ),
-              // ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: RButton.primary(
+                    onPressed: () { themeController.setThemeMode(themeController.themeMode.value == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark); },
+                    child: (color) => Text("aa")
+                ),
+              ),
             ],
           ),
         );
       });
   }
 }
-
 
 class _KingdomViewBuilding extends StatefulWidget {
   final String name;
@@ -155,7 +255,6 @@ class _KingdomViewBuildingState extends State<_KingdomViewBuilding>
     super.dispose();
   }
 }
-
 
 final kingdomViewData = (
   background: (

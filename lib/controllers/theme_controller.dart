@@ -6,6 +6,12 @@ class ThemeController extends GetxController {
   static const _prefKey = 'theme_mode';
 
   final themeMode = ThemeMode.light.obs;
+  Brightness get brightness {
+    if (themeMode.value == ThemeMode.system) {
+      return MediaQuery.platformBrightnessOf(Get.context!);
+    }
+    return themeMode.value == ThemeMode.dark ? Brightness.dark : Brightness.light;
+  }
 
   /// 初始化時讀取儲存的主題設定
   @override

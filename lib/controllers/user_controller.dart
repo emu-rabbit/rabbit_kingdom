@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,7 +42,7 @@ class UserController extends GetxController {
       }
     } else {
       // 建立新使用者
-      final newUser = KingdomUser(name: displayName);
+      final newUser = KingdomUser.newUser(displayName);
       await docRef.set(newUser.toJson());
       _user.value = newUser;
     }
@@ -49,8 +51,10 @@ class UserController extends GetxController {
     _userStream = docRef.snapshots();
     _userStream!.listen((snapshot) {
       if (snapshot.exists && snapshot.data() != null) {
+        log("message");
         final newUser = KingdomUser.fromJson(snapshot.data()!);
         _user.value = newUser;
+        update();
       }
     });
   }
