@@ -27,8 +27,8 @@ class BuildingTownHallPage extends StatelessWidget {
             RSpace(),
             Image.asset(
               "lib/assets/images/townhall_0.png",
-              width: vmin(50),
-              height: vmin(50),
+              width: vmin(70),
+              height: vmin(70),
             ),
             RSpace(type: RSpaceType.large,),
             GetBuilder<UserController>(
