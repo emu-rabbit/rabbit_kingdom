@@ -26,7 +26,7 @@ class ModifyNamePage extends StatelessWidget {
 
     return RLayoutWithHeader(
       "",
-      topRight: RMoney(),
+      topRight: RMoney(types: [MoneyType.coin],),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
