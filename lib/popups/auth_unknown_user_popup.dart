@@ -26,8 +26,8 @@ class AuthUnknownUserPopup extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          RText.titleLarge(user.name),
-          RText.titleSmall(user.email, maxLines: 2,),
+          RText.titleLarge(user.name, color: AppColors.onSecondary,),
+          RText.titleSmall(user.email, color: AppColors.onSecondary, maxLines: 2,),
           RSpace(),
           ...KingdomUserGroup
               .values
@@ -35,7 +35,7 @@ class AuthUnknownUserPopup extends StatelessWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                RButton.primary(
+                RButton.secondary(
                     onPressed: () async {
                       try {
                         RLoading.start();

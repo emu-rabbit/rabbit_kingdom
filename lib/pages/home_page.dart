@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/pages/building_house_page.dart';
 import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
+import 'package:rabbit_kingdom/popups/budget_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 
 class HomePage extends StatelessWidget {
@@ -121,18 +123,21 @@ class _HeaderMoney extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<UserController>(
       builder: (userController) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'lib/assets/images/money_bag.png',
-              width: 25,
-              height: 25,
-            ),
-            SizedBox(width: 2,),
-            _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: 20,)
-          ],
+        return GestureDetector(
+          onTap: (){ Get.rPopup(BudgetPopup()); },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'lib/assets/images/money_bag.png',
+                width: 25,
+                height: 25,
+              ),
+              SizedBox(width: 2,),
+              _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: 20,)
+            ],
+          ),
         );
       }
     );
