@@ -25,12 +25,19 @@ class RButtonGroup extends StatelessWidget {
             child(Color color) {
               return RText.bodyLarge(data.text, textAlign: TextAlign.center, color: color,);
             }
-            return switch(data.type) {
-              RButtonType.primary => RButton.primary(onPressed: data.onPress, child: child),
-              RButtonType.secondary => RButton.secondary(onPressed: data.onPress, child: child),
-              RButtonType.surface => RButton.surface(onPressed: data.onPress, child: child),
-              RButtonType.danger => RButton.danger(onPressed: data.onPress, child: child),
-            };
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                switch(data.type) {
+                  RButtonType.primary => RButton.primary(onPressed: data.onPress, child: child),
+                  RButtonType.secondary => RButton.secondary(onPressed: data.onPress, child: child),
+                  RButtonType.surface => RButton.surface(onPressed: data.onPress, child: child),
+                  RButtonType.danger => RButton.danger(onPressed: data.onPress, child: child),
+                },
+                RSpace(type: RSpaceType.small,)
+              ],
+            );
           })
         ],
       ),
