@@ -266,9 +266,9 @@ final kingdomViewData = (
     height: 1288.0
   ),
   buildings: [
-    (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: (){ Get.to(BuildingTownHallPage()); }),
+    (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: (){ Get.to(() => BuildingTownHallPage()); }),
     (name: "Trading", x: 75.0, y: 328.0, width: 150.0, height: 150.0, onPress: (){}),
-    (name: "House", x: 48.0, y: 470.0, width: 175.0, height: 250.0, onPress: (){ Get.to(BuildingHousePage()); }),
+    (name: "House", x: 48.0, y: 470.0, width: 175.0, height: 250.0, onPress: (){ Get.to(() => BuildingHousePage()); }),
     (name: "Tavern", x: 283.0, y: 600.0, width: 196.0, height: 260.0, onPress: (){}),
     (name: "Fountain", x: 58.0, y: 780.0, width: 146.0, height: 190.0, onPress: (){}),
   ]

@@ -36,8 +36,8 @@ class BuildingTownHallPage extends StatelessWidget {
             RButtonGroup(
               "櫃台後面有個可愛的兔兔公務員",
               [
-                RButtonData(text: "我要申請護照改名", onPress: (){ Get.to(ModifyNamePage()); }),
-                RButtonData(text: "我有問題想問...", onPress: (){ Get.to(FaqPage()); })
+                RButtonData(text: "我要申請護照改名", onPress: (){ Get.to(() => ModifyNamePage()); }),
+                RButtonData(text: "我有問題想問...", onPress: (){ Get.to(() => FaqPage()); })
               ]
             ),
             RSpace(type: RSpaceType.large,),
@@ -50,7 +50,7 @@ class BuildingTownHallPage extends StatelessWidget {
                       RButtonGroup(
                         "阿，是大帝！",
                         [
-                          RButtonData(text: "審查新入境者", onPress: (){ Get.to(EmpireAuthUnknownUsers()); })
+                          RButtonData(text: "審查新入境者", onPress: (){ Get.to(() => EmpireAuthUnknownUsers()); })
                         ]
                       ),
                       RSpace(type: RSpaceType.large,),

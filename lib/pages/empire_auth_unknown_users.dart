@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/popups/auth_unknown_user_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
@@ -44,7 +45,7 @@ class EmpireAuthUnknownUsers extends StatelessWidget {
                     _UnknownUserCard(
                       user: user,
                       onPress: () async {
-                        final result = await Get.to(() => AuthUnknownUserPopup(user));
+                        final result = await Get.rPopup(AuthUnknownUserPopup(user));
                         if (result == true) {
                           controller.popUser(user);
                         }

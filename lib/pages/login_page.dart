@@ -66,7 +66,7 @@ class LoginPage extends StatelessWidget {
                         text: "使用信箱登入",
                         icon: FontAwesomeIcons.envelope,
                         onPressed: () {
-                          Get.to(EmailPage());
+                          Get.to(() => EmailPage());
                         },
                       )
                     ],
@@ -91,7 +91,7 @@ class LoginPage extends StatelessWidget {
                       text: '《隱私政策》',
                       style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()..onTap = () {
-                        Get.to(PrivacyPage());
+                        Get.to(() => PrivacyPage());
                       },
                     ),
                     TextSpan(text: '與'),
@@ -99,7 +99,7 @@ class LoginPage extends StatelessWidget {
                       text: '《使用條款》',
                       style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()..onTap = () {
-                        Get.to(TermsPage());
+                        Get.to(() => TermsPage());
                       },
                     ),
                   ],
