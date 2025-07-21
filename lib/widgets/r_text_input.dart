@@ -72,7 +72,10 @@ class RTextInput extends StatelessWidget {
                         required bool isFocused,
                         required int? maxLength,
                       }) {
-                    return RText.labelSmall('$currentLength / $maxLength');
+                    if (maxLength != null) {
+                      return RText.labelSmall('$currentLength / $maxLength');
+                    }
+                    return SizedBox.shrink();
                   },
                 ),
                 if (obscureText)

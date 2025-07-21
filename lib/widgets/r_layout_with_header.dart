@@ -12,35 +12,35 @@ class RLayoutWithHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RLayout(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              height: 60,
-              child: Stack(
-                children: [
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: RIconButton.back()
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: RText.titleLarge(title),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: topRight ?? SizedBox.shrink(),
-                  )
-                ],
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            height: 60,
+            child: Stack(
+              children: [
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: RIconButton.back()
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: RText.titleLarge(title),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: topRight ?? SizedBox.shrink(),
+                )
+              ],
             ),
-            Expanded(
-                child: child
-            )
-          ],
-        )
+          ),
+          Expanded(
+              child: child
+          )
+        ],
+      )
     );
   }
 }

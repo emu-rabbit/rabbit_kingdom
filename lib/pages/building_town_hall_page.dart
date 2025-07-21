@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/empire_auth_unknown_users.dart';
+import 'package:rabbit_kingdom/pages/empire_new_announce.dart';
 import 'package:rabbit_kingdom/pages/faq_page.dart';
 import 'package:rabbit_kingdom/pages/modify_name_page.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
@@ -50,7 +51,8 @@ class BuildingTownHallPage extends StatelessWidget {
                       RButtonGroup(
                         "阿，是大帝！",
                         [
-                          RButtonData(text: "審查新入境者", onPress: (){ Get.to(() => EmpireAuthUnknownUsers()); })
+                          RButtonData(text: "審查新入境者", onPress: (){ Get.to(() => EmpireAuthUnknownUsers()); }),
+                          RButtonData(text: "發布新公告", onPress: (){ Get.to(() => EmpireNewAnnounce()); })
                         ]
                       ),
                       RSpace(type: RSpaceType.large,),
