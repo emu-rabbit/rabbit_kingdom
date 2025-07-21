@@ -7,6 +7,7 @@ import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_money.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_text_input.dart';
 
@@ -25,6 +26,7 @@ class ModifyNamePage extends StatelessWidget {
 
     return RLayoutWithHeader(
       "",
+      topRight: RMoney(),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

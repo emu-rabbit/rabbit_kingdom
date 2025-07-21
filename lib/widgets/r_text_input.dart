@@ -42,6 +42,7 @@ class RTextInput extends StatelessWidget {
           );
 
           return Material(
+            color: Colors.transparent,
             child: Stack(
               alignment: Alignment.centerRight,
               children: [
@@ -74,6 +75,14 @@ class RTextInput extends StatelessWidget {
                         : const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   ),
                   onChanged: controller.setText,
+                  buildCounter: (
+                      context, {
+                        required int currentLength,
+                        required bool isFocused,
+                        required int? maxLength,
+                      }) {
+                    return RText.labelSmall('$currentLength / $maxLength',);
+                  },
                 ),
                 if (obscureText)
                   Positioned(

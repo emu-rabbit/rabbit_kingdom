@@ -6,7 +6,8 @@ import 'package:rabbit_kingdom/widgets/r_text.dart';
 class RLayoutWithHeader extends StatelessWidget {
   final String title;
   final Widget child;
-  const RLayoutWithHeader(this.title, {super.key, required this.child});
+  final Widget? topRight;
+  const RLayoutWithHeader(this.title, {super.key, required this.child, this.topRight});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,10 @@ class RLayoutWithHeader extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: RText.titleLarge(title),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: topRight ?? SizedBox.shrink(),
                   )
                 ],
               ),
