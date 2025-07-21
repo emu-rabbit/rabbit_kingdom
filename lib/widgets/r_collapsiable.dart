@@ -68,7 +68,7 @@ class _RCollapsibleState extends State<RCollapsible>
           padding: const EdgeInsets.all(12.0),
           child: RText.bodySmall(
             widget.content as String,
-            maxLines: 9223372036854775807,
+            maxLines: null,
             overflow: TextOverflow.visible,
           ),
         ),
