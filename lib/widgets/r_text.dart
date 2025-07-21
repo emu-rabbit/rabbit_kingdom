@@ -119,7 +119,7 @@ class RText extends StatelessWidget {
             style.copyWith(color: color, decoration: TextDecoration.none) :
             style.copyWith(color: AppColors.onSurface, decoration: TextDecoration.none),
             textAlign: textAlign,
-            overflow: overflow,
+            overflow: overflow ?? TextOverflow.ellipsis,
             maxLines: maxLines,
           );
         }

@@ -2,65 +2,76 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
+import 'package:rabbit_kingdom/widgets/r_text.dart';
 
 enum RButtonType { primary, secondary, surface, danger }
 
 class RButton extends StatefulWidget {
   final VoidCallback? onPressed;
-  final Widget Function(Color) child;
+  final Widget Function(Color)? child;
+  final String? text;
   final RButtonType type;
   final bool isDisabled;
 
   const RButton._({
     super.key,
     required this.onPressed,
-    required this.child,
+    this.child,
+    this.text,
     this.type = RButtonType.primary,
     this.isDisabled = false,
   });
 
   factory RButton.primary({
     required VoidCallback onPressed,
-    required Widget Function(Color) child,
+    Widget Function(Color)? child,
+    String? text,
     bool isDisabled = false,
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.primary,
     isDisabled: isDisabled,
     child: child,
+    text: text,
   );
 
   factory RButton.secondary({
     required VoidCallback onPressed,
-    required Widget Function(Color) child,
+    Widget Function(Color)? child,
+    String? text,
     bool isDisabled = false,
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.secondary,
     isDisabled: isDisabled,
     child: child,
+    text: text,
   );
 
   factory RButton.surface({
     required VoidCallback onPressed,
-    required Widget Function(Color) child,
+    Widget Function(Color)? child,
+    String? text,
     bool isDisabled = false,
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.surface,
     isDisabled: isDisabled,
     child: child,
+    text: text,
   );
 
   factory RButton.danger({
     required VoidCallback onPressed,
-    required Widget Function(Color) child,
+    Widget Function(Color)? child,
+    String? text,
     bool isDisabled = false,
   }) => RButton._(
     onPressed: onPressed,
     type: RButtonType.danger,
     isDisabled: isDisabled,
     child: child,
+    text: text,
   );
 
   @override
@@ -135,6 +146,18 @@ class _RButtonState extends State<RButton> with SingleTickerProviderStateMixin {
     }
   }
 
+  Widget Function(Color) _resolveChildBuilder() {
+    if (widget.child != null) {
+      return widget.child!;
+    } else {
+      return (color) => RText.bodyLarge(
+        widget.text ?? '',
+        color: color,
+        textAlign: TextAlign.center,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -151,15 +174,18 @@ class _RButtonState extends State<RButton> with SingleTickerProviderStateMixin {
         child: GetBuilder<ThemeController>(
           builder: (themeController) {
             final colors = AppColors.colorScheme;
+            final bg = _backgroundColor(colors);
+            final fg = _foregroundColor(colors);
+            final childBuilder = _resolveChildBuilder();
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               decoration: BoxDecoration(
-                color: _backgroundColor(colors),
+                color: bg,
                 borderRadius: BorderRadius.circular(9999),
               ),
-              child: widget.child(_foregroundColor(colors)),
+              child: childBuilder(fg),
             );
-          }
+          },
         ),
       ),
     );

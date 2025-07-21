@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
+import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/pages/building_house_page.dart';
 import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
 
@@ -31,7 +32,7 @@ class _Header extends StatelessWidget {
 
     return GetBuilder<UserController>(
         builder: (userController) {
-          final userName = userController.user?.name ?? 'Unknown';
+          final userName = "妳好ㄚㄚㄚ阿餔餔餔哈哈哈哈asdasd"; //userController.user?.name ?? 'Unknown';
           final userLevel = 'Lv.${userController.user?.exp.level ?? 0}';
 
           return Container(
@@ -42,7 +43,16 @@ class _Header extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _HeaderText('$userName $userLevel'),
+                SizedBox(
+                  width: vw(70),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(child: _HeaderText(userName)),
+                      _HeaderText(userLevel),
+                    ],
+                  )
+                ),
                 _HeaderMoney(),
               ],
             ),
@@ -66,6 +76,8 @@ class _HeaderText extends StatelessWidget {
               // 底層：描邊
               Text(
                 text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: fontSize,
                   fontFamily: 'JFHuninn',
@@ -81,6 +93,8 @@ class _HeaderText extends StatelessWidget {
               // 上層：填色
               Text(
                 text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: fontSize,
                   decoration: TextDecoration.none,

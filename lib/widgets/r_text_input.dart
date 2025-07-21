@@ -10,6 +10,7 @@ class RTextInput extends StatelessWidget {
   final String? hint;
   final bool obscureText;
   final int maxLines;
+  final int? maxLength;
   final TextInputType keyboardType;
 
   final RTextInputController controller;
@@ -21,6 +22,7 @@ class RTextInput extends StatelessWidget {
     this.hint,
     this.obscureText = false,
     this.maxLines = 1,
+    this.maxLength,
     this.keyboardType = TextInputType.text,
   });
 
@@ -47,6 +49,7 @@ class RTextInput extends StatelessWidget {
                   controller: textController,
                   obscureText: controller.obscure.value,
                   maxLines: maxLines,
+                  maxLength: maxLength,
                   keyboardType: keyboardType,
                   style: AppTextStyle.bodySmall.copyWith(color: AppColors.onSurface),
                   decoration: InputDecoration(

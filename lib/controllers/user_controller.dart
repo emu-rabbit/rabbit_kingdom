@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rabbit_kingdom/helpers/collection_names.dart';
+import 'package:rabbit_kingdom/values/consts.dart';
 import '../models/kingdom_user.dart';
 
 class UserController extends GetxController {
@@ -13,7 +14,7 @@ class UserController extends GetxController {
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
-    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty ? '未命名' : firebaseUser.displayName!;
+    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty ? Consts.defaultUserName : firebaseUser.displayName!;
     final email = firebaseUser.email ?? '';
     final docRef = FirebaseFirestore.instance.collection(CollectionNames.user).doc(uid);
     _userDocRef.value = docRef;
