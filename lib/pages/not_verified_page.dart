@@ -41,8 +41,8 @@ class NotVerifiedPage extends StatelessWidget {
             RText.bodyMedium("寄送驗證信"),
             Image.asset(
               'lib/assets/images/red_parrot_0.png',
-              width: vmin(75),
-              height: vmin(75),
+              width: mainImageSize(),
+              height: mainImageSize(),
               fit: BoxFit.cover,
             ),
             RSpace(),

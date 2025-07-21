@@ -25,8 +25,8 @@ class UnknownUserPage extends StatelessWidget {
             RSpace(),
             Image.asset(
               'lib/assets/images/rabbit_empire_2.png',
-              width: vmin(75),
-              height: vmin(75),
+              width: mainImageSize(),
+              height: mainImageSize(),
               fit: BoxFit.cover,
             ),
             RSpace(),

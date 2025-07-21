@@ -47,8 +47,8 @@ class EmailPage extends StatelessWidget {
                 children: [
                   Image.asset(
                   'lib/assets/images/rabbit_empire_1.png',
-                    width: vmin(70),
-                    height: vmin(70),
+                    width: mainImageSize(),
+                    height: mainImageSize(),
                     fit: BoxFit.cover,
                   ),
                   RSpace(),

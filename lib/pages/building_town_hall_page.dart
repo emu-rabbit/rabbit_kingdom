@@ -29,8 +29,8 @@ class BuildingTownHallPage extends StatelessWidget {
             RSpace(),
             Image.asset(
               "lib/assets/images/townhall_0.png",
-              width: vmin(70),
-              height: vmin(70),
+              width: mainImageSize(),
+              height: mainImageSize(),
             ),
             RSpace(),
             RButtonGroup(

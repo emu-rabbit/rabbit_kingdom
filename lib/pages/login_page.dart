@@ -138,8 +138,8 @@ class _RabbitEmpireImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       'lib/assets/images/rabbit_empire_0.png',
-      width: vmin(75),
-      height: vmin(75),
+      width: mainImageSize(),
+      height: mainImageSize(),
       fit: BoxFit.cover,
     );
   }

@@ -38,9 +38,9 @@ class ModifyNamePage extends StatelessWidget {
             RText.labelSmall("兔兔公務員看了你的護照，念出了你的名字"),
             RSpace(),
             Image.asset(
-              "lib/assets/images/unknown.png",
-              width: vmin(70),
-              height: vmin(70),
+              "lib/assets/images/modify_name.png",
+              width: mainImageSize(),
+              height: mainImageSize(),
             ),
             RSpace(),
             SizedBox(
