@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
@@ -7,6 +6,8 @@ import 'package:rabbit_kingdom/values/consts.dart';
 import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
+import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_text_input.dart';
 
 import '../helpers/screen.dart';
@@ -48,16 +49,39 @@ class ModifyNamePage extends StatelessWidget {
                 children: [
                   Obx((){
                     if (
-                    authController.firebaseUser.value?.displayName == userController.user?.name ||
-                        userController.user?.name == Consts.defaultUserName
+                      authController.firebaseUser.value?.displayName == userController.user?.name ||
+                      userController.user?.name == Consts.defaultUserName
                     ) {
                       return RText.titleSmall("看來是第一次改名呢，這次是免費唷！");
                     }
                     return RText.titleSmall("改名的話，這邊要跟你收費${Prices.modifyName}兔兔幣唷");
                   }),
+                  RSpace(),
                   RTextInput(label: "新名字", controller: nameController, maxLength: 10,),
                   RSpace(),
-                  RButton.primary(text: "申請改名", onPressed: (){})
+                  Obx((){
+                    return RButton.primary(
+                      text: "申請改名",
+                      isDisabled: nameController.text.value.isEmpty,
+                      onPressed: () async {
+                        if (nameController.text.value.isNotEmpty) {
+                          try {
+                            RLoading.start();
+                            await userController.changeName(
+                                nameController.text.value,
+                                !(authController.firebaseUser.value?.displayName == userController.user?.name ||
+                                    userController.user?.name == Consts.defaultUserName)
+                            );
+                            Get.back();
+                            RSnackBar.show("更名成功", "邁上新的旅途吧！");
+                          } catch(e) {
+                            RSnackBar.error("更名失敗", e.toString());
+                          } finally {
+                            RLoading.stop();
+                          }
+                        }
+                    });
+                  })
                 ],
               ),
             )

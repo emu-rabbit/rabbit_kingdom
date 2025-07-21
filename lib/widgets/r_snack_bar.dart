@@ -7,19 +7,21 @@ class RSnackBar {
   static show(
     String title,
     String message,
-    Color? colorText,
-    Color? backgroundColor
+    {
+      Color? colorText,
+      Color? backgroundColor
+    }
   ) {
     Get.snackbar(
       title,
       message,
-      colorText: colorText,
-      backgroundColor: backgroundColor,
+      colorText: colorText ?? AppColors.onPrimary,
+      backgroundColor: backgroundColor ?? AppColors.primary,
       snackPosition: SnackPosition.BOTTOM
     );
   }
   static error(
     String title,
     String message
-  ) => show(title, message, AppColors.onError, AppColors.error);
+  ) => show(title, message, colorText: AppColors.onError, backgroundColor: AppColors.error);
 }

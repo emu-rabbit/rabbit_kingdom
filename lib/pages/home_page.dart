@@ -6,6 +6,7 @@ import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/pages/building_house_page.dart';
 import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
+import 'package:rabbit_kingdom/widgets/r_space.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -31,33 +32,37 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return GetBuilder<UserController>(
-        builder: (userController) {
-          final userName = "妳好ㄚㄚㄚ阿餔餔餔哈哈哈哈asdasd"; //userController.user?.name ?? 'Unknown';
-          final userLevel = 'Lv.${userController.user?.exp.level ?? 0}';
+      builder: (userController) {
+        final userName = userController.user?.name ?? 'Unknown';
+        final userLevel = 'Lv.${userController.user?.exp.level ?? 0}';
 
-          return Container(
-            height: 50,
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: vw(70),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(child: _HeaderText(userName)),
-                      _HeaderText(userLevel),
-                    ],
-                  )
-                ),
-                _HeaderMoney(),
-              ],
-            ),
-          );
-        }
+        return Container(
+          height: 50,
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: vw(55)),
+                      child: _HeaderText(userName),
+                    ),
+                    RSpace(type: RSpaceType.small,),
+                    _HeaderText(userLevel),
+                  ],
+                )
+              ),
+              _HeaderMoney(),
+            ],
+          ),
+        );
+      }
     );
   }
 }

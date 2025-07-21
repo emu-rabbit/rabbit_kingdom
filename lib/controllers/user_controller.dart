@@ -1,9 +1,11 @@
-import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:rabbit_kingdom/helpers/collection_names.dart';
-import 'package:rabbit_kingdom/values/consts.dart';
+import 'package:get/get.dart';
+
+import '../helpers/collection_names.dart';
 import '../models/kingdom_user.dart';
+import '../values/consts.dart';
+import '../values/prices.dart';
 
 class UserController extends GetxController {
   final _user = Rxn<KingdomUser>();
@@ -14,7 +16,9 @@ class UserController extends GetxController {
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
-    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty ? Consts.defaultUserName : firebaseUser.displayName!;
+    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty
+        ? Consts.defaultUserName
+        : firebaseUser.displayName!;
     final email = firebaseUser.email ?? '';
     final docRef = FirebaseFirestore.instance.collection(CollectionNames.user).doc(uid);
     _userDocRef.value = docRef;
@@ -22,7 +26,6 @@ class UserController extends GetxController {
     final docSnapshot = await docRef.get();
 
     if (docSnapshot.exists) {
-      // 檢查是否有缺少欄位
       final data = docSnapshot.data()!;
       final userFromFirestore = KingdomUser.fromJson(data);
       _user.value = userFromFirestore;
@@ -41,13 +44,12 @@ class UserController extends GetxController {
         await docRef.update(data);
       }
     } else {
-      // 建立新使用者
       final newUser = KingdomUser.newUser(displayName, email);
       await docRef.set(newUser.toJson());
       _user.value = newUser;
     }
 
-    // 綁定 Firestore 實時監聽
+    // 監聽 Firestore
     _userStream = docRef.snapshots();
     _userStream!.listen((snapshot) {
       if (snapshot.exists && snapshot.data() != null) {
@@ -55,6 +57,46 @@ class UserController extends GetxController {
         _user.value = newUser;
         update();
       }
+    });
+  }
+
+  /// 🪙 扣金幣
+  Future<void> deductCoin(int amount) async {
+    final currentUser = _user.value;
+    final docRef = _userDocRef.value;
+
+    if (currentUser == null || docRef == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+
+    final currentCoin = currentUser.budget.coin;
+
+    if (currentCoin < amount) {
+      throw Exception('金幣不足，無法扣除 $amount');
+    }
+
+    await docRef.update({
+      'budget.coin': FieldValue.increment(-amount),
+    });
+  }
+
+  /// ✏️ 修改名字（可收費）
+  Future<void> changeName(String newName, bool isFirstTime) async {
+    final docRef = _userDocRef.value;
+    if (docRef == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+
+    if (isFirstTime) {
+      try {
+        await deductCoin(Prices.modifyName);
+      } catch (_) {
+        throw Exception('修改名稱失敗，金幣不足');
+      }
+    }
+
+    await docRef.update({
+      'name': newName,
     });
   }
 }
