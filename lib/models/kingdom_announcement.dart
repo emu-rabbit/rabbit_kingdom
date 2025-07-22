@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
@@ -9,6 +11,7 @@ import 'kingdom_user.dart';
 class KingdomAnnouncement {
   final int mood;
   final String message;
+  final AnnounceSticker sticker;
   final int poopSell;
   final int poopBuy;
   final DateTime createAt;
@@ -18,6 +21,7 @@ class KingdomAnnouncement {
   KingdomAnnouncement._({
     required this.mood,
     required this.message,
+    required this.sticker,
     required this.poopSell,
     required this.poopBuy,
     required this.createAt,
@@ -29,6 +33,7 @@ class KingdomAnnouncement {
     return KingdomAnnouncement._(
       mood: data['mood'] ?? 0,
       message: data['message'] ?? '',
+      sticker: AnnounceSticker.fromString(data['sticker']),
       poopSell: data['poopSell'] ?? 0,
       poopBuy: data['poopBuy'] ?? 0,
       createAt: data['createAt'].toDateTime() ?? DateTime.fromMillisecondsSinceEpoch(0),
@@ -41,9 +46,28 @@ class KingdomAnnouncement {
     );
   }
 
+  factory KingdomAnnouncement.create({
+    required int mood,
+    required String message,
+    required AnnounceSticker sticker
+  }) {
+    final price = PoopPrice.fromMood(mood);
+    return KingdomAnnouncement._(
+      mood: mood,
+      message: message,
+      sticker: sticker,
+      poopSell: price.sellPrice,
+      poopBuy: price.buyPrice,
+      createAt: DateTime.now(),
+      hearts: [],
+      comments: []
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'mood': mood,
     'message': message,
+    'sticker': sticker.name,
     'poopSell': poopSell,
     'poopBuy': poopBuy,
     'createAt': createAt, //  Firestore 會自動處理 DateTime -> Timestamp
@@ -56,6 +80,31 @@ enum AnnounceSticker {
   happy, angry, sad, tired, excited, shy, cool;
 
   String get imagePath => "lib/assets/images/sticker_$name.png";
+
+  factory AnnounceSticker.fromString(String? str) {
+    return AnnounceSticker.values.firstWhere(
+          (e) => e.name == (str ?? 'happy'),
+      orElse: () => AnnounceSticker.happy,
+    );
+  }
+}
+
+class PoopPrice {
+  final int buyPrice;
+  final int sellPrice;
+
+  PoopPrice(this.buyPrice, this.sellPrice);
+
+  static PoopPrice fromMood(int mood) {
+    int basePrice = (80 + (mood.clamp(0, 99) / 99.0) * 120).round(); // 80~200
+    int fluctuation = [-5, -3, -2, -1, 0, 1, 2, 3, 5][Random().nextInt(9)];
+
+    int mid = basePrice + fluctuation;
+    int buy = mid - 3;
+    int sell = buy + 6;
+
+    return PoopPrice(buy, sell);
+  }
 }
 
 class AnnounceHeart {

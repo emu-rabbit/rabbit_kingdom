@@ -4,6 +4,7 @@ import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 
 import '../helpers/collection_names.dart';
+import '../models/kingdom_announcement.dart';
 
 class EmpireService {
   EmpireService._();
@@ -29,6 +30,9 @@ class EmpireService {
   }
 
   static Future<void> authUnknownUser(UnknownUserData user, KingdomUserGroup group) async {
+    final userController = Get.find<UserController>();
+    if (userController.user?.group != KingdomUserGroup.empire) return;
+
     final docRef = FirebaseFirestore.instance
         .collection(CollectionNames.user)
         .doc(user.uid);
@@ -41,6 +45,16 @@ class EmpireService {
     await docRef.update({
       'group': group.name,
     });
+  }
+
+  static Future<void> publishNewAnnounce(KingdomAnnouncement announce) async {
+    final userController = Get.find<UserController>();
+    if (userController.user?.group != KingdomUserGroup.empire) return;
+
+    final data = announce.toJson();
+    await FirebaseFirestore.instance
+        .collection(CollectionNames.announce)
+        .add(data);
   }
 }
 

@@ -76,7 +76,7 @@ class AppTextStyle {
   );
 
   static TextStyle bodySmall = TextStyle(
-    fontSize: getFromDp(18),
+    fontSize: getFromDp(16),
     fontWeight: FontWeight.normal,
     fontFamily: 'JFHuninn',
   );
