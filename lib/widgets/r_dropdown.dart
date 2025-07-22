@@ -36,6 +36,7 @@ class RDropdown<T> extends StatelessWidget {
             iconDisabledColor: (foregroundColor ?? AppColors.onPrimary).withAlpha(150),
             dropdownColor: backgroundColor ?? AppColors.primary,
             focusColor: backgroundColor ?? AppColors.primary,
+            underline: SizedBox.shrink(),
             style: TextStyle(color: foregroundColor ?? AppColors.onPrimary),
             isExpanded: true,
             value: controller.selected.value,
