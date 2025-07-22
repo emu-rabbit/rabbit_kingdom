@@ -36,17 +36,17 @@ class BuildingTownHallPage extends StatelessWidget {
             ),
             RSpace(),
             RButtonGroup(
-                "櫃台後面有個可愛的兔兔公務員",
+                "某個角落有個很大的布告欄",
                 [
-                  RButtonData(text: "我要申請護照改名", onPress: (){ Get.to(() => ModifyNamePage()); }),
-                  RButtonData(text: "我有問題想問...", onPress: (){ Get.to(() => FaqPage()); })
+                  RButtonData(text: "查看最新公告", onPress: (){ Get.to(() => NewestAnnouncePage()); })
                 ]
             ),
             RSpace(type: RSpaceType.large,),
             RButtonGroup(
-                "某個角落有個很大的布告欄",
+                "櫃台後面有個可愛的兔兔公務員",
                 [
-                  RButtonData(text: "查看最新公告", onPress: (){ Get.to(() => NewestAnnouncePage()); })
+                  RButtonData(text: "我要申請護照改名", onPress: (){ Get.to(() => ModifyNamePage()); }),
+                  RButtonData(text: "我有問題想問...", onPress: (){ Get.to(() => FaqPage()); })
                 ]
             ),
             RSpace(type: RSpaceType.large,),
