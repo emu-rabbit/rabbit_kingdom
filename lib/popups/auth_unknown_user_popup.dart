@@ -34,7 +34,7 @@ class AuthUnknownUserPopup extends StatelessWidget {
           RSpace(),
           SizedBox(
             width: vw(50),
-            child: RDropdown(
+            child: RDropdown.secondary(
               controller: groupController,
               options: KingdomUserGroup.values,
               toDisplayString: (group) => group.toDisplay(),
@@ -43,7 +43,7 @@ class AuthUnknownUserPopup extends StatelessWidget {
           RSpace(),
           SizedBox(
             width: vw(50),
-            child: RButton.primary(
+            child: RButton.secondary(
               text: "送出",
               onPressed: () async {
                 try {

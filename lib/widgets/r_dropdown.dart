@@ -7,6 +7,8 @@ class RDropdown<T> extends StatelessWidget {
   final List<T> options;
   final String Function(T)? toDisplayString;
   final String? hintText;
+  final Color? foregroundColor;
+  final Color? backgroundColor;
 
   const RDropdown({
     super.key,
@@ -14,6 +16,8 @@ class RDropdown<T> extends StatelessWidget {
     required this.options,
     this.toDisplayString,
     this.hintText,
+    this.foregroundColor,
+    this.backgroundColor
   });
 
   @override
@@ -24,15 +28,15 @@ class RDropdown<T> extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: AppColors.primary,
+            color: backgroundColor ?? AppColors.primary,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           child: DropdownButton<T>(
-            iconEnabledColor: AppColors.onPrimary,
-            iconDisabledColor: AppColors.onPrimary.withAlpha(150),
-            dropdownColor: AppColors.primary,
-            focusColor: AppColors.primary,
-            style: TextStyle(color: AppColors.onPrimary),
+            iconEnabledColor: foregroundColor ?? AppColors.onPrimary,
+            iconDisabledColor: (foregroundColor ?? AppColors.onPrimary).withAlpha(150),
+            dropdownColor: backgroundColor ?? AppColors.primary,
+            focusColor: backgroundColor ?? AppColors.primary,
+            style: TextStyle(color: foregroundColor ?? AppColors.onPrimary),
             isExpanded: true,
             value: controller.selected.value,
             onChanged: (T? newValue) {
@@ -53,6 +57,29 @@ class RDropdown<T> extends StatelessWidget {
       );
     });
   }
+
+  factory  RDropdown.primary({
+    required RDropdownController<T> controller,
+    required List<T> options,
+    String Function(T)? toDisplayString,
+    String? hintText,
+  }) => RDropdown<T>(controller: controller, options: options, toDisplayString: toDisplayString, hintText: hintText,);
+
+  factory  RDropdown.secondary({
+    required RDropdownController<T> controller,
+    required List<T> options,
+    String Function(T)? toDisplayString,
+    String? hintText,
+  }) => RDropdown<T>(controller: controller, options: options, toDisplayString: toDisplayString, hintText: hintText,
+      foregroundColor: AppColors.onSecondary, backgroundColor: AppColors.secondary,);
+
+  factory  RDropdown.surface({
+    required RDropdownController<T> controller,
+    required List<T> options,
+    String Function(T)? toDisplayString,
+    String? hintText,
+  }) => RDropdown<T>(controller: controller, options: options, toDisplayString: toDisplayString, hintText: hintText,
+    foregroundColor: AppColors.onSurface, backgroundColor: AppColors.surface,);
 }
 
 class RDropdownController<T> extends GetxController {
