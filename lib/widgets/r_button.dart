@@ -88,10 +88,10 @@ class _RButtonState extends State<RButton> with SingleTickerProviderStateMixin {
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
-      lowerBound: 0.95,
-      upperBound: 1.0,
     );
-    _scale = _animationController.drive(Tween(begin: 1.0, end: 1.0));
+    _scale = Tween<double>(begin: 1.0, end: 0.9).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
   }
 
   @override
@@ -102,19 +102,19 @@ class _RButtonState extends State<RButton> with SingleTickerProviderStateMixin {
 
   void _onTapDown(TapDownDetails _) {
     if (!widget.isDisabled) {
-      _animationController.animateTo(0.95);
+      _animationController.forward();
     }
   }
 
   void _onTapUp(TapUpDetails _) {
     if (!widget.isDisabled) {
-      _animationController.animateTo(1.0);
+      _animationController.reverse();
     }
   }
 
   void _onTapCancel() {
     if (!widget.isDisabled) {
-      _animationController.animateTo(1.0);
+      _animationController.reverse();
     }
   }
 
@@ -168,7 +168,7 @@ class _RButtonState extends State<RButton> with SingleTickerProviderStateMixin {
       child: AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) => Transform.scale(
-          scale: _animationController.value,
+          scale: _scale.value,
           child: child,
         ),
         child: GetBuilder<ThemeController>(

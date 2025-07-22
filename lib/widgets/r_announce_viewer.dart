@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/extensions/date_time.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
@@ -60,7 +62,9 @@ class RAnnounceViewer extends StatelessWidget {
                         children: [
                           RIcon(FontAwesomeIcons.solidHeart, size: vw(3),),
                           RSpace(type: RSpaceType.small,),
-                          RText.labelSmall(announce.hearts.length.toString()),
+                          GetBuilder<AnnounceController>(builder: (announceController){
+                            return RText.labelSmall(announce.hearts.length.toString());
+                          }),
                           RSpace(),
                           RText.labelSmall("-"),
                           RSpace(),

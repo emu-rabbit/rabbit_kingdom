@@ -12,6 +12,8 @@ class RTextInput extends StatelessWidget {
   final int maxLines;
   final int? maxLength;
   final TextInputType keyboardType;
+  final Color? foregroundColor;
+  final Color? backgroundColor;
 
   final RTextInputController controller;
 
@@ -24,6 +26,8 @@ class RTextInput extends StatelessWidget {
     this.maxLines = 1,
     this.maxLength,
     this.keyboardType = TextInputType.text,
+    this.foregroundColor,
+    this.backgroundColor
   });
 
   @override
@@ -43,21 +47,21 @@ class RTextInput extends StatelessWidget {
                   maxLines: maxLines,
                   maxLength: maxLength,
                   keyboardType: keyboardType,
-                  style: AppTextStyle.bodySmall.copyWith(color: AppColors.onSurface),
+                  style: AppTextStyle.bodySmall.copyWith(color: foregroundColor ?? AppColors.onSurface),
                   decoration: InputDecoration(
                     label: RText.titleLarge(
                       label,
-                      color: AppColors.onSurface,
+                      color: foregroundColor ?? AppColors.onSurface,
                     ),
                     hintText: hint,
                     filled: true,
-                    fillColor: AppColors.surfaceContainerLow,
+                    fillColor: backgroundColor ?? AppColors.surfaceContainerLow,
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.primary, width: 1.0),
+                      borderSide: BorderSide(color: foregroundColor ?? AppColors.onSurface, width: 1.0),
                       borderRadius: BorderRadius.zero,
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.primary, width: 2.0),
+                      borderSide: BorderSide(color: foregroundColor ?? AppColors.onSurface, width: 2.0),
                       borderRadius: BorderRadius.zero,
                     ),
                     contentPadding: obscureText
@@ -84,7 +88,7 @@ class RTextInput extends StatelessWidget {
                     child: IconButton(
                       icon: RIcon(
                         controller.obscure.value ? Icons.visibility_off : Icons.visibility,
-                        color: AppColors.onSurface,
+                        color: foregroundColor ?? AppColors.onSurface,
                       ),
                       onPressed: controller.toggleObscure,
                       tooltip: controller.obscure.value ? '顯示密碼' : '隱藏密碼',
