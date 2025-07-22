@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
+import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
@@ -23,6 +24,8 @@ class NewestAnnouncePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+
     return RLayoutWithHeader(
       "最新公告",
       child: GetBuilder<AnnounceController>(builder: (announceController) {
@@ -78,7 +81,7 @@ class NewestAnnouncePage extends StatelessWidget {
                       return RIconButton(
                         icon: isHearted ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
                         size: vmin(10),
-                        color: AppColors.onPrimary,
+                        color: themeController.brightness == Brightness.light ? AppColors.onPrimary: AppColors.onSurface,
                         onPress: () async {
                           if (!isHearted) {
                             try {
