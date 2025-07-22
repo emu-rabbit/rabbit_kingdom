@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
-import 'package:rabbit_kingdom/extensions/string.dart';
+import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/popups/budget_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';

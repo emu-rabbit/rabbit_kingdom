@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/extensions/dynamic.dart';
 
 import 'kingdom_user.dart';
 
@@ -10,6 +11,7 @@ class KingdomAnnouncement {
   final String message;
   final int poopSell;
   final int poopBuy;
+  final DateTime createAt;
   final List<AnnounceHeart> hearts;
   final List<AnnounceComment> comments;
 
@@ -18,6 +20,7 @@ class KingdomAnnouncement {
     required this.message,
     required this.poopSell,
     required this.poopBuy,
+    required this.createAt,
     required this.hearts,
     required this.comments,
   });
@@ -28,6 +31,7 @@ class KingdomAnnouncement {
       message: data['message'] ?? '',
       poopSell: data['poopSell'] ?? 0,
       poopBuy: data['poopBuy'] ?? 0,
+      createAt: data['createAt'].toDateTime() ?? DateTime.fromMillisecondsSinceEpoch(0),
       hearts: (data['hearts'] as List<dynamic>? ?? [])
           .map((c) => AnnounceHeart.fromJson(c))
           .toList(),
@@ -36,6 +40,16 @@ class KingdomAnnouncement {
           .toList(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'mood': mood,
+    'message': message,
+    'poopSell': poopSell,
+    'poopBuy': poopBuy,
+    'createAt': createAt, //  Firestore 會自動處理 DateTime -> Timestamp
+    'hearts': hearts.map((h) => h.toJson()).toList(),
+    'comments': comments.map((c) => c.toJson()).toList(),
+  };
 }
 
 enum AnnounceSticker {
@@ -69,6 +83,11 @@ class AnnounceHeart {
       name: userController.user?.name ?? "",
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'uid': uid,
+    'name': name,
+  };
 }
 
 class AnnounceComment {
@@ -76,12 +95,14 @@ class AnnounceComment {
   final String name;
   final KingdomUserGroup group;
   final String message;
+  final DateTime createAt;
 
   AnnounceComment._({
     required this.uid,
     required this.name,
     required this.group,
     required this.message,
+    required this.createAt
   });
 
   factory AnnounceComment.fromJson(Map<String, dynamic> data) {
@@ -90,6 +111,7 @@ class AnnounceComment {
       name: data['name'] ?? '',
       group: KingdomUserGroup.values.byName(data['group'] ?? 'unknown'),
       message: data['message'] ?? '',
+      createAt: data['createAt'].toDateTime() ?? DateTime.fromMillisecondsSinceEpoch(0)
     );
   }
 
@@ -101,13 +123,16 @@ class AnnounceComment {
       uid: authController.firebaseUser.value?.uid ?? "",
       name: userController.user?.name ?? "",
       group: userController.user?.group ?? KingdomUserGroup.unknown,
-      message: message
+      message: message,
+      createAt: DateTime.now()
     );
   }
 
   Map<String, dynamic> toJson() => {
+    'uid': uid,
     'name': name,
     'group': group.name,
     'message': message,
+    'createAt': createAt
   };
 }

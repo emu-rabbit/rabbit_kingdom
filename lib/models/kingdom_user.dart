@@ -1,4 +1,4 @@
-import 'package:rabbit_kingdom/extensions/string.dart';
+import 'package:rabbit_kingdom/extensions/int.dart';
 
 class KingdomUser {
   final String name;
