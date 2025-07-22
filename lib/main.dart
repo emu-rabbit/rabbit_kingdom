@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/pages/login_page.dart';
@@ -27,6 +28,7 @@ void main() async {
   Get.put(ThemeController());
   Get.put(AuthController());
   Get.put(UserController());
+  Get.put(AnnounceController());
 
   // Run app
   runApp(const MyApp());

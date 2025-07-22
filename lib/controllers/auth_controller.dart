@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/not_verified_page.dart';
@@ -27,34 +28,34 @@ class AuthController extends GetxController {
     ever(firebaseUser, _setInitialScreen);
   }
 
-  void _setInitialScreen(User? user) {
+  void _setInitialScreen(User? user) async {
     log("User: ${user?.email}, verified: ${user?.emailVerified}", name: "AuthController");
     if (user == null) {
       Get.offAll(() => LoginPage());
     } else if (!user.emailVerified) {
       Get.offAll(() => NotVerifiedPage());
     } else {
-      final controller = Get.find<UserController>();
-      RLoading.start();
-      controller.initUser(firebaseUser.value!)
-        .then((_){
-          if (controller.user != null) {
-            if (controller.user!.group == KingdomUserGroup.unknown) {
-              Get.offAll(() => UnknownUserPage());
-            } else {
-              Get.offAll(() => HomePage());
-            }
+      try {
+        RLoading.start();
+        final userController = Get.find<UserController>();
+        await userController.initUser(firebaseUser.value!);
+        if (userController.user != null) {
+          if (userController.user!.group == KingdomUserGroup.unknown) {
+            Get.offAll(() => UnknownUserPage());
           } else {
-            throw Exception("User not initialized");
+            final announceController = Get.find<AnnounceController>();
+            await announceController.initAnnounce();
+            Get.offAll(() => HomePage());
           }
-        })
-        .catchError((e, stack) {
-          log("Error initUser $e", name: "AuthController");
-          RSnackBar.error("Error initUser", "$e");
-        })
-        .whenComplete(() {
-          RLoading.stop();
-        });
+        } else {
+          throw Exception("User not initialized");
+        }
+      } catch(e) {
+        log("Error initUser $e", name: "AuthController");
+        RSnackBar.error("Error initUser", "$e");
+      } finally {
+        RLoading.stop();
+      }
     }
   }
 

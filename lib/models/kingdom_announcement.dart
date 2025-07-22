@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
-import 'package:rabbit_kingdom/extensions/dynamic.dart';
+import 'package:rabbit_kingdom/helpers/dynamic.dart';
 
 import 'kingdom_user.dart';
 
@@ -36,7 +36,7 @@ class KingdomAnnouncement {
       sticker: AnnounceSticker.fromString(data['sticker']),
       poopSell: data['poopSell'] ?? 0,
       poopBuy: data['poopBuy'] ?? 0,
-      createAt: data['createAt'].toDateTime() ?? DateTime.fromMillisecondsSinceEpoch(0),
+      createAt: toDateTime(data['createAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
       hearts: (data['hearts'] as List<dynamic>? ?? [])
           .map((c) => AnnounceHeart.fromJson(c))
           .toList(),
@@ -160,7 +160,7 @@ class AnnounceComment {
       name: data['name'] ?? '',
       group: KingdomUserGroup.values.byName(data['group'] ?? 'unknown'),
       message: data['message'] ?? '',
-      createAt: data['createAt'].toDateTime() ?? DateTime.fromMillisecondsSinceEpoch(0)
+      createAt: toDateTime(data['createAt']) ?? DateTime.fromMillisecondsSinceEpoch(0)
     );
   }
 

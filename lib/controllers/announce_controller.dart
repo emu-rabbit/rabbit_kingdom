@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -18,10 +19,11 @@ class AnnounceController extends GetxController {
     _collectionListener?.cancel();
     _collectionListener = FirebaseFirestore.instance
         .collection(CollectionNames.announce)
-        .orderBy('timestamp', descending: true)
+        .orderBy('createAt', descending: true)
         .limit(1)
         .snapshots()
         .listen((querySnapshot) {
+          log("snapshot ${querySnapshot.docs}");
       if (querySnapshot.docs.isNotEmpty) {
         final latestDoc = querySnapshot.docs.first;
 

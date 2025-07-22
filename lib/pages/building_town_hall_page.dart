@@ -6,6 +6,7 @@ import 'package:rabbit_kingdom/pages/empire_auth_unknown_users.dart';
 import 'package:rabbit_kingdom/pages/empire_new_announce.dart';
 import 'package:rabbit_kingdom/pages/faq_page.dart';
 import 'package:rabbit_kingdom/pages/modify_name_page.dart';
+import 'package:rabbit_kingdom/pages/newest_announce_page.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 
@@ -35,11 +36,18 @@ class BuildingTownHallPage extends StatelessWidget {
             ),
             RSpace(),
             RButtonGroup(
-              "櫃台後面有個可愛的兔兔公務員",
-              [
-                RButtonData(text: "我要申請護照改名", onPress: (){ Get.to(() => ModifyNamePage()); }),
-                RButtonData(text: "我有問題想問...", onPress: (){ Get.to(() => FaqPage()); })
-              ]
+                "櫃台後面有個可愛的兔兔公務員",
+                [
+                  RButtonData(text: "我要申請護照改名", onPress: (){ Get.to(() => ModifyNamePage()); }),
+                  RButtonData(text: "我有問題想問...", onPress: (){ Get.to(() => FaqPage()); })
+                ]
+            ),
+            RSpace(type: RSpaceType.large,),
+            RButtonGroup(
+                "某個角落有個很大的布告欄",
+                [
+                  RButtonData(text: "查看最新公告", onPress: (){ Get.to(() => NewestAnnouncePage()); })
+                ]
             ),
             RSpace(type: RSpaceType.large,),
             GetBuilder<UserController>(
