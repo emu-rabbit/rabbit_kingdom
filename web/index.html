@@ -58,27 +58,20 @@
         .test(navigator.userAgent);
     }
 
+    // 檢查是否為手機裝置
     if (!isMobileDevice()) {
       // 非手機 => 阻擋進入
       document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("desktop-blocker").style.display = "block";
       });
     } else {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('firebase-messaging-sw.js')
-          .then(function(registration) {
-            console.log("Service Worker registered");
-            // 手機 => 正常啟動 Flutter
-            // window.addEventListener('DOMContentLoaded', function () {
-              const script = document.createElement('script');
-              script.src = "flutter_bootstrap.js";
-              script.async = true;
-              document.body.appendChild(script);
-            // });
-          }).catch(function(err) {
-            console.error("Service Worker registration failed", err);
-          });
-     }
+      // 手機 => 正常啟動 Flutter
+      window.addEventListener('DOMContentLoaded', function () {
+        const script = document.createElement('script');
+        script.src = "flutter_bootstrap.js";
+        script.async = true;
+        document.body.appendChild(script);
+      });
     }
   </script>
 

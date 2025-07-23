@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           FocusScope.of(context).unfocus(); // 收起鍵盤
         },
         child: GetMaterialApp(
-          title: '兔兔精華App',
+          title: '兔兔王國',
           themeMode: controller.themeMode.value,
           home: const LoginPage(),
         )
