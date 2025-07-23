@@ -44,7 +44,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBik9H1oZPI42gYmoM0fX9Q9kzOzBqHfRY',
+    apiKey: 'AIzaSyB_hUFnQ8tywSsk5bLPt1nBztyx5nX1ZyQ',
     appId: '1:689030757641:web:fe66dc39be5fb4fea4e7d8',
     messagingSenderId: '689030757641',
     projectId: 'rabbit-kingdom-2759a',
@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDsFBsvg-DVmGUq8mBa6tZsEMFLGXxfXRU',
+    apiKey: 'AIzaSyBOZP7x44EcSqZfSAgFZO9cT28w0a8_g9I',
     appId: '1:689030757641:android:b51e70d8a55d252ea4e7d8',
     messagingSenderId: '689030757641',
     projectId: 'rabbit-kingdom-2759a',
@@ -62,7 +62,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAemZ03nKarNEhlbYloSE6OsEUepaDzjeQ',
+    apiKey: 'AIzaSyDsSyKM1BUDjMW06dYSinVoqvsPCZ57qB4',
     appId: '1:689030757641:ios:d2c05b52aea22dafa4e7d8',
     messagingSenderId: '689030757641',
     projectId: 'rabbit-kingdom-2759a',
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAemZ03nKarNEhlbYloSE6OsEUepaDzjeQ',
+    apiKey: 'AIzaSyDsSyKM1BUDjMW06dYSinVoqvsPCZ57qB4',
     appId: '1:689030757641:ios:e2ba9737b8d26ca7a4e7d8',
     messagingSenderId: '689030757641',
     projectId: 'rabbit-kingdom-2759a',
