@@ -42,6 +42,7 @@ async function sendNotificationToUsers(prefix: string, data: Record<string, any>
         notification: {
           title: "兔兔大帝發公告拉",
           body: `兔兔現在心情很${display}，心情指數${mood}`,
+          imageUrl: `https://rabbit-kingdom-2759a.web.app/assets/lib/assets/images/sticker_${sticker}.png`,
         },
       };
       try {

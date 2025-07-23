@@ -58,7 +58,7 @@ class EmpireNewAnnounce extends StatelessWidget {
                   final mood = int.tryParse(moodController.text.value);
                   final message = messageController.text.value;
                   final sticker = stickerController.selected.value;
-                  if (mood != null && mood >= 0 && mood < 99 && message.isNotEmpty) {
+                  if (mood != null && mood >= 0 && mood <= 99 && message.isNotEmpty) {
                     announce.value = KingdomAnnouncement.create(mood: mood, message: message, sticker: sticker);
                   }
                 }),
