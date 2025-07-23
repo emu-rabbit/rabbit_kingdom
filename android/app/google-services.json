@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:689030757641:android:2d390ebb522a20d4a4e7d8",
+        "android_client_info": {
+          "package_name": "build.gradle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689030757641-aeb04uu2cm5cik7t8tgpumk0kqm7006h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsFBsvg-DVmGUq8mBa6tZsEMFLGXxfXRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689030757641-aeb04uu2cm5cik7t8tgpumk0kqm7006h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "689030757641-d6lrag0c858j89nppoknbijmi50hv8do.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.github.emurabbit.rabbitKingdom"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:689030757641:android:b51e70d8a55d252ea4e7d8",
         "android_client_info": {
           "package_name": "io.github.emu_rabbit.rabbit_kingdom"
@@ -27,6 +63,14 @@
           "android_info": {
             "package_name": "io.github.emu_rabbit.rabbit_kingdom",
             "certificate_hash": "881b2db4d276bd54f20f0aac60ce0d9dbdd689f4"
+          }
+        },
+        {
+          "client_id": "689030757641-r0i9m3jtu0jd5oeh2b0kestcg0rq4jk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.emu_rabbit.rabbit_kingdom",
+            "certificate_hash": "cfd8cc3f51150a3321caed44f65a1793df98f089"
           }
         },
         {

@@ -22,6 +22,7 @@ class ReleaseNotePopup extends StatelessWidget {
         title: "<2025/07/23>",
         contents: [
           "新增工程紀錄系統",
+          "現在新公告出現時會發布通知了(曾以最新版登入後才會收到通知)",
           "調整了公告中愛心按鈕的顏色",
           "小窩中的登出按鈕改為醒目顏色"
         ]
@@ -49,8 +50,11 @@ class ReleaseNotePopup extends StatelessWidget {
                           RText.titleMedium(note.title, color: AppColors.onSecondary,),
                           RSpace(type: RSpaceType.small,),
                           ...note.contents.map((content) {
-                            return RText.bodySmall("- $content", color: AppColors.onSecondary, maxLines: 10,);
-                          })
+                            return [
+                              RText.bodySmall("- $content", color: AppColors.onSecondary, maxLines: 10,),
+                              RSpace(type: RSpaceType.small,)
+                            ];
+                          }).expand((e) => e)
                         ],
                       ),
                     ),

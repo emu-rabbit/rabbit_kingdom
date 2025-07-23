@@ -21,10 +21,7 @@ void main() async {
   ]);
 
   // Initialize firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseMessaging.instance.requestPermission();
 
   // Put getx controllers

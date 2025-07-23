@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
@@ -137,7 +138,7 @@ class AuthController extends GetxController {
 
 // 要在登入後上傳 token
   Future<void> uploadFcmToken(String uid) async {
-    final token = await FirebaseMessaging.instance.getToken();
+    final token = await FirebaseMessaging.instance.getToken(vapidKey: 'BHFqe6POSJHaHNfqiSkX4h7TZNB439fGwRMvxTmi8MYNu2SQpya45Akoxn6gwP4GVFjGDiVBNQpaNxeH9oWzQYY');
     if (token != null) {
       FirebaseMessaging
         .onMessage
