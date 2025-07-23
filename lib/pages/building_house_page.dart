@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
@@ -59,6 +60,7 @@ class BuildingHousePage extends StatelessWidget {
               [
                 RButtonData(
                   text: "收拾行李並出境",
+                  type: RButtonType.danger,
                   onPress: () async {
                     RLoading.start();
                     await authController.logout();

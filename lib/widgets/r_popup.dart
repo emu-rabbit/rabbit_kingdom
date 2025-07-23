@@ -22,7 +22,7 @@ class RPopup extends StatelessWidget {
             child: Container(
               width: vw(70),
               decoration: BoxDecoration(
-                color: AppColors.secondary.withAlpha(200),
+                color: AppColors.secondary.withAlpha(220),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 border: Border.all(
                   color: AppColors.onSecondary,

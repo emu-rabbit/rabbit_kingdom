@@ -1,0 +1,73 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/announce_controller.dart';
+import 'package:rabbit_kingdom/helpers/app_colors.dart';
+import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/widgets/r_button.dart';
+import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_popup.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
+import 'package:rabbit_kingdom/widgets/r_space.dart';
+import 'package:rabbit_kingdom/widgets/r_text.dart';
+import 'package:rabbit_kingdom/widgets/r_text_input.dart';
+
+class ReleaseNotePopup extends StatelessWidget {
+  const ReleaseNotePopup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<_ReleaseNote> notes = [
+      _ReleaseNote(
+        title: "<2025/07/23>",
+        contents: [
+          "新增工程紀錄系統",
+          "調整了公告中愛心按鈕的顏色",
+          "小窩中的登出按鈕改為醒目顏色"
+        ]
+      )
+    ];
+
+    return RPopup(
+        title: "王國工程紀錄",
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: vh(80)),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: 15),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ...notes.map((note) {
+                  return [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RText.titleMedium(note.title, color: AppColors.onSecondary,),
+                          RSpace(type: RSpaceType.small,),
+                          ...note.contents.map((content) {
+                            return RText.bodySmall("- $content", color: AppColors.onSecondary, maxLines: 10,);
+                          })
+                        ],
+                      ),
+                    ),
+                    RSpace(type: RSpaceType.large,)
+                  ];
+                }).expand((e) => e)
+              ],
+            ),
+          ),
+        )
+    );
+  }
+}
+
+class _ReleaseNote {
+  final String title;
+  final List<String> contents;
+
+  const _ReleaseNote({ required this.title, required this.contents });
+}
