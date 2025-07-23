@@ -3,11 +3,12 @@ enum KingdomTaskNames {
 }
 
 class KingdomTask {
-  const KingdomTask();
+  final int limit;
+  const KingdomTask(this.limit);
 }
 
 const Map<KingdomTaskNames, KingdomTask> kingdomTasks = {
-  KingdomTaskNames.login: KingdomTask(),
-  KingdomTaskNames.heart: KingdomTask(),
-  KingdomTaskNames.comment: KingdomTask(),
+  KingdomTaskNames.login: KingdomTask(1),
+  KingdomTaskNames.heart: KingdomTask(1),
+  KingdomTaskNames.comment: KingdomTask(3),
 };
