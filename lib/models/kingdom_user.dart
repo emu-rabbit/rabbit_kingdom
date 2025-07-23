@@ -1,4 +1,8 @@
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
+import 'package:rabbit_kingdom/helpers/dynamic.dart';
+import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 class KingdomUser {
   final String name;
@@ -6,13 +10,15 @@ class KingdomUser {
   final KingdomUserGroup group;
   final KingdomUserExp exp;
   final KingdomUserBudget budget;
+  final KingdomUserTaskRecords records;
 
   KingdomUser._({
     required this.name,
     required this.email,
     required this.group,
     required this.exp,
-    required this.budget
+    required this.budget,
+    required this.records
   });
 
   factory KingdomUser.fromJson(Map<String, dynamic> json) {
@@ -21,7 +27,8 @@ class KingdomUser {
       email: json['email'] ?? '',
       group: KingdomUserGroup.fromString(json['group']),
       exp: KingdomUserExp.fromInt(json['exp']), 
-      budget: KingdomUserBudget.fromJson(json['budget'])
+      budget: KingdomUserBudget.fromJson(json['budget']),
+      records: KingdomUserTaskRecords.fromJson(json['records'])
     );
   }
 
@@ -31,7 +38,8 @@ class KingdomUser {
       email: email,
       group: KingdomUserGroup.unknown,
       exp: KingdomUserExp.fromInt(0),
-      budget: KingdomUserBudget.fromJson(null)
+      budget: KingdomUserBudget.fromJson(null),
+      records: KingdomUserTaskRecords.create()
     );
   }
 
@@ -41,7 +49,8 @@ class KingdomUser {
       'email': email,
       'group': group.name,
       'exp': exp.raw,
-      'budget': budget.toJson()
+      'budget': budget.toJson(),
+      'records': records.toJson()
     };
   }
 }
@@ -108,7 +117,11 @@ class KingdomUserExp {
 class KingdomUserBudget {
   int coin;
   int poop;
-  int get property => 0;
+  int get property {
+    final controller = Get.find<AnnounceController>();
+    final buyPrice = controller.announcement?.poopBuy ?? 0;
+    return coin + poop * buyPrice;
+  }
   String get propertyText => property.toRDisplayString();
   
   KingdomUserBudget._({ this.coin = 0, this.poop = 0 });
@@ -125,5 +138,41 @@ class KingdomUserBudget {
       'coin': coin,
       'poop': poop
     };
+  }
+}
+
+class KingdomUserTaskRecords {
+  final Map<KingdomTaskNames, List<DateTime>> record;
+
+  KingdomUserTaskRecords._({ required this.record });
+
+  factory KingdomUserTaskRecords.fromJson(Map<String, dynamic>? json) {
+    final r = <KingdomTaskNames, List<DateTime>>{};
+    for (var entry in kingdomTasks.entries) {
+       final taskRecords = json?[entry.key.name];
+       if (taskRecords != null && taskRecords is List<dynamic>) {
+         r.putIfAbsent(entry.key, () => taskRecords.map((e) => toDateTime(e)).whereType<DateTime>().toList());
+       } else {
+         r.putIfAbsent(entry.key, () => []);
+       }
+    }
+
+    return KingdomUserTaskRecords._(record: r);
+  }
+
+  factory KingdomUserTaskRecords.create() {
+    final r = <KingdomTaskNames, List<DateTime>>{};
+    for (var entry in kingdomTasks.entries) {
+      r.putIfAbsent(entry.key, () => []);
+    }
+    return KingdomUserTaskRecords._(record: r);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> result = {};
+    record.forEach((taskName, dateList) {
+      result[taskName.name] = dateList;
+    });
+    return result;
   }
 }
