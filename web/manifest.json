@@ -1,6 +1,6 @@
 {
-    "name": "rabbit_kingdom",
-    "short_name": "rabbit_kingdom",
+    "name": "兔兔王國",
+    "short_name": "兔兔王國",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
