@@ -139,6 +139,15 @@ class AuthController extends GetxController {
   Future<void> uploadFcmToken(String uid) async {
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
+      FirebaseMessaging
+        .onMessage
+        .listen((message) {
+          final notification = message.notification;
+          RSnackBar.show(
+            notification?.title ?? "收到通知",
+            notification?.body ?? "訊息遺失了QQ"
+          );
+      });
       await FirebaseFirestore.instance
           .collection(CollectionNames.fcm)
           .doc(uid)
