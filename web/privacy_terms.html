@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>隱私權政策 / 使用條款</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --primary-light: #FFB1CC;
+          --on-primary-light: #5C0011;
+          --surface-light: #FFF5F9;
+          --on-surface-light: #5E325E;
+          --secondary-light: #FFC878;
+
+          --primary-dark: #E1B7F2;
+          --on-primary-dark: #270033;
+          --surface-dark: #1D132A;
+          --on-surface-dark: #EFE3F7;
+          --secondary-dark: #F1BCA3;
+
+          --font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: var(--font-family);
+          background-color: var(--surface-light);
+          color: var(--on-surface-light);
+          transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark {
+          background-color: var(--surface-dark);
+          color: var(--on-surface-dark);
+        }
+
+        header {
+          padding: 1rem;
+          background-color: var(--primary-light);
+          color: var(--on-primary-light);
+          text-align: center;
+        }
+
+        body.dark header {
+          background-color: var(--primary-dark);
+          color: var(--on-primary-dark);
+        }
+
+        .container {
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 1.75rem;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          font-size: 1rem;
+          line-height: 1.6;
+          margin-bottom: 1rem;
+        }
+
+        .item-title {
+          font-weight: bold;
+          margin-top: 1rem;
+        }
+
+        #theme-toggle {
+          position: fixed;
+          bottom: 2rem;
+          right: 1.5rem;
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 2rem;
+          color: var(--on-surface-light);
+          transition: color 0.3s;
+        }
+
+        body.dark #theme-toggle {
+          color: var(--on-surface-dark);
+        }
+    </style>
+</head>
+<body>
+<button id="theme-toggle" title="切換主題">
+    <!-- 太陽 -->
+    <svg width="3rem" height="3rem" viewBox="0 0 24 24" fill="none"
+         xmlns="http://www.w3.org/2000/svg" id="sun" class="icon">
+        <path d="M12 4V2M12 22V20M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M2 12H4M20 12H22M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22M12 16A4 4 0 1 0 12 8a4 4 0 0 0 0 8z"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+    <!-- 月亮 -->
+    <svg width="3rem" height="3rem" viewBox="0 0 24 24" fill="none"
+         xmlns="http://www.w3.org/2000/svg" id="moon" class="icon">
+        <path d="M21 12.79A9 9 0 0 1 12.21 3 7 7 0 1 0 21 12.79z"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+</button>
+<header>
+    <h1>兔兔王國 - 隱私權政策 / 使用條款</h1>
+</header>
+<div class="container">
+    <h2>隱私權政策</h2>
+    <p>歡迎使用「兔兔王國」App，我們重視您的隱私，以下說明我們的隱私政策：</p>
+    <p class="item-title">1. 收集資訊</p>
+    <p>本 App 不會主動收集您的個人資料。登入功能使用 Firebase 提供的 Google 與郵件登入，登入資料由 Firebase 管理。</p>
+    <p class="item-title">2. 資料使用</p>
+    <p>我們不會用您的資料進行任何廣告或行銷用途。App 中的留言板功能會將您所輸入的留言存放於 Firebase Firestore。</p>
+    <p class="item-title">3. 第三方服務</p>
+    <p>本 App 使用 Firebase Firestore 來儲存留言板資料，並使用 Firebase Authentication 作為登入驗證。我們不使用 Firebase Analytics 或其他追蹤工具。</p>
+    <p class="item-title">4. 資料安全</p>
+    <p>我們會盡力保護您的資料安全，避免未經授權的存取、修改或洩漏。</p>
+    <p class="item-title">5. 隱私權政策更新</p>
+    <p>若有政策變更，會在此公告並提示使用者。</p>
+    <h2>聯絡方式</h2>
+    <p>如有隱私權相關疑問，歡迎聯絡我們：mausu2526@gmail.com</p>
+
+    <hr>
+
+    <h2>使用條款</h2>
+    <p>歡迎使用「兔兔王國」App，請您在使用本服務前詳閱以下條款：</p>
+    <p class="item-title">1. 服務內容</p>
+    <p>本 App 提供留言板功能，讓使用者能相互留言與交流。</p>
+    <p class="item-title">2. 用戶責任</p>
+    <p>您在留言板發表的內容應遵守相關法律規範，禁止發布任何違法、誹謗、暴力或侵犯他人權益的言論。</p>
+    <p class="item-title">3. 資料保護</p>
+    <p>留言內容會儲存在 Firebase Firestore，請妥善保護您的帳號資訊。</p>
+    <p class="item-title">4. 免責聲明</p>
+    <p>本 App 對使用者在留言板發布的內容不負擔任何法律責任，但保留刪除不當內容的權利。</p>
+    <p class="item-title">5. 條款變更</p>
+    <p>我們保留隨時修改本使用條款的權利，修改後會在 App 內公告。</p>
+</div>
+
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let dark;
+
+    function setTheme(isDark) {
+      document.body.classList.toggle('dark', isDark);
+      if (isDark) {
+        document.getElementById('sun').style.display = 'block';
+        document.getElementById('moon').style.display = 'none';
+      } else {
+        document.getElementById('sun').style.display = 'none';
+        document.getElementById('moon').style.display = 'block';
+      }
+      dark = isDark
+    }
+
+    toggleButton.addEventListener('click', () => {
+      setTheme(!dark);
+    });
+
+    // 初始根據系統偏好設定主題
+    setTheme(prefersDark);
+</script>
+</body>
+</html>
