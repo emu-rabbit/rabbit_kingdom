@@ -31,11 +31,13 @@ class AnnounceController extends GetxController {
         _announcementRef = latestDoc.reference;
 
         _announcement.value = KingdomAnnouncement.fromJson(latestDoc.data());
+        update();
 
         _documentListener?.cancel();
         _documentListener = latestDoc.reference.snapshots().listen((docSnapshot) {
           if (docSnapshot.exists) {
             _announcement.value = KingdomAnnouncement.fromJson(docSnapshot.data() ?? {});
+            update();
           }
         });
       }
