@@ -24,8 +24,6 @@ class NewestAnnouncePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
-
     return RLayoutWithHeader(
       "最新公告",
       child: GetBuilder<AnnounceController>(builder: (announceController) {
@@ -81,7 +79,7 @@ class NewestAnnouncePage extends StatelessWidget {
                       return RIconButton(
                         icon: isHearted ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
                         size: vmin(10),
-                        color: themeController.brightness == Brightness.light ? AppColors.onPrimary: AppColors.onSurface,
+                        color: AppColors.primary,
                         onPress: () async {
                           if (!isHearted) {
                             try {
