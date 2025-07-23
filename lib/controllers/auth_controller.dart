@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/helpers/collection_names.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/not_verified_page.dart';
 import 'package:rabbit_kingdom/pages/unknown_user_page.dart';
@@ -43,6 +46,7 @@ class AuthController extends GetxController {
           if (userController.user!.group == KingdomUserGroup.unknown) {
             Get.offAll(() => UnknownUserPage());
           } else {
+            await uploadFcmToken(user.uid);
             final announceController = Get.find<AnnounceController>();
             await announceController.initAnnounce();
             Get.offAll(() => HomePage());
@@ -128,6 +132,17 @@ class AuthController extends GetxController {
   Future<void> sendVerificationEmail() async {
     if (firebaseUser.value != null && !firebaseUser.value!.emailVerified) {
       await firebaseUser.value!.sendEmailVerification();
+    }
+  }
+
+// 要在登入後上傳 token
+  Future<void> uploadFcmToken(String uid) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      await FirebaseFirestore.instance
+          .collection(CollectionNames.fcm)
+          .doc(uid)
+          .set({'token': token});
     }
   }
 }
