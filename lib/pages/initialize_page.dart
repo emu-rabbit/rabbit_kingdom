@@ -77,7 +77,7 @@ class InitializePageController extends GetxController {
 
       setProgress(15);
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      FirebaseRemoteConfig.instance.setConfigSettings(
+      await FirebaseRemoteConfig.instance.setConfigSettings(
         RemoteConfigSettings(
           fetchTimeout: const Duration(seconds: 30),
           minimumFetchInterval: const Duration(minutes: 5)
