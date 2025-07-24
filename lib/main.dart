@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +24,11 @@ void main() async {
 
   // Initialize firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseMessaging.instance.requestPermission();
+  try {
+    await FirebaseMessaging.instance.requestPermission();
+  } catch(e) {
+    log("Message failed to request permission");
+  }
 
   // Put getx controllers
   Get.put(ThemeController());

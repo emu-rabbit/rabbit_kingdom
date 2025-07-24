@@ -138,21 +138,25 @@ class AuthController extends GetxController {
 
 // 要在登入後上傳 token
   Future<void> uploadFcmToken(String uid) async {
-    final token = await FirebaseMessaging.instance.getToken(vapidKey: 'BHFqe6POSJHaHNfqiSkX4h7TZNB439fGwRMvxTmi8MYNu2SQpya45Akoxn6gwP4GVFjGDiVBNQpaNxeH9oWzQYY');
-    if (token != null) {
-      FirebaseMessaging
-        .onMessage
-        .listen((message) {
+    try {
+      final token = await FirebaseMessaging.instance.getToken(vapidKey: 'BHFqe6POSJHaHNfqiSkX4h7TZNB439fGwRMvxTmi8MYNu2SQpya45Akoxn6gwP4GVFjGDiVBNQpaNxeH9oWzQYY');
+      if (token != null) {
+        FirebaseMessaging
+            .onMessage
+            .listen((message) {
           final notification = message.notification;
           RSnackBar.show(
-            notification?.title ?? "收到通知",
-            notification?.body ?? "訊息遺失了QQ"
+              notification?.title ?? "收到通知",
+              notification?.body ?? "訊息遺失了QQ"
           );
-      });
-      await FirebaseFirestore.instance
-          .collection(CollectionNames.fcm)
-          .doc(uid)
-          .set({'token': token});
+        });
+        await FirebaseFirestore.instance
+            .collection(CollectionNames.fcm)
+            .doc(uid)
+            .set({'token': token});
+      }
+    } catch (e) {
+      log("Failed to get & upload fcm token");
     }
   }
 }
