@@ -26,7 +26,7 @@ class KingdomUser {
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       group: KingdomUserGroup.fromString(json['group']),
-      exp: KingdomUserExp.fromInt(json['exp']), 
+      exp: KingdomUserExp.fromInt(json['exp']),
       budget: KingdomUserBudget.fromJson(json['budget']),
       records: KingdomUserTaskRecords.fromJson(json['records'])
     );
@@ -52,6 +52,34 @@ class KingdomUser {
       'budget': budget.toJson(),
       'records': records.toJson()
     };
+  }
+
+  Map<KingdomTaskNames, ComputedTaskData> get taskData {
+    final Map<KingdomTaskNames, ComputedTaskData> result = {};
+
+    final now = DateTime.now().toUtc().add(const Duration(hours: 8)); // 台灣時間
+    final todayStart = DateTime(now.year, now.month, now.day, 8); // 今天早上 8 點（台灣時間）
+
+    for (final entry in kingdomTasks.entries) {
+      final name = entry.key;
+      final task = entry.value;
+      final recordList = records.record[name] ?? [];
+
+      final completedToday = recordList.where((dt) {
+        final localTime = dt.toUtc().add(const Duration(hours: 8)); // 轉為台灣時間
+        return localTime.isAfter(todayStart);
+      }).length.clamp(0, task.limit);
+
+      result[name] = ComputedTaskData(
+        task.text,
+        completed: completedToday,
+        limit: task.limit,
+        coinReward: task.coinReward,
+        expReward: task.expReward,
+      );
+    }
+
+    return result;
   }
 }
 
@@ -175,4 +203,17 @@ class KingdomUserTaskRecords {
     });
     return result;
   }
+}
+
+class ComputedTaskData extends KingdomTask {
+  final int completed;
+  ComputedTaskData(
+    super.text,
+    {
+      required this.completed,
+      required super.limit,
+      required super.coinReward,
+      required super.expReward
+    }
+  );
 }
