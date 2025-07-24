@@ -10,6 +10,7 @@ import 'package:rabbit_kingdom/helpers/collection_names.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/not_verified_page.dart';
 import 'package:rabbit_kingdom/pages/unknown_user_page.dart';
+import 'package:rabbit_kingdom/services/notification_service.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'dart:developer';
@@ -47,7 +48,7 @@ class AuthController extends GetxController {
           if (userController.user!.group == KingdomUserGroup.unknown) {
             Get.offAll(() => UnknownUserPage());
           } else {
-            await uploadFcmToken(user.uid);
+            await NotificationService.initialize(user.uid);
             final announceController = Get.find<AnnounceController>();
             await announceController.initAnnounce();
             Get.offAll(() => HomePage());
@@ -133,30 +134,6 @@ class AuthController extends GetxController {
   Future<void> sendVerificationEmail() async {
     if (firebaseUser.value != null && !firebaseUser.value!.emailVerified) {
       await firebaseUser.value!.sendEmailVerification();
-    }
-  }
-
-// 要在登入後上傳 token
-  Future<void> uploadFcmToken(String uid) async {
-    try {
-      final token = await FirebaseMessaging.instance.getToken(vapidKey: 'BHFqe6POSJHaHNfqiSkX4h7TZNB439fGwRMvxTmi8MYNu2SQpya45Akoxn6gwP4GVFjGDiVBNQpaNxeH9oWzQYY');
-      if (token != null) {
-        FirebaseMessaging
-            .onMessage
-            .listen((message) {
-          final notification = message.notification;
-          RSnackBar.show(
-              notification?.title ?? "收到通知",
-              notification?.body ?? "訊息遺失了QQ"
-          );
-        });
-        await FirebaseFirestore.instance
-            .collection(CollectionNames.fcm)
-            .doc(uid)
-            .set({'token': token});
-      }
-    } catch (e) {
-      log("Failed to get & upload fcm token");
     }
   }
 }

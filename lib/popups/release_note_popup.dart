@@ -19,6 +19,12 @@ class ReleaseNotePopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<_ReleaseNote> notes = [
       _ReleaseNote(
+          title: "<2025/07/24>",
+          contents: [
+            "現在若拒絕權限就不會再被詢問了(兔兔大帝不想當恐怖情兔)"
+          ]
+      ),
+      _ReleaseNote(
         title: "<2025/07/23>",
         contents: [
           "新增工程紀錄系統",

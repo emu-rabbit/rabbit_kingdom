@@ -9,6 +9,7 @@ import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:rabbit_kingdom/services/notification_service.dart';
 import 'firebase_options.dart';
 
 import 'controllers/theme_controller.dart';
@@ -24,11 +25,7 @@ void main() async {
 
   // Initialize firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  try {
-    await FirebaseMessaging.instance.requestPermission();
-  } catch(e) {
-    log("Message failed to request permission");
-  }
+  await NotificationService.requestPermission();
 
   // Put getx controllers
   Get.put(ThemeController());
