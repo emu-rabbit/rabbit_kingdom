@@ -29,18 +29,18 @@ class KingdomAnnouncement {
     required this.comments,
   });
 
-  factory KingdomAnnouncement.fromJson(Map<String, dynamic> data) {
+  factory KingdomAnnouncement.fromJson(Map<String, dynamic>? data) {
     return KingdomAnnouncement._(
-      mood: data['mood'] ?? 0,
-      message: data['message'] ?? '',
-      sticker: AnnounceSticker.fromString(data['sticker']),
-      poopSell: data['poopSell'] ?? 0,
-      poopBuy: data['poopBuy'] ?? 0,
-      createAt: toDateTime(data['createAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-      hearts: (data['hearts'] as List<dynamic>? ?? [])
+      mood: data?['mood'] ?? 0,
+      message: data?['message'] ?? '',
+      sticker: AnnounceSticker.fromString(data?['sticker']),
+      poopSell: data?['poopSell'] ?? 0,
+      poopBuy: data?['poopBuy'] ?? 0,
+      createAt: toDateTime(data?['createAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      hearts: (data?['hearts'] as List<dynamic>? ?? [])
           .map((c) => AnnounceHeart.fromJson(c))
           .toList(),
-      comments: (data['comments'] as List<dynamic>? ?? [])
+      comments: (data?['comments'] as List<dynamic>? ?? [])
           .map((c) => AnnounceComment.fromJson(c))
           .toList(),
     );

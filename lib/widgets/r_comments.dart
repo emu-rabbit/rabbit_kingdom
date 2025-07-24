@@ -12,6 +12,7 @@ class RComments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (comments.isEmpty) return SizedBox.shrink();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Container(

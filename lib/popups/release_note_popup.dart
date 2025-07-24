@@ -21,7 +21,8 @@ class ReleaseNotePopup extends StatelessWidget {
       _ReleaseNote(
           title: "<2025/07/24>",
           contents: [
-            "現在若拒絕權限就不會再被詢問了(兔兔大帝不想當恐怖情兔)"
+            "現在若拒絕權限就不會再被詢問了(兔兔大帝不想當恐怖情兔)",
+            "現在可以查看歷史公告了"
           ]
       ),
       _ReleaseNote(

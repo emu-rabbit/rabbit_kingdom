@@ -8,10 +8,12 @@ import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/pages/announce_history_page.dart';
 import 'package:rabbit_kingdom/popups/publish_comment.dart';
 import 'package:rabbit_kingdom/widgets/r_announce_viewer.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_comment.dart';
+import 'package:rabbit_kingdom/widgets/r_comments.dart';
 import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
@@ -26,6 +28,12 @@ class NewestAnnouncePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return RLayoutWithHeader(
       "最新公告",
+      topRight: RIconButton(
+        icon: FontAwesomeIcons.clockRotateLeft,
+        onPress: (){
+          Get.to(() => AnnounceHistoryPage());
+        }
+      ),
       child: GetBuilder<AnnounceController>(builder: (announceController) {
         if (announceController.announcement != null) {
           return Column(
@@ -40,31 +48,7 @@ class NewestAnnouncePage extends StatelessWidget {
                     child: RText.titleLarge("目前沒留言，快搶頭香！"),
                   ):
                   SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceContainerLow.withAlpha(180),
-                          border: Border.all(color: AppColors.onSurface.withAlpha(50)),
-                          borderRadius: BorderRadius.all(Radius.circular(20))
-                        ),
-                        child: Column(
-                          children: [
-                            ...announceController.announcement!.comments.asMap().entries.map((entry) {
-                              return [
-                                RComment(entry.value),
-                                entry.key != announceController.announcement!.comments.length - 1 ?
-                                  SizedBox(
-                                    width: vw(100) - 60,
-                                    child: Divider(color: AppColors.onSurface.withAlpha(50),),
-                                  ) : SizedBox.shrink()
-                              ];
-                            }).expand((e) => e)
-                          ],
-                        ),
-                      ),
-                    ),
+                    child: RComments(comments: announceController.announcement!.comments),
                   )
               ),
               RSpace(),
