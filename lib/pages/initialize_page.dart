@@ -67,8 +67,8 @@ class InitializePageController extends GetxController {
   }
 
   @override
-  Future<void> onInit() async {
-    super.onInit();
+  Future<void> onReady() async {
+    super.onReady();
     try {
       setProgress(5);
       await SystemChrome.setPreferredOrientations([
@@ -77,13 +77,6 @@ class InitializePageController extends GetxController {
 
       setProgress(15);
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      await FirebaseRemoteConfig.instance.setConfigSettings(
-        RemoteConfigSettings(
-          fetchTimeout: const Duration(seconds: 30),
-          minimumFetchInterval: const Duration(minutes: 5)
-        )
-      );
-      await FirebaseRemoteConfig.instance.fetchAndActivate();
 
       setProgress(30);
       await VersionService.checkUpdate();

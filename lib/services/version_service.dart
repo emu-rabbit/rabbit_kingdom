@@ -33,6 +33,13 @@ class VersionService {
   
   static Future<List<dynamic>> _getLatestVersion() async {
     if (Platform.isAndroid) {
+      await FirebaseRemoteConfig.instance.setConfigSettings(
+          RemoteConfigSettings(
+              fetchTimeout: const Duration(seconds: 30),
+              minimumFetchInterval: const Duration(minutes: 5)
+          )
+      );
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
       final version = FirebaseRemoteConfig.instance.getString("latest_available_version_android");
       if (version.isEmpty) throw Exception("Cannot get latest version");
       return _parseVersion(version);
