@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/pages/initialize_page.dart';
+import 'package:rabbit_kingdom/pages/startup_gate.dart';
 
 import 'controllers/theme_controller.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         child: GetMaterialApp(
           title: '兔兔王國',
           themeMode: controller.themeMode.value,
-          home: const InitializePage(),
+          home: const StartupGate(),
         )
       );
     });

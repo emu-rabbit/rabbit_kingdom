@@ -26,33 +26,35 @@ class InitializePage extends StatelessWidget {
     final controller = Get.put(InitializePageController());
 
     return RLayout(
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              "lib/assets/images/sticker_happy.png",
-              width: mainImageSize(),
-              height: mainImageSize(),
-            ),
-            RSpace(),
-            RText.displaySmall("兔兔王國正在努力載入中..."),
-            RSpace(type: RSpaceType.large,),
-            Obx(() => SizedBox(
-              width: vw(80),
-              child: LinearProgressIndicator(
-                value: controller.progress.value / 100.0,
-                minHeight: 8,
-                backgroundColor: AppColors.onSurface.withAlpha(100),
-                color: AppColors.onSurface,
-                borderRadius: BorderRadius.all(Radius.circular(50)),
+      child: Obx(() =>
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                "lib/assets/images/sticker_happy.png",
+                width: mainImageSize(),
+                height: mainImageSize(),
               ),
-            )),
-            RSpace(),
-            Obx(() => RText.bodyMedium("${controller.progress.value}%")),
-          ],
+              RSpace(),
+              RText.displaySmall("兔兔王國正在努力載入中..."),
+              RSpace(type: RSpaceType.large,),
+              SizedBox(
+                width: vw(80),
+                child: LinearProgressIndicator(
+                  value: controller.progress.value / 100.0,
+                  minHeight: 8,
+                  backgroundColor: AppColors.onSurface.withAlpha(100),
+                  color: AppColors.onSurface,
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                ),
+              ),
+              RSpace(),
+              RText.bodyMedium("${controller.progress.value}%"),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }
