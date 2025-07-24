@@ -3,10 +3,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/extensions/date_time.dart';
+import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/models/kingdom_announcement.dart';
+import 'package:rabbit_kingdom/popups/heart_list_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_icon.dart';
+import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
@@ -60,7 +63,11 @@ class RAnnounceViewer extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          RIcon(FontAwesomeIcons.solidHeart, size: vw(3),),
+                          RIconButton(
+                            icon: FontAwesomeIcons.solidHeart,
+                            size: vw(3),
+                            onPress: () { Get.rPopup(HeartListPopup(hearts: announce.hearts)); },
+                          ),
                           RSpace(type: RSpaceType.small,),
                           GetBuilder<AnnounceController>(builder: (announceController){
                             return RText.labelSmall(announce.hearts.length.toString());
