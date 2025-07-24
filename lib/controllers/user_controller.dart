@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/widgets/r_task_compelete.dart';
 
 import '../helpers/collection_names.dart';
 import '../models/kingdom_user.dart';
 import '../values/consts.dart';
+import '../values/kingdom_tasks.dart';
 import '../values/prices.dart';
 
 class UserController extends GetxController {
@@ -80,7 +82,7 @@ class UserController extends GetxController {
     });
   }
 
-  /// ✏️ 修改名字（可收費）
+  /// 修改名字（可收費）
   Future<void> changeName(String newName, bool isFirstTime) async {
     final docRef = _userDocRef.value;
     if (docRef == null) {
@@ -98,5 +100,40 @@ class UserController extends GetxController {
     await docRef.update({
       'name': newName,
     });
+  }
+
+  Future<void> triggerTaskComplete(KingdomTaskNames name) async {
+    final user = this.user;
+    final docRef = _userDocRef.value;
+
+    if (user == null || docRef == null) return;
+
+    // 1. 取得任務資料
+    final taskData = user.taskData[name];
+    if (taskData == null) return;
+
+    if (taskData.completed >= taskData.limit) return;
+
+    // 2. 清理舊紀錄
+    final now = DateTime.now().toUtc().add(const Duration(hours: 8)); // 台灣時間
+    final todayStart = DateTime(now.year, now.month, now.day, 8); // 今日 8 點
+
+    final oldList = List<DateTime>.from(user.records.record[name] ?? []);
+    final newList = oldList
+      ..removeWhere((dt) => dt.toUtc().add(const Duration(hours: 8)).isBefore(todayStart))
+      ..add(DateTime.now()); // 使用 UTC 儲存
+
+    // 3. 計算新經驗值與兔兔幣
+    final newExp = user.exp.raw + taskData.expReward;
+    final newCoin = user.budget.coin + taskData.coinReward;
+
+    // 4. 一次更新 Firestore
+    await docRef.update({
+      'records.${name.name}': newList,
+      'exp': newExp,
+      'budget.coin': newCoin,
+    });
+
+    RTaskComplete.show(name);
   }
 }

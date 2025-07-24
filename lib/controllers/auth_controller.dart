@@ -11,6 +11,7 @@ import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/not_verified_page.dart';
 import 'package:rabbit_kingdom/pages/unknown_user_page.dart';
 import 'package:rabbit_kingdom/services/notification_service.dart';
+import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'dart:developer';
@@ -51,6 +52,7 @@ class AuthController extends GetxController {
             await NotificationService.initialize(user.uid);
             final announceController = Get.find<AnnounceController>();
             await announceController.initAnnounce();
+            await userController.triggerTaskComplete(KingdomTaskNames.login);
             Get.offAll(() => HomePage());
           }
         } else {

@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 import '../helpers/collection_names.dart';
 import '../models/kingdom_announcement.dart';
@@ -53,6 +56,9 @@ class AnnounceController extends GetxController {
 
     await _announcementRef!.update({
       'hearts': FieldValue.arrayUnion([heartJson]),
+    }).then((_) async {
+      final c = Get.find<UserController>();
+      await c.triggerTaskComplete(KingdomTaskNames.heart);
     }).then((_) {
       update();
     });
@@ -69,6 +75,9 @@ class AnnounceController extends GetxController {
     // 寫入 Firestore 的 comments 陣列
     await _announcementRef!.update({
       'comments': FieldValue.arrayUnion([commentJson]),
+    }).then((_) async {
+      final c = Get.find<UserController>();
+      await c.triggerTaskComplete(KingdomTaskNames.comment);
     }).then((_) {
       update();
     });
