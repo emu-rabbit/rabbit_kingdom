@@ -8,6 +8,7 @@ import 'controllers/theme_controller.dart';
 void main() async {
   // Ensure binding
   WidgetsFlutterBinding.ensureInitialized();
+  await Future.delayed(Duration(milliseconds: 150));
   Get.put(ThemeController());
   // Run app
   runApp(const MyApp());
