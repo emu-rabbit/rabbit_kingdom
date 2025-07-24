@@ -23,7 +23,9 @@ class ReleaseNotePopup extends StatelessWidget {
           contents: [
             "現在若拒絕權限就不會再被詢問了(兔兔大帝不想當恐怖情兔)",
             "可以查看誰按了愛心(但入口很難點)",
-            "可以查看歷史公告了"
+            "可以查看歷史公告了",
+            "啟動時有跑條頁了 (但現在他跑很快看不到)",
+            "現在兔兔公務員會主動來通知更新APP"
           ]
       ),
       _ReleaseNote(

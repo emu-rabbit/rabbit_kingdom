@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // ← 為了 LinearProgressIndicator
 import 'package:flutter/services.dart';
@@ -6,7 +7,9 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/services/version_service.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
@@ -66,27 +69,40 @@ class InitializePageController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
+    try {
+      setProgress(5);
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
 
-    setProgress(5);
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+      setProgress(15);
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      FirebaseRemoteConfig.instance.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 30),
+          minimumFetchInterval: const Duration(minutes: 5)
+        )
+      );
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
 
-    setProgress(15);
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      setProgress(30);
+      await VersionService.checkUpdate();
 
-    setProgress(30);
-    await NotificationService.requestPermission();
+      setProgress(40);
+      await NotificationService.requestPermission();
 
-    setProgress(50);
-    Get.put(UserController(), permanent: true);
+      setProgress(50);
+      Get.put(UserController(), permanent: true);
 
-    setProgress(70);
-    Get.put(AnnounceController(), permanent: true);
+      setProgress(70);
+      Get.put(AnnounceController(), permanent: true);
 
-    setProgress(90);
-    Get.put(AuthController(), permanent: true);
+      setProgress(90);
+      Get.put(AuthController(), permanent: true);
 
-    setProgress(100);
+      setProgress(100);
+    } catch (e) {
+      RSnackBar.error("王國加載失敗", e.toString());
+    }
   }
 }
