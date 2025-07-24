@@ -21,6 +21,7 @@ class ReleaseNotePopup extends StatelessWidget {
       _ReleaseNote(
           title: "<2025/07/24>",
           contents: [
+            "開放酒館、新增了任務系統",
             "現在若拒絕權限就不會再被詢問了(兔兔大帝不想當恐怖情兔)",
             "可以查看誰按了愛心(但入口很難點)",
             "可以查看歷史公告了",
