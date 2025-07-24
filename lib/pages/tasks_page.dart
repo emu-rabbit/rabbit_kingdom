@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
+import 'package:rabbit_kingdom/popups/task_info_popup.dart';
+import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 
@@ -14,6 +18,7 @@ class TasksPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return RLayoutWithHeader(
       "每日任務",
+      topRight: RIconButton(icon: FontAwesomeIcons.circleQuestion, onPress: (){ Get.rPopup(TaskQuestionPopup()); }),
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -33,7 +38,7 @@ class TasksPage extends StatelessWidget {
                         Opacity(
                           opacity: task.completed >= task.limit ? 0.5 : 1,
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                             decoration: BoxDecoration(
                                 color: AppColors.surfaceContainerHigh,
                                 border: Border.all(color: AppColors.onSurface, width: 2),
