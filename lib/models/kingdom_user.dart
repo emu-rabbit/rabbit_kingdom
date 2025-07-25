@@ -11,6 +11,7 @@ class KingdomUser {
   final KingdomUserExp exp;
   final KingdomUserBudget budget;
   final KingdomUserTaskRecords records;
+  final KingdomUserDrinks drinks;
 
   KingdomUser._({
     required this.name,
@@ -18,7 +19,8 @@ class KingdomUser {
     required this.group,
     required this.exp,
     required this.budget,
-    required this.records
+    required this.records,
+    required this.drinks
   });
 
   factory KingdomUser.fromJson(Map<String, dynamic> json) {
@@ -28,7 +30,8 @@ class KingdomUser {
       group: KingdomUserGroup.fromString(json['group']),
       exp: KingdomUserExp.fromInt(json['exp']),
       budget: KingdomUserBudget.fromJson(json['budget']),
-      records: KingdomUserTaskRecords.fromJson(json['records'])
+      records: KingdomUserTaskRecords.fromJson(json['records']),
+      drinks: KingdomUserDrinks.fromJson(json['drinks'])
     );
   }
 
@@ -39,7 +42,8 @@ class KingdomUser {
       group: KingdomUserGroup.unknown,
       exp: KingdomUserExp.fromInt(0),
       budget: KingdomUserBudget.fromJson(null),
-      records: KingdomUserTaskRecords.create()
+      records: KingdomUserTaskRecords.create(),
+      drinks: KingdomUserDrinks.create()
     );
   }
 
@@ -50,7 +54,8 @@ class KingdomUser {
       'group': group.name,
       'exp': exp.raw,
       'budget': budget.toJson(),
-      'records': records.toJson()
+      'records': records.toJson(),
+      'drinks': drinks.toJson()
     };
   }
 
@@ -227,4 +232,35 @@ class ComputedTaskData extends KingdomTask {
       required super.navigator
     }
   );
+}
+
+class KingdomUserDrinks {
+  final int count;
+  final DateTime lastAt;
+
+  KingdomUserDrinks._({
+    required this.count,
+    required this.lastAt
+  });
+
+  factory KingdomUserDrinks.fromJson(Map<String, dynamic>? json) {
+    return KingdomUserDrinks._(
+      count: json?['count'] ?? 0,
+      lastAt: toDateTime(json?['lastAt']) ?? DateTime.fromMillisecondsSinceEpoch(0)
+    );
+  }
+
+  factory KingdomUserDrinks.create() {
+    return KingdomUserDrinks._(
+      count: 0,
+      lastAt: DateTime.fromMillisecondsSinceEpoch(0)
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'count': count,
+      'lastAt': lastAt
+    };
+  }
 }
