@@ -11,6 +11,7 @@ import '../values/prices.dart';
 
 class UserController extends GetxController {
   final _user = Rxn<KingdomUser>();
+  Rxn<KingdomUser> get userRx => _user;
   KingdomUser? get user => _user.value;
 
   final _userDocRef = Rxn<DocumentReference<Map<String, dynamic>>>();

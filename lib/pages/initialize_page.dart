@@ -85,22 +85,16 @@ class InitializePageController extends GetxController {
       setProgress(10);
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-      setProgress(20);
+      setProgress(30);
       await VersionService.checkUpdate();
 
-      setProgress(30);
+      setProgress(50);
       if (isAdSupported()) {
         await MobileAds.instance.initialize();
       }
 
-      setProgress(40);
-      await NotificationService.requestPermission();
-
-      setProgress(50);
-      Get.put(UserController(), permanent: true);
-
       setProgress(70);
-      Get.put(AnnounceController(), permanent: true);
+      await NotificationService.requestPermission();
 
       setProgress(90);
       Get.put(AuthController(), permanent: true);

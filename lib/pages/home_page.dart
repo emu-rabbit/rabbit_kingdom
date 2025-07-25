@@ -13,6 +13,7 @@ import 'package:rabbit_kingdom/pages/building_tavern_page.dart';
 import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
 import 'package:rabbit_kingdom/popups/budget_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_ad_banner.dart';
+import 'package:rabbit_kingdom/widgets/r_blurred_overlay.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 
 class HomePage extends StatelessWidget {
