@@ -75,6 +75,7 @@ class UserController extends GetxController {
       _userListener!.cancel();
       _userListener = null;
     }
+    update();
   }
 
   /// 🪙 扣金幣
