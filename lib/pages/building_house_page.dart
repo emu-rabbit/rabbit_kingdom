@@ -66,7 +66,7 @@ class BuildingHousePage extends StatelessWidget {
               "一台閃亮亮的新電腦",
               [
                 RButtonData(
-                    text: "調整電腦通知設定",
+                    text: "調整通知設定",
                     onPress: (){
                       if (kIsWeb) {
                         Get.rPopup(WebNotificationPopup());
