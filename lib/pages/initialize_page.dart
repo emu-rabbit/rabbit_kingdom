@@ -89,9 +89,7 @@ class InitializePageController extends GetxController {
       await VersionService.checkUpdate();
 
       setProgress(30);
-      print("????l");
       if (isAdSupported()) {
-        print("????");
         await MobileAds.instance.initialize();
       }
 

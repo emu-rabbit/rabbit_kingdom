@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +24,7 @@ class NotificationService {
 
       // 只有在尚未決定時，才觸發請求 UI
       if (status == AuthorizationStatus.notDetermined) {
-        final result = await FirebaseMessaging.instance.requestPermission();
+        final result = await safeRequestPermission();
         status = result.authorizationStatus;
       }
 
@@ -37,6 +40,22 @@ class NotificationService {
     } catch (e) {
       debugPrint("🔕 通知權限處理失敗：$e");
       // 默默失敗，不影響主功能
+    }
+  }
+
+
+  static Future<NotificationSettings> safeRequestPermission() async {
+    if (kIsWeb) {
+      try {
+        return await FirebaseMessaging.instance
+            .requestPermission()
+            .timeout(const Duration(seconds: 6));
+      } catch (e) {
+        log("🔕 無法請求通知權限（可能是沒有手勢）: $e");
+        rethrow;
+      }
+    } else {
+      return await FirebaseMessaging.instance.requestPermission();
     }
   }
 
