@@ -21,6 +21,7 @@ class ReleaseNotePopup extends StatelessWidget {
       _ReleaseNote(
           title: "<2025/07/25>",
           contents: [
+            "新增廣告和相關任務 (非網頁平台限定)",
             "任務頁的任務現在可以點擊了",
             "修正了任務沒有在台灣時間早上八點正常刷新的錯誤"
           ]
