@@ -9,6 +9,7 @@ import 'package:rabbit_kingdom/pages/building_house_page.dart';
 import 'package:rabbit_kingdom/pages/building_tavern_page.dart';
 import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
 import 'package:rabbit_kingdom/popups/budget_popup.dart';
+import 'package:rabbit_kingdom/widgets/r_ad_banner.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 
 class HomePage extends StatelessWidget {
@@ -24,6 +25,10 @@ class HomePage extends StatelessWidget {
         Align(
           alignment: Alignment.topLeft,
           child: SafeArea(child: _Header()),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SafeArea(child: _AdBanner()),
         )
       ],
     );
@@ -277,5 +282,18 @@ class _KingdomViewBuildingState extends State<_KingdomViewBuilding>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+}
+
+class _AdBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RAdBanner()
+      ],
+    );
   }
 }

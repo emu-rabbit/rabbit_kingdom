@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // ← 為了 LinearProgressIndicator
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
@@ -77,11 +78,14 @@ class InitializePageController extends GetxController {
         DeviceOrientation.portraitUp,
       ]);
 
-      setProgress(15);
+      setProgress(10);
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-      setProgress(30);
+      setProgress(20);
       await VersionService.checkUpdate();
+
+      setProgress(30);
+      await MobileAds.instance.initialize();
 
       setProgress(40);
       await NotificationService.requestPermission();
