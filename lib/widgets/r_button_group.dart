@@ -6,7 +6,7 @@ import 'package:rabbit_kingdom/widgets/r_text.dart';
 
 class RButtonGroup extends StatelessWidget {
   final String title;
-  final List<RButtonData> buttons;
+  final List<RButtonData?> buttons;
   const RButtonGroup(this.title, this.buttons, {super.key});
 
   @override
@@ -21,7 +21,7 @@ class RButtonGroup extends StatelessWidget {
             RText.titleSmall(title): SizedBox.shrink(),
           title.isNotEmpty ?
             RSpace(): SizedBox.shrink(),
-          ...buttons.map((data) {
+          ...buttons.whereType<RButtonData>().map((data) {
             child(Color color) {
               return RText.bodyLarge(data.text, textAlign: TextAlign.center, color: color,);
             }
