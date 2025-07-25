@@ -1,7 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/extensions/get_interface.dart';
+import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/pages/tasks_page.dart';
+import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
+import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_popup.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 
 import '../helpers/screen.dart';
 import '../widgets/r_layout_with_header.dart';
@@ -33,6 +40,45 @@ class BuildingTavernPage extends StatelessWidget {
                 "牆上貼著密密麻麻的紙片",
                 [
                   RButtonData(text: "查看任務區", onPress: (){ Get.to(() => TasksPage()); })
+                ]
+              ),
+              RSpace(type: RSpaceType.large,),
+              RButtonGroup(
+                '吧檯後面的酒保微笑地看著你',
+                [
+                  RButtonData(
+                    child: (color) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RText.bodyLarge("來一杯吧 (", color: color,),
+                          Image.asset(
+                            "lib/assets/images/rabbit_coin.png",
+                            width: vw(6),
+                            height: vw(6),
+                          ),
+                          RText.bodyLarge(": ${Prices.drink})", color: color,),
+                        ],
+                      );
+                    },
+                    onPress: () async {
+                      try {
+                        RLoading.start();
+                        final c = Get.find<UserController>();
+                        await c.drink();
+                        Get.rPopup(
+                          RPopup(
+                            child: RText.titleMedium("你覺得有點暈...", color: AppColors.onSecondary,)
+                          )
+                        );
+                      } catch (e) {
+                        RSnackBar.error("喝不到酒QQ", e.toString());
+                      } finally {
+                        RLoading.stop();
+                      }
+                    }
+                  )
                 ]
               )
             ],

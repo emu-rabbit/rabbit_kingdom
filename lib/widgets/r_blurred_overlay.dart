@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
+import 'package:rabbit_kingdom/values/consts.dart';
 
 import '../controllers/user_controller.dart';
 
@@ -85,7 +86,7 @@ class _RBlurredOverlayState extends State<RBlurredOverlay>
     double maxBlur = (drinks.count * 4).clamp(0, 25).toDouble();
     double minBlur = (maxBlur * 0.4).clamp(0, maxBlur);
 
-    double decayFactor = (1 - (diffMinutes / 90)).clamp(0.0, 1.0);
+    double decayFactor = (1 - (diffMinutes / Consts.drinkFullyDecay.inMinutes)).clamp(0.0, 1.0);
 
     maxBlur = maxBlur * decayFactor;
     minBlur = minBlur * decayFactor;

@@ -22,8 +22,13 @@ class RButtonGroup extends StatelessWidget {
           title.isNotEmpty ?
             RSpace(): SizedBox.shrink(),
           ...buttons.whereType<RButtonData>().map((data) {
-            child(Color color) {
-              return RText.bodyLarge(data.text, textAlign: TextAlign.center, color: color,);
+            Widget Function(Color) child;
+            if (data.child != null) {
+              child = data.child!;
+            } else {
+              child = (Color color) {
+                return RText.bodyLarge(data.text ?? "", textAlign: TextAlign.center, color: color,);
+              };
             }
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -46,9 +51,10 @@ class RButtonGroup extends StatelessWidget {
 }
 
 class RButtonData {
-  final String text;
+  final String? text;
+  final Widget Function(Color)? child;
   final RButtonType type;
   final Function() onPress;
 
-  RButtonData({ required this.text, this.type = RButtonType.primary, required this.onPress });
+  RButtonData({ this.text, this.child, this.type = RButtonType.primary, required this.onPress });
 }
