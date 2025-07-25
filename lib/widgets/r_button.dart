@@ -161,7 +161,15 @@ class _RButtonState extends State<RButton> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.isDisabled ? null : widget.onPressed,
+      onTap: () async {
+        if (!widget.isDisabled) {
+          if (widget.onPressed != null) {
+            widget.onPressed!();
+          }
+          await _animationController.forward();
+          _animationController.reverse();
+        }
+      },
       onTapDown: _onTapDown,
       onTapUp: _onTapUp,
       onTapCancel: _onTapCancel,
