@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -15,7 +17,7 @@ class UserController extends GetxController {
   KingdomUser? get user => _user.value;
 
   final _userDocRef = Rxn<DocumentReference<Map<String, dynamic>>>();
-  Stream<DocumentSnapshot<Map<String, dynamic>>>? _userStream;
+  StreamSubscription<DocumentSnapshot>? _userListener;
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
@@ -53,14 +55,26 @@ class UserController extends GetxController {
     }
 
     // 監聽 Firestore
-    _userStream = docRef.snapshots();
-    _userStream!.listen((snapshot) {
+    _userListener = docRef.snapshots().listen((snapshot) {
       if (snapshot.exists && snapshot.data() != null) {
         final newUser = KingdomUser.fromJson(snapshot.data()!);
         _user.value = newUser;
         update();
       }
     });
+  }
+
+  void logout() {
+    if (_user.value != null) {
+      _user.value = null;
+    }
+    if (_userDocRef.value != null) {
+      _userDocRef.value = null;
+    }
+    if (_userListener != null) {
+      _userListener!.cancel();
+      _userListener = null;
+    }
   }
 
   /// 🪙 扣金幣

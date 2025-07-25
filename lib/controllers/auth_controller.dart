@@ -131,6 +131,8 @@ class AuthController extends GetxController {
     // 也幫忙 signOut GoogleSignIn，避免殘留
     await _auth.signOut();
     await _googleSignIn.signOut();
+    final c = Get.find<UserController>();
+    c.logout();
   }
 
   Future<void> sendVerificationEmail() async {
