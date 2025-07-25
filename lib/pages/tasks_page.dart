@@ -18,7 +18,7 @@ class TasksPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return RLayoutWithHeader(
       "每日任務",
-      topRight: RIconButton(icon: FontAwesomeIcons.circleQuestion, onPress: (){ Get.rPopup(TaskQuestionPopup()); }),
+      // topRight: RIconButton(icon: FontAwesomeIcons.circleQuestion, onPress: (){ Get.rPopup(TaskQuestionPopup()); }),
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -34,32 +34,39 @@ class TasksPage extends StatelessWidget {
                     .entries
                     .map((entry) {
                       final task = entry.value;
+                      final isComplete = task.completed >= task.limit;
                       return [
-                        Opacity(
-                          opacity: task.completed >= task.limit ? 0.5 : 1,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                            decoration: BoxDecoration(
-                                color: AppColors.surfaceContainerHigh,
-                                border: Border.all(color: AppColors.onSurface, width: 2),
-                                borderRadius: BorderRadius.all(Radius.circular(20))
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    RText.displaySmall(task.text),
-                                    RText.titleSmall("${task.completed} / ${task.limit}")
-                                  ],
-                                ),
-                                RSpace(),
-                                RText.bodySmall("獎勵：經驗值（${task.expReward}）、兔兔幣（${task.coinReward}）")
-                              ],
+                        GestureDetector(
+                          onTap: (){
+                            if (isComplete) return;
+                            task.navigator();
+                          },
+                          child: Opacity(
+                            opacity: isComplete ? 0.5 : 1,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                              decoration: BoxDecoration(
+                                  color: AppColors.surfaceContainerHigh,
+                                  border: Border.all(color: AppColors.onSurface, width: 2),
+                                  borderRadius: BorderRadius.all(Radius.circular(20))
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      RText.displaySmall(task.text),
+                                      RText.titleSmall("${task.completed} / ${task.limit}")
+                                    ],
+                                  ),
+                                  RSpace(),
+                                  RText.bodySmall("獎勵：經驗值（${task.expReward}）、兔兔幣（${task.coinReward}）")
+                                ],
+                              ),
                             ),
                           ),
                         ),

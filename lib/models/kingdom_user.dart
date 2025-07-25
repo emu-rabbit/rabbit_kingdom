@@ -85,6 +85,7 @@ class KingdomUser {
         limit: task.limit,
         coinReward: task.coinReward,
         expReward: task.expReward,
+        navigator: task.navigator
       );
     }
 
@@ -222,7 +223,8 @@ class ComputedTaskData extends KingdomTask {
       required this.completed,
       required super.limit,
       required super.coinReward,
-      required super.expReward
+      required super.expReward,
+      required super.navigator
     }
   );
 }
