@@ -48,6 +48,10 @@ class FaqPage extends StatelessWidget {
         title: "經驗值是？",
         content: "經驗值主要靠任務獲得，經驗值越高，在許願池許願時取得較好的獎勵機率會越高唷！"
       ),
+      (
+        title: "酒可以一直喝嗎？",
+        content: "只要有錢，當然可以一直喝囉，但提醒您不要過量飲酒唷！"
+      )
     ];
     return RLayoutWithHeader(
       "",
