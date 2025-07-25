@@ -168,5 +168,6 @@ class UserController extends GetxController {
         'lastAt': now,
       }
     });
+    await triggerTaskComplete(KingdomTaskNames.drink);
   }
 }

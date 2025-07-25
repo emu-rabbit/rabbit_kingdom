@@ -3,7 +3,7 @@ import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/pages/newest_announce_page.dart';
 
 enum KingdomTaskNames {
-  login, heart, comment, ad
+  login, heart, comment, drink, ad
 }
 
 class KingdomTask {
@@ -41,6 +41,13 @@ Map<KingdomTaskNames, KingdomTask> buildKingdomTasks() {
       expReward: 200,
       navigator: () => Get.to(() => NewestAnnouncePage()),
     ),
+    KingdomTaskNames.drink: KingdomTask(
+      "喝一杯酒",
+      limit: 1,
+      coinReward: 100,
+      expReward: 50,
+      navigator: () => Get.back()
+    )
   };
 
   if (isAdSupported()) {
