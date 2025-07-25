@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
+import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/pages/building_house_page.dart';
@@ -288,12 +291,12 @@ class _KingdomViewBuildingState extends State<_KingdomViewBuilding>
 class _AdBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return isAdSupported() ? Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RAdBanner()
       ],
-    );
+    ) : SizedBox.shrink();
   }
 }

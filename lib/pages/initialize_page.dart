@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
+import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/services/version_service.dart';
@@ -85,7 +89,11 @@ class InitializePageController extends GetxController {
       await VersionService.checkUpdate();
 
       setProgress(30);
-      await MobileAds.instance.initialize();
+      print("????l");
+      if (isAdSupported()) {
+        print("????");
+        await MobileAds.instance.initialize();
+      }
 
       setProgress(40);
       await NotificationService.requestPermission();
