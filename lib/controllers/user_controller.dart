@@ -108,20 +108,29 @@ class UserController extends GetxController {
 
     if (user == null || docRef == null) return;
 
-    // 1. 取得任務資料
+    // 1. 取得任務資料 (這裡的 taskData.completed 會是根據 get taskData 的新邏輯計算出來的)
     final taskData = user.taskData[name];
     if (taskData == null) return;
 
+    // 檢查是否已達上限 (此檢查現在會基於 get taskData 的正確計算)
     if (taskData.completed >= taskData.limit) return;
 
-    // 2. 清理舊紀錄
-    final now = DateTime.now().toUtc().add(const Duration(hours: 8)); // 台灣時間
-    final todayStart = DateTime(now.year, now.month, now.day, 8); // 今日 8 點
+    // 2. 清理舊紀錄 - 調整清理的起始點
+    final nowTaiwanTime = DateTime.now().toUtc().add(const Duration(hours: 8)); // 當前台灣時間
+
+    // 計算「今天的有效起始時間」，也就是最近的早上8點
+    // 這個邏輯必須與 get taskData 中的 todayEffectiveStart 完全一致
+    final DateTime todayEffectiveStartForCleanup;
+    if (nowTaiwanTime.hour < 8) {
+      todayEffectiveStartForCleanup = DateTime(nowTaiwanTime.year, nowTaiwanTime.month, nowTaiwanTime.day - 1, 8); // 前一天早上8點
+    } else {
+      todayEffectiveStartForCleanup = DateTime(nowTaiwanTime.year, nowTaiwanTime.month, nowTaiwanTime.day, 8); // 當天早上8點
+    }
 
     final oldList = List<DateTime>.from(user.records.record[name] ?? []);
     final newList = oldList
-      ..removeWhere((dt) => dt.toUtc().add(const Duration(hours: 8)).isBefore(todayStart))
-      ..add(DateTime.now()); // 使用 UTC 儲存
+      ..removeWhere((dt) => dt.toUtc().add(const Duration(hours: 8)).isBefore(todayEffectiveStartForCleanup))
+      ..add(DateTime.now()); // 使用 UTC 儲存新的完成紀錄
 
     // 3. 計算新經驗值與兔兔幣
     final newExp = user.exp.raw + taskData.expReward;

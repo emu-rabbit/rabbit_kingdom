@@ -58,7 +58,16 @@ class KingdomUser {
     final Map<KingdomTaskNames, ComputedTaskData> result = {};
 
     final now = DateTime.now().toUtc().add(const Duration(hours: 8)); // 台灣時間
-    final todayStart = DateTime(now.year, now.month, now.day, 8); // 今天早上 8 點（台灣時間）
+
+    // 計算「今天的起始時間」，也就是最近的早上8點
+    // 如果現在時間在當天早上8點之前，則起始時間是前一天的早上8點
+    // 否則，起始時間是當天早上8點
+    final DateTime todayEffectiveStart;
+    if (now.hour < 8) {
+      todayEffectiveStart = DateTime(now.year, now.month, now.day - 1, 8); // 前一天早上8點
+    } else {
+      todayEffectiveStart = DateTime(now.year, now.month, now.day, 8); // 當天早上8點
+    }
 
     for (final entry in kingdomTasks.entries) {
       final name = entry.key;
@@ -67,7 +76,7 @@ class KingdomUser {
 
       final completedToday = recordList.where((dt) {
         final localTime = dt.toUtc().add(const Duration(hours: 8)); // 轉為台灣時間
-        return localTime.isAfter(todayStart);
+        return localTime.isAfter(todayEffectiveStart); // 判斷是否在有效起始時間之後
       }).length.clamp(0, task.limit);
 
       result[name] = ComputedTaskData(
