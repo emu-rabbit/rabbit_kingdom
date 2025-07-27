@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -92,6 +93,7 @@ class InitializePageController extends GetxController {
         androidProvider: !kDebugMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
         webProvider: ReCaptchaV3Provider(!kDebugMode ? '6Ld8NJArAAAAAKuha0NZH9GKA83OEjcEWcC2QiUj': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI')
       );
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
       setProgress(30);
       await VersionService.checkUpdate();

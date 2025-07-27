@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -36,6 +37,9 @@ class AuthController extends GetxController {
 
   void _setInitialScreen(User? user) async {
     log("User: ${user?.email}, verified: ${user?.emailVerified}", name: "AuthController");
+    if (user != null) {
+      FirebaseCrashlytics.instance.setUserIdentifier(user.uid);
+    }
     if (user == null) {
       Get.offAll(() => LoginPage());
     } else if (!user.emailVerified) {
