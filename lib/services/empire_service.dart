@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
+import 'package:rabbit_kingdom/models/poop_prices.dart';
 
 import '../helpers/collection_names.dart';
 import '../models/kingdom_announcement.dart';
@@ -55,6 +56,16 @@ class EmpireService {
     await FirebaseFirestore.instance
         .collection(CollectionNames.announce)
         .add(data);
+  }
+
+  static Future<void> publishNewPrices(PoopPrices prices) async {
+    final userController = Get.find<UserController>();
+    if (userController.user?.group != KingdomUserGroup.empire) return;
+
+    final data = prices.toJson();
+    await FirebaseFirestore.instance
+      .collection(CollectionNames.prices)
+      .add(data);
   }
 }
 
