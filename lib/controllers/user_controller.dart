@@ -64,7 +64,7 @@ class UserController extends GetxController {
     });
   }
 
-  void logout() {
+  void onLogout() {
     if (_user.value != null) {
       _user.value = null;
     }
@@ -76,6 +76,12 @@ class UserController extends GetxController {
       _userListener = null;
     }
     update();
+  }
+
+  @override
+  void onClose() {
+    onLogout();
+    super.onClose();
   }
 
   /// 🪙 扣金幣

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
+import 'package:rabbit_kingdom/controllers/records_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/collection_names.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
@@ -59,6 +60,8 @@ class AuthController extends GetxController {
             await announceController.initAnnounce();
             final pricesController = Get.find<PricesController>();
             await pricesController.initPrices();
+            final recordsController = Get.find<RecordsController>();
+            await recordsController.initRecords(firebaseUser.value!);
             await userController.triggerTaskComplete(KingdomTaskNames.login);
             Get.offAll(() => HomePage());
           }
@@ -136,10 +139,16 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     // 也幫忙 signOut GoogleSignIn，避免殘留
+    final uc = Get.find<UserController>();
+    uc.onLogout();
+    final ac = Get.find<AnnounceController>();
+    ac.onLogout();
+    final pc = Get.find<PricesController>();
+    pc.onLogout();
+    final rc = Get.find<RecordsController>();
+    rc.onLogout();
     await _auth.signOut();
     await _googleSignIn.signOut();
-    final c = Get.find<UserController>();
-    c.logout();
   }
 
   Future<void> sendVerificationEmail() async {

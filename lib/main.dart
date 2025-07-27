@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
+import 'package:rabbit_kingdom/controllers/records_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/pages/startup_gate.dart';
 import 'package:rabbit_kingdom/widgets/r_blurred_overlay.dart';
@@ -19,6 +20,7 @@ void main() async {
   Get.put(UserController());
   Get.put(AnnounceController());
   Get.put(PricesController());
+  Get.put(RecordsController());
 
   // Run app
   runApp(const MyApp());

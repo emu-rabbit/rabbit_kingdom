@@ -83,10 +83,17 @@ class AnnounceController extends GetxController {
     });
   }
 
-  @override
-  void onClose() {
+  void onLogout() {
     _collectionListener?.cancel();
     _documentListener?.cancel();
+    _collectionListener = null;
+    _documentListener = null;
+    update();
+  }
+
+  @override
+  void onClose() {
+    onLogout();
     super.onClose();
   }
 }
