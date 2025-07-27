@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/records_controller.dart';
+import 'package:rabbit_kingdom/models/kingdom_records.dart';
 import 'package:rabbit_kingdom/widgets/r_task_compelete.dart';
 
 import '../helpers/collection_names.dart';
@@ -84,8 +86,8 @@ class UserController extends GetxController {
     super.onClose();
   }
 
-  /// 🪙 扣金幣
-  Future<void> deductCoin(int amount) async {
+  /// 🪙 直接設定金幣
+  Future<void> setCoin(int newCoin) async {
     final currentUser = _user.value;
     final docRef = _userDocRef.value;
 
@@ -93,16 +95,78 @@ class UserController extends GetxController {
       throw Exception('尚未載入使用者資訊');
     }
 
-    final currentCoin = currentUser.budget.coin;
+    await docRef.update({
+      'budget.coin': newCoin,
+    });
 
-    if (currentCoin < amount) {
-      throw Exception('金幣不足，無法扣除 $amount');
+    final recordsController = Get.find<RecordsController>();
+    await recordsController.setRecord(
+      name: RecordName.coin,
+      round: AllRound(),
+      value: newCoin.toDouble(),
+    );
+  }
+
+  /// 🪙 增加（或扣除）金幣
+  Future<void> increaseCoin(int amount) async {
+    final currentUser = _user.value;
+    if (currentUser == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+
+    final currentCoin = currentUser.budget.coin;
+    final newCoin = currentCoin + amount;
+
+    if (newCoin < 0) {
+      throw Exception('金幣不足，無法扣除 ${amount.abs()}');
+    }
+
+    await setCoin(newCoin);
+  }
+
+  /// 🪙 扣金幣
+  Future<void> deductCoin(int amount) async {
+    await increaseCoin(-amount);
+  }
+
+  /// 🪙 直接設定經驗值
+  Future<void> setExp(int newExp) async {
+    final currentUser = _user.value;
+    final docRef = _userDocRef.value;
+
+    if (currentUser == null || docRef == null) {
+      throw Exception('尚未載入使用者資訊');
     }
 
     await docRef.update({
-      'budget.coin': FieldValue.increment(-amount),
+      'budget.exp': newExp,
     });
+
+    final recordsController = Get.find<RecordsController>();
+    await recordsController.setRecord(
+      name: RecordName.exp,
+      round: AllRound(),
+      value: newExp.toDouble(),
+    );
   }
+
+  /// 🪙 增加（或扣除）經驗值
+  Future<void> increaseExp(int amount) async {
+    final currentUser = _user.value;
+    if (currentUser == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+
+    final currentCoin = currentUser.budget.coin;
+    int newExp = currentCoin + amount;
+
+    if (newExp < 0) {
+      newExp = 0;
+    }
+
+    await setExp(newExp);
+  }
+
 
   /// 修改名字（可收費）
   Future<void> changeName(String newName, bool isFirstTime) async {
@@ -154,16 +218,10 @@ class UserController extends GetxController {
       ..removeWhere((dt) => dt.toUtc().add(const Duration(hours: 8)).isBefore(todayEffectiveStartForCleanup))
       ..add(DateTime.now()); // 使用 UTC 儲存新的完成紀錄
 
-    // 3. 計算新經驗值與兔兔幣
-    final newExp = user.exp.raw + taskData.expReward;
-    final newCoin = user.budget.coin + taskData.coinReward;
-
-    // 4. 一次更新 Firestore
-    await docRef.update({
-      'records.${name.name}': newList,
-      'exp': newExp,
-      'budget.coin': newCoin,
-    });
+    // 3. 更新 Firestore
+    await docRef.update({'records.${name.name}': newList});
+    await increaseExp(taskData.expReward);
+    await increaseCoin(taskData.coinReward);
 
     RTaskComplete.show(name);
   }
@@ -190,5 +248,8 @@ class UserController extends GetxController {
       }
     });
     await triggerTaskComplete(KingdomTaskNames.drink);
+
+    final recordsController = Get.find<RecordsController>();
+    await recordsController.increaseRecord(name: RecordName.drink, round: MonthlyRound.now());
   }
 }

@@ -25,7 +25,7 @@ KingdomRecords kingdomRecordsFromJson(Map<String, dynamic>? json) {
 }
 
 enum RecordName {
-  coin, poop, drink
+  coin, poop, exp, drink
 }
 abstract class RecordRound {
   String toKey();
@@ -49,6 +49,12 @@ class AllRound implements RecordRound {
   String toKey() {
     return 'all';
   }
+
+  @override
+  bool operator ==(Object other) => other is AllRound;
+
+  @override
+  int get hashCode => toKey().hashCode;
 }
 class MonthlyRound implements RecordRound {
   final int year;
@@ -89,16 +95,31 @@ class MonthlyRound implements RecordRound {
 
     return MonthlyRound._(year: year, month: month);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is MonthlyRound &&
+          other.year == year &&
+          other.month == month;
+
+  @override
+  int get hashCode => Object.hash(year, month);
 }
 class UnknownRound implements RecordRound {
   @override
   String toKey() {
     return 'unknown';
   }
+
+  @override
+  bool operator ==(Object other) => other is UnknownRound;
+
+  @override
+  int get hashCode => toKey().hashCode;
 }
 
 class RankRecord {
-  final int value;
+  final double value;
   RankRecord._({ required this.value });
 
   factory RankRecord.fromJson(Map<String, dynamic>? json) {
