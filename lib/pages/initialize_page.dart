@@ -91,7 +91,7 @@ class InitializePageController extends GetxController {
       setProgress(20);
       await FirebaseAppCheck.instance.activate(
         androidProvider: !kDebugMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
-        webProvider: ReCaptchaV3Provider(!kDebugMode ? '6Ld8NJArAAAAAKuha0NZH9GKA83OEjcEWcC2QiUj': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI')
+        webProvider: ReCaptchaV3Provider('6Ld8NJArAAAAAKuha0NZH9GKA83OEjcEWcC2QiUj')
       );
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 

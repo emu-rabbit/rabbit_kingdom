@@ -29,8 +29,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -74,12 +73,23 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDsSyKM1BUDjMW06dYSinVoqvsPCZ57qB4',
-    appId: '1:689030757641:ios:e2ba9737b8d26ca7a4e7d8',
+    appId: '1:689030757641:ios:d2c05b52aea22dafa4e7d8',
     messagingSenderId: '689030757641',
     projectId: 'rabbit-kingdom-2759a',
     storageBucket: 'rabbit-kingdom-2759a.firebasestorage.app',
     androidClientId: '689030757641-7s50b8fabhjsh1d9t2ivqedsn070kks0.apps.googleusercontent.com',
-    iosClientId: '689030757641-glbl9iij6tb25jqd5i2pvi9tukrna6gr.apps.googleusercontent.com',
-    iosBundleId: 'io.github.emurabbit.rabbitKingdom.RunnerTests',
+    iosClientId: '689030757641-d6lrag0c858j89nppoknbijmi50hv8do.apps.googleusercontent.com',
+    iosBundleId: 'io.github.emurabbit.rabbitKingdom',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyB_hUFnQ8tywSsk5bLPt1nBztyx5nX1ZyQ',
+    appId: '1:689030757641:web:e77934a6b7729fdea4e7d8',
+    messagingSenderId: '689030757641',
+    projectId: 'rabbit-kingdom-2759a',
+    authDomain: 'rabbit-kingdom-2759a.firebaseapp.com',
+    storageBucket: 'rabbit-kingdom-2759a.firebasestorage.app',
+    measurementId: 'G-XRLS1Y7Z56',
+  );
+
 }

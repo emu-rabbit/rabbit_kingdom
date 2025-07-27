@@ -1,0 +1,5 @@
+include ':app'
+
+def flutterProjectRoot = rootProject.projectDir.parentFile.toPath()
+
+apply from: "$flutterProjectRoot/packages/flutter_tools/gradle/app_plugin_loader.gradle"
