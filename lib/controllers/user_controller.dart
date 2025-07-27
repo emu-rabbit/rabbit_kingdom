@@ -139,7 +139,7 @@ class UserController extends GetxController {
     }
 
     await docRef.update({
-      'budget.exp': newExp,
+      'exp': newExp,
     });
 
     final recordsController = Get.find<RecordsController>();
@@ -157,8 +157,8 @@ class UserController extends GetxController {
       throw Exception('尚未載入使用者資訊');
     }
 
-    final currentCoin = currentUser.budget.coin;
-    int newExp = currentCoin + amount;
+    final currentExp = currentUser.exp.raw;
+    int newExp = currentExp + amount;
 
     if (newExp < 0) {
       newExp = 0;
