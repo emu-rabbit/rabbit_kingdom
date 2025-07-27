@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'; // ← 為了 LinearProgressIndicator
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -84,6 +86,12 @@ class InitializePageController extends GetxController {
 
       setProgress(10);
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+      setProgress(20);
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: !kDebugMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
+        webProvider: ReCaptchaV3Provider(!kDebugMode ? '6Ld8NJArAAAAAKuha0NZH9GKA83OEjcEWcC2QiUj': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI')
+      );
 
       setProgress(30);
       await VersionService.checkUpdate();
