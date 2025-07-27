@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
@@ -145,7 +146,11 @@ class _HeaderMoney extends StatelessWidget {
                 height: 25,
               ),
               SizedBox(width: 2,),
-              _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: 20,)
+              GetBuilder<PricesController>(
+                builder: (_) {
+                  return _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: 20,);
+                }
+              )
             ],
           ),
         );

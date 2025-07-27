@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
+import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/collection_names.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
@@ -56,6 +57,8 @@ class AuthController extends GetxController {
             await NotificationService.initialize(user.uid);
             final announceController = Get.find<AnnounceController>();
             await announceController.initAnnounce();
+            final pricesController = Get.find<PricesController>();
+            await pricesController.initPrices();
             await userController.triggerTaskComplete(KingdomTaskNames.login);
             Get.offAll(() => HomePage());
           }

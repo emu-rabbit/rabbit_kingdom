@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
+import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
@@ -161,8 +162,8 @@ class KingdomUserBudget {
   int coin;
   int poop;
   int get property {
-    final controller = Get.find<AnnounceController>();
-    final buyPrice = controller.announcement?.poopBuy ?? 0;
+    final controller = Get.find<PricesController>();
+    final buyPrice = controller.prices?.buy ?? 0;
     return coin + poop * buyPrice;
   }
   String get propertyText => property.toRDisplayString();

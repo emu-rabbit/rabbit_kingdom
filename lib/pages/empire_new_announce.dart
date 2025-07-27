@@ -35,8 +35,8 @@ class EmpireNewAnnounce extends StatelessWidget {
                 children: [
                   RAnnounceViewer(announce: announce.value!,),
                   RSpace(),
-                  RText.bodySmall("賣出：${announce.value!.poopSell} | 買入：${announce.value!.poopBuy}"),
-                  RSpace(),
+                  // RText.bodySmall("賣出：${announce.value!.poopSell} | 買入：${announce.value!.poopBuy}"),
+                  // RSpace(),
                 ],
               );
             }

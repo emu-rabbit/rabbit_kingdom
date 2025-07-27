@@ -7,4 +7,5 @@ class CollectionNames {
   static String get user => "${prefix}user";
   static String get fcm => "${prefix}fcm";
   static String get announce => "${prefix}announce";
+  static String get prices => "${prefix}prices";
 }
