@@ -59,14 +59,20 @@ async function sendNotificationToUsers(prefix: string, data: Record<string, any>
 }
 
 // announce 觸發
-export const onAnnounceCreated = onDocumentCreated("announce/{uid}", (event) => {
+export const onAnnounceCreated = onDocumentCreated({
+  document: "announce/{uid}",
+  region: "asia-east2", // 可改成你要的地區
+}, (event) => {
   const data = event.data?.data();
   if (!data) return;
   return sendNotificationToUsers("", data);
 });
 
 // dev_announce 觸發
-export const onDevAnnounceCreated = onDocumentCreated("dev_announce/{uid}", (event) => {
+export const onDevAnnounceCreated = onDocumentCreated({
+  document: "dev_announce/{uid}",
+  region: "asia-east2", // 可改成你要的地區
+}, (event) => {
   const data = event.data?.data();
   if (!data) return;
   return sendNotificationToUsers("dev_", data);
