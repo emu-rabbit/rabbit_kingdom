@@ -58,15 +58,15 @@ class EmpireService {
         .add(data);
   }
 
-  static Future<void> publishNewPrices(PoopPrices prices) async {
-    final userController = Get.find<UserController>();
-    if (userController.user?.group != KingdomUserGroup.empire) return;
-
-    final data = prices.toJson();
-    await FirebaseFirestore.instance
-      .collection(CollectionNames.prices)
-      .add(data);
-  }
+  // static Future<void> publishNewPrices(PoopPrices prices) async {
+  //   final userController = Get.find<UserController>();
+  //   if (userController.user?.group != KingdomUserGroup.empire) return;
+  //
+  //   final data = prices.toJson();
+  //   await FirebaseFirestore.instance
+  //     .collection(CollectionNames.prices)
+  //     .add(data);
+  // }
 }
 
 class UnknownUserData {

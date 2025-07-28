@@ -23,7 +23,7 @@ class EmpireNewAnnounce extends StatelessWidget {
     final messageController = RTextInputController();
     final stickerController = RDropdownController(AnnounceSticker.happy);
     Rxn<KingdomAnnouncement> announce = Rxn<KingdomAnnouncement>();
-    Rxn<PoopPrices> prices = Rxn<PoopPrices>();
+    // Rxn<PoopPrices> prices = Rxn<PoopPrices>();
 
     return RLayoutWithHeader(
       "新公告",
@@ -37,7 +37,7 @@ class EmpireNewAnnounce extends StatelessWidget {
                 children: [
                   RAnnounceViewer(announce: announce.value!,),
                   RSpace(),
-                  RText.bodySmall("賣出：${prices.value!.sell} | 買入：${prices.value!.buy}"),
+                  // RText.bodySmall("賣出：${prices.value!.sell} | 買入：${prices.value!.buy}"),
                   RSpace(),
                 ],
               );
@@ -62,17 +62,17 @@ class EmpireNewAnnounce extends StatelessWidget {
                   final sticker = stickerController.selected.value;
                   if (mood != null && mood >= 0 && mood <= 99 && message.isNotEmpty) {
                     announce.value = KingdomAnnouncement.create(mood: mood, message: message, sticker: sticker);
-                    prices.value = PoopPrices.create(mood);
+                    // prices.value = PoopPrices.create(mood);
                   }
                 }),
                 RSpace(),
                 Obx((){
-                  if (announce.value != null && prices.value != null) {
+                  if (announce.value != null/* && prices.value != null*/) {
                     return RButton.primary(text: "確認發布", onPressed: () async {
                       try {
                         RLoading.start();
                         await EmpireService.publishNewAnnounce(announce.value!);
-                        await EmpireService.publishNewPrices(prices.value!);
+                        // await EmpireService.publishNewPrices(prices.value!);
                         Get.back();
                         RSnackBar.show("發布成功", "新公告已發布");
                       } catch (e) {
