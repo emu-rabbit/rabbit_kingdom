@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/records_controller.dart';
+import 'package:rabbit_kingdom/helpers/firestore_updater.dart';
 import 'package:rabbit_kingdom/models/kingdom_records.dart';
 import 'package:rabbit_kingdom/widgets/r_task_compelete.dart';
 
@@ -20,6 +21,8 @@ class UserController extends GetxController {
 
   final _userDocRef = Rxn<DocumentReference<Map<String, dynamic>>>();
   StreamSubscription<DocumentSnapshot>? _userListener;
+
+  late final _userUpdater = FirestoreUpdater(docRef: _userDocRef);
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
@@ -87,7 +90,7 @@ class UserController extends GetxController {
   }
 
   /// 🪙 直接設定金幣
-  Future<void> setCoin(int newCoin) async {
+  Future<void> setCoin(int newCoin) {
     final currentUser = _user.value;
     final docRef = _userDocRef.value;
 
@@ -95,20 +98,19 @@ class UserController extends GetxController {
       throw Exception('尚未載入使用者資訊');
     }
 
-    await docRef.update({
-      'budget.coin': newCoin,
-    });
+    final f1 = _userUpdater.update('budget.coin', newCoin);
 
     final recordsController = Get.find<RecordsController>();
-    await recordsController.setRecord(
+    final f2 = recordsController.setRecord(
       name: RecordName.coin,
       round: AllRound(),
       value: newCoin.toDouble(),
     );
+    return Future.wait([f1, f2]).then((_){});
   }
 
   /// 🪙 增加（或扣除）金幣
-  Future<void> increaseCoin(int amount) async {
+  Future<void> increaseCoin(int amount) {
     final currentUser = _user.value;
     if (currentUser == null) {
       throw Exception('尚未載入使用者資訊');
@@ -121,12 +123,19 @@ class UserController extends GetxController {
       throw Exception('金幣不足，無法扣除 ${amount.abs()}');
     }
 
-    await setCoin(newCoin);
+    final f1 = setCoin(newCoin);
+    final recordsController = Get.find<RecordsController>();
+    final f2 = recordsController.increaseRecord(
+      name: RecordName.coin,
+      round: MonthlyRound.now(),
+      value: amount.toDouble(),
+    );
+    return Future.wait([f1, f2]).then((_){});
   }
 
   /// 🪙 扣金幣
   Future<void> deductCoin(int amount) async {
-    await increaseCoin(-amount);
+    return increaseCoin(-amount);
   }
 
   /// 🪙 直接設定經驗值
@@ -138,16 +147,15 @@ class UserController extends GetxController {
       throw Exception('尚未載入使用者資訊');
     }
 
-    await docRef.update({
-      'exp': newExp,
-    });
+    final f1 = _userUpdater.update('exp', newExp);
 
     final recordsController = Get.find<RecordsController>();
-    await recordsController.setRecord(
+    final f2 = recordsController.setRecord(
       name: RecordName.exp,
       round: AllRound(),
       value: newExp.toDouble(),
     );
+    return Future.wait([f1, f2]).then((_){});
   }
 
   /// 🪙 增加（或扣除）經驗值
@@ -164,7 +172,14 @@ class UserController extends GetxController {
       newExp = 0;
     }
 
-    await setExp(newExp);
+    final f1 = setExp(newExp);
+    final recordsController = Get.find<RecordsController>();
+    final f2 = recordsController.increaseRecord(
+      name: RecordName.exp,
+      round: MonthlyRound.now(),
+      value: amount.toDouble(),
+    );
+    return Future.wait([f1, f2]).then((_){});
   }
 
 
@@ -183,9 +198,7 @@ class UserController extends GetxController {
       }
     }
 
-    await docRef.update({
-      'name': newName,
-    });
+    return _userUpdater.update('name', newName);
   }
 
   Future<void> triggerTaskComplete(KingdomTaskNames name) async {
@@ -219,9 +232,10 @@ class UserController extends GetxController {
       ..add(DateTime.now()); // 使用 UTC 儲存新的完成紀錄
 
     // 3. 更新 Firestore
-    await docRef.update({'records.${name.name}': newList});
-    await increaseExp(taskData.expReward);
-    await increaseCoin(taskData.coinReward);
+    final f1 = _userUpdater.update('records.${name.name}', newList);
+    final f2 = increaseExp(taskData.expReward);
+    final f3 = increaseCoin(taskData.coinReward);
+    await Future.wait([f1, f2, f3]);
 
     RTaskComplete.show(name);
   }
@@ -241,15 +255,18 @@ class UserController extends GetxController {
         now.difference(oldDrinks.lastAt) > Consts.drinkFullyDecay;
 
     // 更新 firestore 上的資料
-    await docRef.update({
+    final f1 = _userUpdater.updateJson({
       'drinks': {
         'count': fullyDecayed ? 1 : oldDrinks.count + 1,
         'lastAt': now,
       }
     });
-    await triggerTaskComplete(KingdomTaskNames.drink);
+    final f2 = triggerTaskComplete(KingdomTaskNames.drink);
 
     final recordsController = Get.find<RecordsController>();
-    await recordsController.increaseRecord(name: RecordName.drink, round: MonthlyRound.now());
+    final f3 = recordsController.increaseRecord(name: RecordName.drink, round: AllRound());
+    final f4 = recordsController.increaseRecord(name: RecordName.drink, round: MonthlyRound.now());
+
+    return Future.wait([f1, f2, f3, f4]).then((_){});
   }
 }

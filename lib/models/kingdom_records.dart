@@ -123,6 +123,6 @@ class RankRecord {
   RankRecord._({ required this.value });
 
   factory RankRecord.fromJson(Map<String, dynamic>? json) {
-    return RankRecord._(value: json?['value'] ?? 0);
+    return RankRecord._(value: (json?['value'] ?? 0).toDouble());
   }
 }
