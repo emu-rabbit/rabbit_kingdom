@@ -1,11 +1,14 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
-import * as functions from "firebase-functions";
+import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 import {TokenMessage} from "firebase-admin/lib/messaging/messaging-api";
 import {limitConcurrency} from "./utils";
+import {logger} from "firebase-functions";
 
-admin.initializeApp();
+if (admin.apps.length === 0) {
+  admin.initializeApp();
+}
 
 // 共用推播方法
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,19 +51,23 @@ async function sendNotificationToUsers(prefix: string, data: Record<string, any>
       try {
         await admin.messaging().send(message);
       } catch (error) {
-        console.error(`Failed to send message to token ${doc.token}:`, error);
+        logger.error(`Failed to send message to token ${doc.token}:`, error);
       }
     }),
-    5 // 這裡你可以改成任何你想要的併發數量上限
+    5 // 你可以調整這個併發數量
   );
 }
 
 // announce 觸發
-export const onAnnounceCreated = functions.firestore
-  .document("announce/{uid}")
-  .onCreate((snap) => sendNotificationToUsers("", snap.data()));
+export const onAnnounceCreated = onDocumentCreated("announce/{uid}", (event) => {
+  const data = event.data?.data();
+  if (!data) return;
+  return sendNotificationToUsers("", data);
+});
 
 // dev_announce 觸發
-export const onDevAnnounceCreated = functions.firestore
-  .document("dev_announce/{uid}")
-  .onCreate((snap) => sendNotificationToUsers("dev_", snap.data()));
+export const onDevAnnounceCreated = onDocumentCreated("dev_announce/{uid}", (event) => {
+  const data = event.data?.data();
+  if (!data) return;
+  return sendNotificationToUsers("dev_", data);
+});
