@@ -23,7 +23,7 @@ export async function createNewPoopPricesFromLatest(prefix: string) {
   const sellVolume = 0;
 
   // 計算新價格（使用主人設計的 market formula）
-  const baseVolatility = 0.04;
+  const baseVolatility = 0.03;
   const randomNoise = (Math.random() * 2 - 1) * baseVolatility;
 
   const netDemand = buyVolume - sellVolume;
