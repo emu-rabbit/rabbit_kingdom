@@ -15,6 +15,14 @@ class PoopPrices {
     );
   }
 
+  factory PoopPrices.create(int buy) {
+    return PoopPrices._(
+      buy: buy,
+      sell: buy + 6,
+      createAt: DateTime.now()
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'buy': buy,

@@ -5,6 +5,7 @@ import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/empire_auth_unknown_users.dart';
 import 'package:rabbit_kingdom/pages/empire_new_announce.dart';
+import 'package:rabbit_kingdom/pages/empire_set_prices.dart';
 import 'package:rabbit_kingdom/pages/faq_page.dart';
 import 'package:rabbit_kingdom/pages/modify_name_page.dart';
 import 'package:rabbit_kingdom/pages/newest_announce_page.dart';
@@ -64,7 +65,8 @@ class BuildingTownHallPage extends StatelessWidget {
                         "阿，是大帝！",
                         [
                           RButtonData(text: "審查新入境者", type: RButtonType.secondary, onPress: (){ Get.to(() => EmpireAuthUnknownUsers()); }),
-                          RButtonData(text: "發布新公告", type: RButtonType.secondary, onPress: (){ Get.to(() => EmpireNewAnnounce()); })
+                          RButtonData(text: "發布新公告", type: RButtonType.secondary, onPress: (){ Get.to(() => EmpireNewAnnounce()); }),
+                          RButtonData(text: "干預精華價格", type: RButtonType.secondary, onPress: (){ Get.to(() => EmpireSetPrices()); })
                         ]
                       ),
                       RSpace(type: RSpaceType.large,),
