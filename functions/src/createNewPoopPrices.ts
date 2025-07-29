@@ -74,8 +74,15 @@ export async function createNewPoopPricesFromAnnounce(
   const lastDoc = latestPriceSnap.docs[0];
   const lastBuyPrice = lastDoc.data().buy;
 
-  const moodImpact = (mood - 50) / 50 * 0.5;
-  const rawBuy = Math.round(lastBuyPrice * (1 + moodImpact));
+  const baseMood = 70;
+  const deviation = (mood - baseMood) / 30; // 約 -2 ~ +1
+  const maxImpact = 0.4;
+
+  const logAdjusted =
+    Math.sign(deviation) * Math.log1p(Math.abs(deviation * 0.8));
+  const impact = Math.max(-1, Math.min(1, logAdjusted)) * maxImpact;
+
+  const rawBuy = Math.round(lastBuyPrice * (1 + impact));
   const newBuy = Math.max(1, rawBuy);
   const newSell = newBuy + 6;
 
