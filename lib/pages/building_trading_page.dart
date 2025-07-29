@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/pages/trading_page.dart';
+import 'package:rabbit_kingdom/popups/trading_info_popup.dart';
 import 'package:rabbit_kingdom/popups/trading_note_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
+import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 
 import '../helpers/screen.dart';
 import '../widgets/r_layout_with_header.dart';
@@ -17,6 +20,10 @@ class BuildingTradingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return RLayoutWithHeader(
         "",
+        topRight: RIconButton(
+          icon: FontAwesomeIcons.circleQuestion,
+          onPress: (){ Get.rPopup(TradingInfoPopup()); }
+        ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -21,7 +21,7 @@ class ReleaseNotePopup extends StatelessWidget {
       _ReleaseNote(
           title: "<2025/07/29>",
           contents: [
-            "新增了交易所頁面",
+            "開啟交易所，新增兔兔精華交易系統",
             "調整了背景"
           ]
       ),
