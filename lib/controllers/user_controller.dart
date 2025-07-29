@@ -366,5 +366,6 @@ class UserController extends GetxController {
       .instance
       .collection(CollectionNames.tradings)
       .add(record.toJson());
+    return triggerTaskComplete(KingdomTaskNames.trade);
   }
 }

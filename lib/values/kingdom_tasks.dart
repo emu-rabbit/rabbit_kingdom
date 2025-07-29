@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/pages/newest_announce_page.dart';
+import 'package:rabbit_kingdom/pages/trading_page.dart';
 
 enum KingdomTaskNames {
-  login, heart, comment, drink, ad
+  login, heart, comment, drink, ad, trade
 }
 
 class KingdomTask {
@@ -47,6 +48,13 @@ Map<KingdomTaskNames, KingdomTask> buildKingdomTasks() {
       coinReward: 100,
       expReward: 50,
       navigator: () => Get.back()
+    ),
+    KingdomTaskNames.trade: KingdomTask(
+      "在交易所交易一次",
+      limit: 1,
+      coinReward: 200,
+      expReward: 200,
+      navigator: () => Get.to(() => TradingPage())
     )
   };
 
