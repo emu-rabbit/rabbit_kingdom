@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
 
 class PoopPrices {
