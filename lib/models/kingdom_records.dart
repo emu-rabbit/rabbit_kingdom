@@ -25,7 +25,7 @@ KingdomRecords kingdomRecordsFromJson(Map<String, dynamic>? json) {
 }
 
 enum RecordName {
-  coin, poop, exp, drink
+  coin, poop, exp, drink, tradingVolume, buyAvg, sellAvg
 }
 abstract class RecordRound {
   String toKey();

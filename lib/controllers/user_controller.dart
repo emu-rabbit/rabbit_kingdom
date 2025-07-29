@@ -234,6 +234,37 @@ class UserController extends GetxController {
     return Future.wait([f1, f2]).then((_){});
   }
 
+  Future<void> applyTradingRecord(TradingRecord record) async {
+    final currentUser = _user.value;
+    if (currentUser == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+    final newNote = currentUser.note.applyRecord(record);
+    if (_userDocRef.value == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+    await _userDocRef.value!.update({
+      'note': newNote.toJson()
+    });
+    final recordsController = Get.find<RecordsController>();
+    final f1 = recordsController.increaseRecord(
+      name: RecordName.tradingVolume, round: AllRound(), value: record.amount.toDouble()
+    );
+    final f2 = recordsController.increaseRecord(
+      name: RecordName.tradingVolume, round: MonthlyRound.now(), value: record.amount.toDouble()
+    );
+    final f3 = recordsController.setRecord(
+        name: record.type == TradingType.buy ? RecordName.sellAvg : RecordName.buyAvg,
+        round: AllRound(),
+        value: record.type == TradingType.buy ? newNote.sellAverage! : newNote.buyAverage!
+    );
+    final f4 = recordsController.setRecord(
+        name: record.type == TradingType.buy ? RecordName.sellAvg : RecordName.buyAvg,
+        round: MonthlyRound.now(),
+        value: record.type == TradingType.buy ? newNote.sellAverage! : newNote.buyAverage!
+    );
+    return Future.wait([f1, f2, f3, f4]).then((_){});
+  }
 
   /// 修改名字（可收費）
   Future<void> changeName(String newName, bool isFirstTime) async {
@@ -323,15 +354,6 @@ class UserController extends GetxController {
   }
 
   Future<void> makeTrade(TradingRecord record) async {
-    final currentUser = _user.value;
-    if (currentUser == null) {
-      throw Exception('尚未載入使用者資訊');
-    }
-    final newNote = currentUser.note.applyRecord(record);
-    if (_userDocRef.value == null) {
-      throw Exception('尚未載入使用者資訊');
-    }
-
     if (record.type == TradingType.buy) {
       await deductPoop(record.amount);
       await increaseCoin(record.price * record.amount);
@@ -339,9 +361,7 @@ class UserController extends GetxController {
       await deductCoin(record.price * record.amount);
       await increasePoop(record.amount);
     }
-    await _userDocRef.value!.update({
-      'note': newNote.toJson()
-    });
+    await applyTradingRecord(record);
     await FirebaseFirestore
       .instance
       .collection(CollectionNames.tradings)
