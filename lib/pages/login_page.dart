@@ -157,7 +157,7 @@ class _LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RButton.surface(
+    return RButton.primary(
         onPressed: onPressed,
         child: (color) => Center(
           child: Row(

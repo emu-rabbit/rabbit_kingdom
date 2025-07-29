@@ -68,7 +68,7 @@ class NotVerifiedPage extends StatelessWidget {
                         textAlign: TextAlign.center),
                   )),
                   RSpace(),
-                  RButton.surface(
+                  RButton.primary(
                     onPressed: () async {
                       authController.firebaseUser.value?.reload();
                     },
