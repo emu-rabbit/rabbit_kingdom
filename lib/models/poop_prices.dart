@@ -17,20 +17,6 @@ class PoopPrices {
     );
   }
 
-  factory PoopPrices.create(int mood) {
-    int basePrice = (80 + (mood.clamp(0, 99) / 99.0) * 120).round(); // 80~200
-    int fluctuation = [-5, -3, -2, -1, 0, 1, 2, 3, 5][Random().nextInt(9)];
-
-    int mid = basePrice + fluctuation;
-    int rBuy = mid - 3;
-    int rSell = rBuy + 6;
-    return PoopPrices._(
-      buy: rBuy,
-      sell: rSell,
-      createAt: DateTime.now()
-    );
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'buy': buy,

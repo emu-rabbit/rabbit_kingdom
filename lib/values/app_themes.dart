@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppThemes {
   static final light = const ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFFFFB1CC), // 草莓奶霜
+    primary: Color(0xFFFF95B7), // 草莓奶霜
     onPrimary: Color(0xFF5C0011), // 深莓紅字體
     surface: Color(0xFFFFF5F9), // 奶霜底色
     onSurface: Color(0xFF5E325E), // 櫻花棕
