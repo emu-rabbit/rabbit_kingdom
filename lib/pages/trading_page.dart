@@ -36,7 +36,7 @@ class TradingPage extends StatelessWidget {
 
     return RLayoutWithHeader(
       "兔兔精華交易所",
-      topRight: RMoney(),
+      topRight: RMoney(types: [MoneyType.property],),
       child: Obx((){
         final pc = Get.find<PricesController>();
         if (tc.historyPrices.value == null) {
