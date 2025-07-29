@@ -3,6 +3,7 @@ import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
+import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 class KingdomUser {
@@ -13,6 +14,7 @@ class KingdomUser {
   final KingdomUserBudget budget;
   final KingdomUserTaskRecords records;
   final KingdomUserDrinks drinks;
+  final KingdomUserTradingsNote note;
 
   KingdomUser._({
     required this.name,
@@ -21,7 +23,8 @@ class KingdomUser {
     required this.exp,
     required this.budget,
     required this.records,
-    required this.drinks
+    required this.drinks,
+    required this.note
   });
 
   factory KingdomUser.fromJson(Map<String, dynamic> json) {
@@ -32,7 +35,8 @@ class KingdomUser {
       exp: KingdomUserExp.fromInt(json['exp']),
       budget: KingdomUserBudget.fromJson(json['budget']),
       records: KingdomUserTaskRecords.fromJson(json['records']),
-      drinks: KingdomUserDrinks.fromJson(json['drinks'])
+      drinks: KingdomUserDrinks.fromJson(json['drinks']),
+      note: KingdomUserTradingsNote.fromJson(json['note'])
     );
   }
 
@@ -44,7 +48,8 @@ class KingdomUser {
       exp: KingdomUserExp.fromInt(0),
       budget: KingdomUserBudget.fromJson(null),
       records: KingdomUserTaskRecords.create(),
-      drinks: KingdomUserDrinks.create()
+      drinks: KingdomUserDrinks.create(),
+      note: KingdomUserTradingsNote.create()
     );
   }
 
@@ -56,7 +61,8 @@ class KingdomUser {
       'exp': exp.raw,
       'budget': budget.toJson(),
       'records': records.toJson(),
-      'drinks': drinks.toJson()
+      'drinks': drinks.toJson(),
+      'note': note.toJson()
     };
   }
 
@@ -263,5 +269,101 @@ class KingdomUserDrinks {
       'count': count,
       'lastAt': lastAt
     };
+  }
+}
+
+class KingdomUserTradingsNote {
+  final int buyAmount;
+  final double? buyAverage;
+  final int sellAmount;
+  final double? sellAverage;
+
+  const KingdomUserTradingsNote._({
+    required this.buyAmount,
+    required this.buyAverage,
+    required this.sellAmount,
+    required this.sellAverage,
+  });
+
+  /// 初次建立用（所有值歸零）
+  factory KingdomUserTradingsNote.create() {
+    return const KingdomUserTradingsNote._(
+      buyAmount: 0,
+      buyAverage: null,
+      sellAmount: 0,
+      sellAverage: null,
+    );
+  }
+
+  /// 轉換為 JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'buyAmount': buyAmount,
+      'buyAverage': buyAverage,
+      'sellAmount': sellAmount,
+      'sellAverage': sellAverage,
+    };
+  }
+
+  /// 從 JSON 建立物件
+  factory KingdomUserTradingsNote.fromJson(Map<String, dynamic>? json) {
+    return KingdomUserTradingsNote._(
+      buyAmount: json?['buyAmount'] ?? 0,
+      buyAverage: json?['buyAverage'],
+      sellAmount: json?['sellAmount'] ?? 0,
+      sellAverage: json?['sellAverage'],
+    );
+  }
+
+  /// 套用一筆交易紀錄，計算新的統計資訊（不會修改原物件）
+  KingdomUserTradingsNote applyRecord(TradingRecord record) {
+    switch (record.type) {
+      case TradingType.buy:
+      // 對使用者來說是「賣出」
+        final newSellAmount = sellAmount + record.amount;
+        final newSellAverage = _calcNewAverage(
+          currentAmount: sellAmount,
+          currentAverage: sellAverage,
+          newAmount: record.amount,
+          newPrice: record.price,
+        );
+        return KingdomUserTradingsNote._(
+          buyAmount: buyAmount,
+          buyAverage: buyAverage,
+          sellAmount: newSellAmount,
+          sellAverage: newSellAverage,
+        );
+
+      case TradingType.sell:
+      // 對使用者來說是「買入」
+        final newBuyAmount = buyAmount + record.amount;
+        final newBuyAverage = _calcNewAverage(
+          currentAmount: buyAmount,
+          currentAverage: buyAverage,
+          newAmount: record.amount,
+          newPrice: record.price,
+        );
+        return KingdomUserTradingsNote._(
+          buyAmount: newBuyAmount,
+          buyAverage: newBuyAverage,
+          sellAmount: sellAmount,
+          sellAverage: sellAverage,
+        );
+    }
+  }
+
+  /// 計算新的加權平均價格
+  double _calcNewAverage({
+    required int currentAmount,
+    required double? currentAverage,
+    required int newAmount,
+    required int newPrice,
+  }) {
+    if (currentAmount == 0 || currentAverage == null) {
+      return newPrice.toDouble();
+    }
+    final totalAmount = currentAmount + newAmount;
+    final totalValue = currentAmount * currentAverage + newAmount * newPrice;
+    return totalValue / totalAmount;
   }
 }

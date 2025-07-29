@@ -323,6 +323,15 @@ class UserController extends GetxController {
   }
 
   Future<void> makeTrade(TradingRecord record) async {
+    final currentUser = _user.value;
+    if (currentUser == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+    final newNote = currentUser.note.applyRecord(record);
+    if (_userDocRef.value == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+
     if (record.type == TradingType.buy) {
       await deductPoop(record.amount);
       await increaseCoin(record.price * record.amount);
@@ -330,6 +339,9 @@ class UserController extends GetxController {
       await deductCoin(record.price * record.amount);
       await increasePoop(record.amount);
     }
+    await _userDocRef.value!.update({
+      'note': newNote.toJson()
+    });
     await FirebaseFirestore
       .instance
       .collection(CollectionNames.tradings)

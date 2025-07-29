@@ -11,6 +11,7 @@ class RText extends StatelessWidget {
   final TextAlign? textAlign;
   final TextOverflow? overflow;
   final int? maxLines;
+  final bool softWrap;
 
   const RText._(
       this.text,
@@ -19,6 +20,7 @@ class RText extends StatelessWidget {
         this.textAlign,
         this.overflow,
         this.maxLines,
+        this.softWrap = true
       });
 
   factory RText.displayLarge(String text, {
@@ -106,8 +108,9 @@ class RText extends StatelessWidget {
     TextAlign? textAlign,
     TextOverflow? overflow,
     int? maxLines,
+    bool? softWrap
   }) => RText._(text, AppTextStyle.labelSmall,
-      color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
+      color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines, softWrap: softWrap ?? true,);
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +124,7 @@ class RText extends StatelessWidget {
             textAlign: textAlign,
             overflow: overflow ?? TextOverflow.ellipsis,
             maxLines: maxLines,
+            softWrap: softWrap,
           );
         }
     );

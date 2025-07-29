@@ -246,7 +246,14 @@ class HistoryChart extends StatelessWidget {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              getTitlesWidget: (value, _) => RText.labelSmall(value.toInt().toString(), overflow: TextOverflow.visible,)
+              reservedSize: vw(7),
+              getTitlesWidget: (value, _) => RText.labelSmall(
+                value.toInt().toString(),
+                overflow: TextOverflow.visible,
+                maxLines: 1,
+                softWrap: false,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           bottomTitles: AxisTitles(

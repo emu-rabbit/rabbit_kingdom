@@ -1,4 +1,4 @@
-extension RDisplayFormat on int {
+extension RIntExtension on int {
   String toRDisplayString() {
     if (this < 1000) return toString();
 
@@ -28,4 +28,6 @@ extension RDisplayFormat on int {
     if (this < 0) return '$this'; // 自帶負號
     return '0';
   }
+
+  int get orZero => this ?? 0;
 }

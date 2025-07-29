@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/pages/trading_page.dart';
+import 'package:rabbit_kingdom/popups/trading_note_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 
 import '../helpers/screen.dart';
@@ -30,11 +32,18 @@ class BuildingTradingPage extends StatelessWidget {
               ),
               RSpace(type: RSpaceType.large,),
               RButtonGroup(
-                "你看著那個高聳的水晶",
-                [
-                  RButtonData(text: "交易兔兔精華", onPress: (){ Get.to(() => TradingPage()); })
-                ]
-              )
+                  "你看著那個高聳的水晶",
+                  [
+                    RButtonData(text: "交易兔兔精華", onPress: (){ Get.to(() => TradingPage()); })
+                  ]
+              ),
+              RSpace(type: RSpaceType.large,),
+              RButtonGroup(
+                  "你手中捏著一張小紙條",
+                  [
+                    RButtonData(text: "查看買賣小帳本", onPress: (){ Get.rPopup(TradingNotePopup()); })
+                  ]
+              ),
             ],
           ),
         )
