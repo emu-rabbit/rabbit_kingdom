@@ -9,4 +9,5 @@ class CollectionNames {
   static String get announce => "${prefix}announce";
   static String get prices => "${prefix}prices";
   static String get records => "${prefix}records";
+  static String get tradings => "${prefix}tradings";
 }

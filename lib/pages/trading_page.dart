@@ -1,24 +1,25 @@
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/models/poop_prices.dart';
+import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/services/kingdom_user_service.dart';
-import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_amount_input.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
-import 'package:rabbit_kingdom/widgets/r_dropdown.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
+import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_money.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
-import 'package:rabbit_kingdom/widgets/r_text_input.dart';
 
 final Color colorBuy = Color(0xFFEF602B);
 final Color colorSell = Color(0xFF2FBF8E);
@@ -35,6 +36,7 @@ class TradingPage extends StatelessWidget {
 
     return RLayoutWithHeader(
       "兔兔精華交易所",
+      topRight: RMoney(),
       child: Obx((){
         final pc = Get.find<PricesController>();
         if (tc.historyPrices.value == null) {
@@ -108,42 +110,97 @@ class TradingPage extends StatelessWidget {
                     },
                   ),
                   RSpace(type: RSpaceType.large,),
-                  SizedBox(
-                    width: vw(75),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                  GetBuilder<UserController>(
+                    builder: (uc) {
+                      return Obx((){
+                        if (uc.user != null) {
+                          final totalBuyCoin = amountController.value * pc.prices!.sell * -1;
+                          final totalSellCoin = amountController.value * pc.prices!.buy;
+                          final canBuy = uc.user!.budget.coin + totalBuyCoin > 0;
+                          final canSell = uc.user!.budget.poop >= amountController.value;
+                          return SizedBox(
+                            width: vw(75),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
                               children: [
-                                RButton.primary(text: "買入精華", onPressed: (){}),
+                                Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        RButton.primary(
+                                            text: "買入精華",
+                                            isDisabled: !canBuy,
+                                            onPressed: () async {
+                                              try {
+                                                RLoading.start();
+                                                final record = TradingRecord.createSell(
+                                                  amount: amountController.value,
+                                                  price: pc.prices!.sell
+                                                );
+                                                await uc.makeTrade(record);
+                                                RSnackBar.show("交易成功", "祝你發大財");
+                                              } catch (e) {
+                                                RSnackBar.error("交易失敗", e.toString());
+                                              } finally {
+                                                RLoading.stop();
+                                              }
+                                            }
+                                        ),
+                                        RSpace(),
+                                        Opacity(
+                                          opacity: canBuy ? 1 : 0.4,
+                                          child: PreviewChange(
+                                              coinChange: totalBuyCoin,
+                                              poopChange: amountController.value
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                ),
                                 RSpace(),
-                                PreviewChange(
-                                  coinChange: amountController.value * pc.prices!.sell * -1,
-                                  poopChange: amountController.value
-                                )
+                                Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        RButton.primary(
+                                          text: "賣出精華",
+                                          isDisabled: !canSell,
+                                          onPressed: () async {
+                                            try {
+                                              RLoading.start();
+                                              final record = TradingRecord.createBuy(
+                                                  amount: amountController.value,
+                                                  price: pc.prices!.buy
+                                              );
+                                              await uc.makeTrade(record);
+                                              RSnackBar.show("交易成功", "祝你發大財");
+                                            } catch (e) {
+                                              RSnackBar.error("交易失敗", e.toString());
+                                            } finally {
+                                              RLoading.stop();
+                                            }
+                                          }
+                                        ),
+                                        RSpace(),
+                                        Opacity(
+                                          opacity: canSell ? 1 : 0.4,
+                                          child: PreviewChange(
+                                              coinChange: totalSellCoin,
+                                              poopChange: amountController.value * -1
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                ),
                               ],
-                            )
-                        ),
-                        RSpace(),
-                        Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                RButton.primary(text: "賣出精華", onPressed: (){}),
-                                RSpace(),
-                                PreviewChange(
-                                    coinChange: amountController.value * pc.prices!.buy,
-                                    poopChange: amountController.value * -1
-                                )
-                              ],
-                            )
-                        ),
-                      ],
-                    ),
+                            ),
+                          );
+                        }
+                        return RText.titleMedium("無法載入資料QQ");
+                      });
+                    }
                   )
                 ],
               ),

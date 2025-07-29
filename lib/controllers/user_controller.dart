@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/records_controller.dart';
 import 'package:rabbit_kingdom/helpers/firestore_updater.dart';
 import 'package:rabbit_kingdom/models/kingdom_records.dart';
+import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/widgets/r_task_compelete.dart';
 
 import '../helpers/collection_names.dart';
@@ -138,6 +139,57 @@ class UserController extends GetxController {
     return increaseCoin(-amount);
   }
 
+  /// 💩 直接設定便便數量
+  Future<void> setPoop(int newPoop) {
+    final currentUser = _user.value;
+    final docRef = _userDocRef.value;
+
+    if (currentUser == null || docRef == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+
+    final f1 = _userUpdater.update('budget.poop', newPoop);
+
+    final recordsController = Get.find<RecordsController>();
+    final f2 = recordsController.setRecord(
+      name: RecordName.poop,
+      round: AllRound(),
+      value: newPoop.toDouble(),
+    );
+
+    return Future.wait([f1, f2]).then((_) {});
+  }
+
+  /// 💩 增加（或扣除）便便
+  Future<void> increasePoop(int amount) {
+    final currentUser = _user.value;
+    if (currentUser == null) {
+      throw Exception('尚未載入使用者資訊');
+    }
+
+    final currentPoop = currentUser.budget.poop;
+    final newPoop = currentPoop + amount;
+
+    if (newPoop < 0) {
+      throw Exception('便便數量不足，無法扣除 ${amount.abs()} 喔💩');
+    }
+
+    final f1 = setPoop(newPoop);
+    final recordsController = Get.find<RecordsController>();
+    final f2 = recordsController.increaseRecord(
+      name: RecordName.poop,
+      round: MonthlyRound.now(),
+      value: amount.toDouble(),
+    );
+
+    return Future.wait([f1, f2]).then((_) {});
+  }
+
+  /// 💩 扣便便
+  Future<void> deductPoop(int amount) async {
+    return increasePoop(-amount);
+  }
+
   /// 🪙 直接設定經驗值
   Future<void> setExp(int newExp) async {
     final currentUser = _user.value;
@@ -268,5 +320,19 @@ class UserController extends GetxController {
     final f4 = recordsController.increaseRecord(name: RecordName.drink, round: MonthlyRound.now());
 
     return Future.wait([f1, f2, f3, f4]).then((_){});
+  }
+
+  Future<void> makeTrade(TradingRecord record) async {
+    if (record.type == TradingType.buy) {
+      await deductPoop(record.amount);
+      await increaseCoin(record.price * record.amount);
+    } else {
+      await deductCoin(record.price * record.amount);
+      await increasePoop(record.amount);
+    }
+    await FirebaseFirestore
+      .instance
+      .collection(CollectionNames.tradings)
+      .add(record.toJson());
   }
 }
