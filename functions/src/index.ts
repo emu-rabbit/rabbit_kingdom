@@ -30,7 +30,7 @@ export const onDevAnnounceCreated = onDocumentCreated({
 // 🕒 每 20 分鐘觸發一次（你可以依需求修改 schedule）
 export const scheduledPoopPricesCreation = onSchedule(
   {
-    schedule: "every 20 minutes",
+    schedule: "every 30 minutes",
     region: "asia-east2", // 你可以改成自己的區域
   },
   async () => {
