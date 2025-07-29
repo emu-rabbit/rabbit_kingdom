@@ -49,6 +49,8 @@ dependencies:
   app_settings: ^6.1.1
   firebase_app_check: ^0.3.2+10
   firebase_crashlytics: ^4.3.10
+  fl_chart: ^1.0.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

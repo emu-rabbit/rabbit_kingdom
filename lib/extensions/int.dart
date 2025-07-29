@@ -22,4 +22,10 @@ extension RDisplayFormat on int {
 
     return '$formatted${units[unitIndex]}';
   }
+
+  String toSignedString() {
+    if (this > 0) return '+$this';
+    if (this < 0) return '$this'; // 自帶負號
+    return '0';
+  }
 }

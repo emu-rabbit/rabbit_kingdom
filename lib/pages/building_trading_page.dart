@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/pages/trading_page.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 
 import '../helpers/screen.dart';
@@ -30,7 +32,7 @@ class BuildingTradingPage extends StatelessWidget {
               RButtonGroup(
                 "你看著那個高聳的水晶",
                 [
-                  RButtonData(text: "交易兔兔精華", onPress: (){})
+                  RButtonData(text: "交易兔兔精華", onPress: (){ Get.to(() => TradingPage()); })
                 ]
               )
             ],
