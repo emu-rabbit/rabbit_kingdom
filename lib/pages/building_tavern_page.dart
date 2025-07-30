@@ -69,7 +69,14 @@ class BuildingTavernPage extends StatelessWidget {
                         await c.drink();
                         Get.rPopup(
                           RPopup(
-                            child: RText.titleMedium("你覺得有點暈...", color: AppColors.onSecondary,)
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                RText.titleMedium("你覺得有點暈...", color: AppColors.onSecondary,),
+                                RText.titleMedium("視線開始模糊...", color: AppColors.onSecondary,)
+                              ],
+                            )
                           )
                         );
                       } catch (e) {
