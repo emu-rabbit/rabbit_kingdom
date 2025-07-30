@@ -48,7 +48,7 @@ class _RAdBannerState extends State<RAdBanner> {
       if (Platform.isAndroid) {
         return 'ca-app-pub-3770234564897287/8430193701';
       } else if (Platform.isIOS) {
-        return 'ca-app-pub-3770234564897287/2764656254';
+        return 'ca-app-pub-3770234564897287/1180444981';
       }
     }
     return '';
