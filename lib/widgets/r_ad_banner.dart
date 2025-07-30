@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +45,13 @@ class _RAdBannerState extends State<RAdBanner> {
     if (isDev) {
       return 'ca-app-pub-3940256099942544/6300978111'; // 測試 ID
     } else {
-      return 'ca-app-pub-3770234564897287/8430193701';
+      if (Platform.isAndroid) {
+        return 'ca-app-pub-3770234564897287/8430193701';
+      } else if (Platform.isIOS) {
+        return 'ca-app-pub-3770234564897287/2764656254';
+      }
     }
+    return '';
   }
 
   @override
