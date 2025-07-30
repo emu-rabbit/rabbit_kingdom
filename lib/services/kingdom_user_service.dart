@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rabbit_kingdom/helpers/app_data_cache.dart';
 import 'package:rabbit_kingdom/helpers/collection_names.dart';
 import 'package:rabbit_kingdom/models/kingdom_announcement.dart';
 import 'package:rabbit_kingdom/models/poop_prices.dart';
+import 'package:rabbit_kingdom/values/caches.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 
 class KingdomUserService {
@@ -25,16 +27,7 @@ class KingdomUserService {
 
   static Future<List<PoopPrices>> getRecentPrices() async {
     try {
-      final result = await FirebaseFirestore
-        .instance
-        .collection(CollectionNames.prices)
-        .orderBy('createAt', descending: true)
-        .limit(20)
-        .get();
-      return result
-        .docs
-        .map((doc) => PoopPrices.fromJson(doc.data()))
-        .toList();
+      return await Caches.recentPrices.getData();
     } catch (e) {
       RSnackBar.error("抓取失敗", e.toString());
       return [];
