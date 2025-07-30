@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -59,33 +60,51 @@ class NotificationService {
     }
   }
 
-  /// 初始化通知功能，只有使用者授權時才會執行
   static Future<void> initialize(String uid) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final status = prefs.getInt(_permissionKey);
 
-      if (status == -1) return; // 沒授權就不做初始化
+      if (status == -1) return; // 使用者拒絕過權限
 
-      final token = await FirebaseMessaging.instance.getToken(
-        vapidKey: 'BHFqe6POSJHaHNfqiSkX4h7TZNB439fGwRMvxTmi8MYNu2SQpya45Akoxn6gwP4GVFjGDiVBNQpaNxeH9oWzQYY'
+      final messaging = FirebaseMessaging.instance;
+
+      // iOS 需要等 APNs Token 準備好（模擬器不支援）
+      if (!kIsWeb && Platform.isIOS) {
+        String? apnsToken;
+        int retry = 0;
+        while ((apnsToken = await messaging.getAPNSToken()) == null && retry < 10) {
+          await Future.delayed(const Duration(seconds: 1));
+          retry++;
+        }
+        debugPrint("🍎 APNs Token: $apnsToken");
+      }
+
+      // 取得 FCM token（這是 Firebase 用的）
+      final fcmToken = await messaging.getToken(
+        vapidKey: 'BHFqe6POSJHaHNfqiSkX4h7TZNB439fGwRMvxTmi8MYNu2SQpya45Akoxn6gwP4GVFjGDiVBNQpaNxeH9oWzQYY',
       );
-      if (token == null) return;
+
+      debugPrint("🔑 FCM Token: $fcmToken");
+      if (fcmToken == null) return;
+
+      // 監聽前景通知
       FirebaseMessaging.onMessage.listen((message) {
         final notification = message.notification;
         RSnackBar.show(
-            notification?.title ?? "收到通知",
-            notification?.body ?? "訊息遺失了QQ"
+          notification?.title ?? "📬 收到通知",
+          notification?.body ?? "訊息遺失了QQ",
         );
       });
 
+      // 上傳 token 至 Firestore
       await FirebaseFirestore.instance
           .collection(CollectionNames.fcm)
           .doc(uid)
-          .set({'token': token});
-    } catch (e) {
+          .set({'token': fcmToken});
+    } catch (e, stack) {
       debugPrint("🔕 通知初始化失敗：$e");
-      // 默默失敗不影響主流程
+      debugPrint("🪵 堆疊：$stack");
     }
   }
 }
