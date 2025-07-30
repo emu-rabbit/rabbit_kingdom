@@ -147,18 +147,12 @@ class AuthController extends GetxController {
     try {
       final rawNonce = _generateNonce();
       final nonce = _sha256ofString(rawNonce);
-      debugPrint('Generated rawNonce for AppleIDCredential: $rawNonce');
-      debugPrint('Generated SHA256 nonce for AppleIDCredential: $nonce');
 
       // Apple 登入授權
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
         nonce: nonce,
       );
-
-      debugPrint('Raw appleCredential: ${appleCredential.toString()}'); // 您已有的
-      debugPrint('Extracted identityToken from appleCredential: ${appleCredential.identityToken}'); // 新增
-
 
       // 檢查是否有拿到 token
       if (appleCredential.identityToken == null) {
@@ -170,10 +164,6 @@ class AuthController extends GetxController {
         rawNonce: rawNonce,
         accessToken: appleCredential.authorizationCode
       );
-
-      debugPrint('Created oauthCredential: ${oauthCredential.toString()}'); // 您已有的
-      debugPrint('oauthCredential token: ${oauthCredential.token}'); // 新增
-      debugPrint('oauthCredential accessToken: ${oauthCredential.accessToken}'); 
 
       // 登入 Firebase
       await _auth.signInWithCredential(oauthCredential);
