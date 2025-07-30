@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -101,6 +102,7 @@ class InitializePageController extends GetxController {
 
       setProgress(50);
       if (isAdSupported()) {
+        await AppTrackingTransparency.requestTrackingAuthorization();
         await MobileAds.instance.initialize();
       }
 

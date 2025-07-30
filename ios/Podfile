@@ -37,6 +37,21 @@ target 'Runner' do
 end
 
 post_install do |installer|
+  require 'yaml'
+
+  # 讀取 Flutter 專案的版本號
+  version = YAML.load_file('../pubspec.yaml')['version']
+  short_version, build_number = version.split('+')
+  plist_path = 'Runner/Info.plist'
+
+  # 寫入 Info.plist
+  if File.exist?(plist_path)
+    puts "📦 同步 Flutter 版號 #{short_version} (build #{build_number}) 到 Info.plist"
+    system("/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString #{short_version}\" #{plist_path}")
+    system("/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion #{build_number}\" #{plist_path}")
+  end
+
+  # 保留 flutter 預設設定
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
   end

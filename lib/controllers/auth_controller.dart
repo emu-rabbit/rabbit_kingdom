@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:math' hide log;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,6 +21,7 @@ import 'package:rabbit_kingdom/services/notification_service.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:developer';
 
 import '../pages/home_page.dart';
@@ -135,6 +140,62 @@ class AuthController extends GetxController {
       RSnackBar.error("Login Failed", e.toString());
       rethrow;
     }
+  }
+
+  /// Apple 登入
+  Future<void> loginWithApple() async {
+    try {
+      final rawNonce = _generateNonce();
+      final nonce = _sha256ofString(rawNonce);
+      debugPrint('Generated rawNonce for AppleIDCredential: $rawNonce');
+      debugPrint('Generated SHA256 nonce for AppleIDCredential: $nonce');
+
+      // Apple 登入授權
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
+        nonce: nonce,
+      );
+
+      debugPrint('Raw appleCredential: ${appleCredential.toString()}'); // 您已有的
+      debugPrint('Extracted identityToken from appleCredential: ${appleCredential.identityToken}'); // 新增
+
+
+      // 檢查是否有拿到 token
+      if (appleCredential.identityToken == null) {
+        throw Exception("Apple identityToken is null");
+      }
+
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+        accessToken: appleCredential.authorizationCode
+      );
+
+      debugPrint('Created oauthCredential: ${oauthCredential.toString()}'); // 您已有的
+      debugPrint('oauthCredential token: ${oauthCredential.token}'); // 新增
+      debugPrint('oauthCredential accessToken: ${oauthCredential.accessToken}'); 
+
+      // 登入 Firebase
+      await _auth.signInWithCredential(oauthCredential);
+    } catch (e) {
+      log('Apple SignIn error: $e', name: 'AuthController');
+      RSnackBar.error("Login Failed", e.toString());
+      rethrow;
+    }
+  }
+
+  // 產生 nonce（避免重播攻擊）
+  String _generateNonce([int length = 32]) {
+    final charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+  }
+
+  // 將 nonce 做 sha256 處理
+  String _sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
   }
 
   Future<void> logout() async {

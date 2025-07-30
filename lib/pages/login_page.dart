@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -62,6 +65,23 @@ class LoginPage extends StatelessWidget {
                         },
                       ),
                       RSpace(),
+                      if (!kIsWeb && Platform.isIOS) ...[
+                        _LoginButton(
+                          text: "用Apple登入",
+                          icon: FontAwesomeIcons.apple,
+                          onPressed: () async {
+                            try {
+                              RLoading.start();
+                              await authController.loginWithApple(); // 這裡也要改喔！
+                            } catch (e) {
+                              // Pass
+                            } finally {
+                              RLoading.stop();
+                            }
+                          },
+                        ),
+                        RSpace(),
+                      ],
                       _LoginButton(
                         text: "使用信箱登入",
                         icon: FontAwesomeIcons.envelope,
