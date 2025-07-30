@@ -171,7 +171,7 @@ class UserController extends GetxController {
     final newPoop = currentPoop + amount;
 
     if (newPoop < 0) {
-      throw Exception('便便數量不足，無法扣除 ${amount.abs()} 喔💩');
+      throw Exception('精華數量不足，無法扣除 ${amount.abs()} ');
     }
 
     final f1 = setPoop(newPoop);
