@@ -62,8 +62,8 @@ Map<KingdomTaskNames, KingdomTask> buildKingdomTasks() {
     tasks[KingdomTaskNames.ad] = KingdomTask(
       "觀看廣告",
       limit: 3,
-      coinReward: 100,
-      expReward: 100,
+      coinReward: 150,
+      expReward: 150,
       navigator: () => showRewardedAd(),
     );
   }
