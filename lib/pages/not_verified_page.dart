@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 
 import '../controllers/auth_controller.dart';
 import '../helpers/screen.dart';
@@ -70,7 +74,10 @@ class NotVerifiedPage extends StatelessWidget {
                   RSpace(),
                   RButton.primary(
                     onPressed: () async {
-                      authController.firebaseUser.value?.reload();
+                      await authController.firebaseUser.value?.reload();
+                      if (!(FirebaseAuth.instance.currentUser?.emailVerified ?? false)) {
+                        RSnackBar.error("驗證失敗", "兔兔大帝還沒收到你的驗證內容，請稍後再試");
+                      }
                     },
                     child: (color) => RText.bodyLarge(
                         "我剛剛認證了！",
