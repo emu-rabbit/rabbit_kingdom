@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
@@ -12,7 +13,7 @@ class VersionService {
     try {
       final appVersion = await _getAppVersion();
       final latestVersion = await _getLatestVersion();
-      log("appVersion: $appVersion, latestVersion: $latestVersion");
+      debugPrint("appVersion: $appVersion, latestVersion: $latestVersion");
       if (_isVersionLessThan(appVersion, latestVersion)) {
         await Get.rPopup(
           ShouldUpdatePopup(
@@ -22,7 +23,7 @@ class VersionService {
         );
       }
     } catch (e) {
-      log("check update failed ${e.toString()}");
+      debugPrint("check update failed ${e.toString()}");
     }
   }
 
@@ -32,15 +33,15 @@ class VersionService {
   }
   
   static Future<List<dynamic>> _getLatestVersion() async {
-    if (Platform.isAndroid) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       await FirebaseRemoteConfig.instance.setConfigSettings(
           RemoteConfigSettings(
               fetchTimeout: const Duration(seconds: 30),
-              minimumFetchInterval: const Duration(minutes: 5)
+              minimumFetchInterval: kDebugMode ? const Duration(minutes: 1) : const Duration(minutes: 10)
           )
       );
       await FirebaseRemoteConfig.instance.fetchAndActivate();
-      final version = FirebaseRemoteConfig.instance.getString("latest_available_version_android");
+      final version = FirebaseRemoteConfig.instance.getString("latest_available_version_${Platform.isAndroid ? "android": "ios"}");
       if (version.isEmpty) throw Exception("Cannot get latest version");
       return _parseVersion(version);
     } else {

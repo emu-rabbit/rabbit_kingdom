@@ -29,6 +29,8 @@ class ShouldUpdatePopup extends StatelessWidget {
             try {
               if (Platform.isAndroid) {
                 launchUrl(Uri.parse("https://play.google.com/store/apps/details?id=io.github.emu_rabbit.rabbit_kingdom"));
+              } else if (Platform.isIOS) {
+                launchUrl(Uri.parse("https://testflight.apple.com/join/NvnVW5qZ"));
               } else {
                 throw Exception("Platform error");
               }
