@@ -4,6 +4,8 @@ import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
+import '../values/app_text_styles.dart';
+
 enum RButtonType { primary, secondary, surface, danger }
 
 class RButton extends StatefulWidget {
@@ -186,7 +188,7 @@ class _RButtonState extends State<RButton> with SingleTickerProviderStateMixin {
             final fg = _foregroundColor(colors);
             final childBuilder = _resolveChildBuilder();
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: AppTextStyle.getFromDp(24), vertical: AppTextStyle.getFromDp(12)),
               decoration: BoxDecoration(
                 color: bg,
                 borderRadius: BorderRadius.circular(9999),

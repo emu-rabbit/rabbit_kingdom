@@ -14,6 +14,7 @@ import 'package:rabbit_kingdom/pages/building_tavern_page.dart';
 import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
 import 'package:rabbit_kingdom/pages/building_trading_page.dart';
 import 'package:rabbit_kingdom/popups/budget_popup.dart';
+import 'package:rabbit_kingdom/values/app_text_styles.dart';
 import 'package:rabbit_kingdom/widgets/r_ad_banner.dart';
 import 'package:rabbit_kingdom/widgets/r_blurred_overlay.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
@@ -49,7 +50,7 @@ class _Header extends StatelessWidget {
         final userLevel = 'Lv.${userController.user?.exp.level ?? 0}';
 
         return Container(
-          height: 50,
+          height: AppTextStyle.getFromDp(50),
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -81,8 +82,8 @@ class _Header extends StatelessWidget {
 
 class _HeaderText extends StatelessWidget {
   final String text;
-  final double fontSize;
-  const _HeaderText(this.text, { this.fontSize = 26 });
+  final double? fontSize;
+  const _HeaderText(this.text, { this.fontSize });
 
   @override
   Widget build(BuildContext context) {
@@ -96,12 +97,12 @@ class _HeaderText extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: fontSize,
+                  fontSize: fontSize ?? AppTextStyle.getFromDp(26),
                   fontFamily: 'JFHuninn',
                   decoration: TextDecoration.none,
                   foreground: Paint()
                     ..style = PaintingStyle.stroke
-                    ..strokeWidth = fontSize / 26 * 4
+                    ..strokeWidth = (fontSize ?? AppTextStyle.getFromDp(26)) / 26 * 4
                     ..color = themeController.brightness == Brightness.light ?
                         Color(0xffe6723d)
                       : AppColors.surfaceContainerHigh,
@@ -113,7 +114,7 @@ class _HeaderText extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: fontSize,
+                  fontSize: fontSize ?? AppTextStyle.getFromDp(26),
                   decoration: TextDecoration.none,
                   fontFamily: 'JFHuninn',
                   color: themeController.brightness == Brightness.light ?
@@ -141,13 +142,13 @@ class _HeaderMoney extends StatelessWidget {
             children: [
               Image.asset(
                 'lib/assets/images/money_bag.png',
-                width: 25,
-                height: 25,
+                width: AppTextStyle.getFromDp(25),
+                height: AppTextStyle.getFromDp(25),
               ),
               SizedBox(width: 2,),
               GetBuilder<PricesController>(
                 builder: (_) {
-                  return _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: 20,);
+                  return _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: AppTextStyle.getFromDp(20),);
                 }
               )
             ],
@@ -314,6 +315,7 @@ class _KingdomViewBuildingState extends State<_KingdomViewBuilding>
           'lib/assets/images/building_${widget.name.toLowerCase()}_${widget.phase}.png', // 建築物圖片需放在 assets/images 下
           width: widget.width, // 可以視情況調整
           height: widget.height,
+          fit: BoxFit.fill,
         ),
       ),
     );

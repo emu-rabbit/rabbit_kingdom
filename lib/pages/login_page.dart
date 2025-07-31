@@ -18,6 +18,7 @@ import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
 import '../controllers/theme_controller.dart';
+import '../values/app_text_styles.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -100,12 +101,12 @@ class LoginPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: AppTextStyle.getFromDp(20), vertical: AppTextStyle.getFromDp(16)),
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text: '點擊登入表示您同意',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  style: TextStyle(color: Colors.grey[600], fontSize: AppTextStyle.getFromDp(12)),
                   children: [
                     TextSpan(
                       text: '《隱私政策》',
@@ -145,7 +146,7 @@ class _BrightnessIconSwitcher extends StatelessWidget {
         ),
         child: FaIcon(
           controller.themeMode.value == ThemeMode.light ? FontAwesomeIcons.sun : FontAwesomeIcons.moon,
-          size: 30,
+          size: AppTextStyle.getFromDp(30),
           color: AppColors.secondary,
         ),
       );
@@ -184,7 +185,7 @@ class _LoginButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FaIcon(icon, color: color, size: 20,),
+              FaIcon(icon, color: color, size: AppTextStyle.getFromDp(20),),
               RSpace(type: RSpaceType.small,),
               RText.bodyLarge(
                 text,

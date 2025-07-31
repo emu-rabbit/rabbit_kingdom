@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 
 import '../helpers/app_colors.dart';
+import '../values/app_text_styles.dart';
 
 class RIcon extends StatelessWidget {
   final IconData icon;
@@ -19,7 +20,7 @@ class RIcon extends StatelessWidget {
         return FaIcon(
           icon,
           color: color ?? AppColors.onSurface,
-          size: size,
+          size: size ?? AppTextStyle.getFromDp(25),
         );
       }
     );

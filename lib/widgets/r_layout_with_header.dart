@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:rabbit_kingdom/values/app_text_styles.dart';
 import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
@@ -18,7 +19,7 @@ class RLayoutWithHeader extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            height: 60,
+            height: AppTextStyle.getFromDp(60),
             child: Stack(
               children: [
                 Align(
