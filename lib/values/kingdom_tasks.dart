@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/pages/newest_announce_page.dart';
 import 'package:rabbit_kingdom/pages/trading_page.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 
 enum KingdomTaskNames {
   login, heart, comment, drink, ad, trade
@@ -64,7 +65,13 @@ Map<KingdomTaskNames, KingdomTask> buildKingdomTasks() {
       limit: 3,
       coinReward: 150,
       expReward: 150,
-      navigator: () => showRewardedAd(),
+      navigator: () {
+        showRewardedAd(
+          onFail: () {
+            RSnackBar.error("抓取廣告失敗", "目前沒有廣告，請稍後再試");
+          }
+        );
+      },
     );
   }
 
