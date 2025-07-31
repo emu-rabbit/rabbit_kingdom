@@ -25,9 +25,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: _KingdomView(),
-        ),
+        _KingdomView(),
         Align(
           alignment: Alignment.topLeft,
           child: SafeArea(child: _Header()),
@@ -166,64 +164,97 @@ class _KingdomView extends StatelessWidget {
     return GetBuilder<ThemeController>(
       builder: (themeController) {
         final kingdomViewData = (
-          background: (
-            width: 552.0,
-            height: 1288.0
-          ),
-          buildings: [
-            (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: (){ Get.to(() => BuildingTownHallPage()); }),
-            (name: "Trading", x: 75.0, y: 328.0, width: 150.0, height: 150.0, onPress: (){ Get.to(() => BuildingTradingPage()); }),
-            (name: "House", x: 48.0, y: 470.0, width: 175.0, height: 250.0, onPress: (){ Get.to(() => BuildingHousePage()); }),
-            (name: "Tavern", x: 283.0, y: 600.0, width: 196.0, height: 260.0, onPress: (){ Get.to(() => BuildingTavernPage()); }),
-            (name: "Fountain", x: 58.0, y: 780.0, width: 146.0, height: 190.0, onPress: (){}),
-          ]
+        background: (
+        width: 552.0,
+        height: 1288.0
+        ),
+        buildings: [
+          (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: () {
+            Get.to(() => BuildingTownHallPage());
+          }),
+          (name: "Trading", x: 75.0, y: 328.0, width: 150.0, height: 150.0, onPress: () {
+            Get.to(() => BuildingTradingPage());
+          }),
+          (name: "House", x: 48.0, y: 470.0, width: 175.0, height: 250.0, onPress: () {
+            Get.to(() => BuildingHousePage());
+          }),
+          (name: "Tavern", x: 283.0, y: 600.0, width: 196.0, height: 260.0, onPress: () {
+            Get.to(() => BuildingTavernPage());
+          }),
+          (name: "Fountain", x: 58.0, y: 780.0, width: 146.0, height: 190.0, onPress: () {}),
+        ]
         );
+        final double bottomPadding = 80.0;
 
-        final phase = themeController.brightness == Brightness.light ? "day" : "night";
-        final screenWidth = MediaQuery.of(context).size.width;
+        final phase = themeController.brightness == Brightness.light
+            ? "day"
+            : "night";
 
-        // 根據原始背景比例換算高度
-        final backgroundAspectRatio =
-            kingdomViewData.background.width / kingdomViewData.background.height;
-        final scaledHeight = screenWidth / backgroundAspectRatio;
+        final screenWidth = MediaQuery
+            .of(context)
+            .size
+            .width;
+        final scale = screenWidth / kingdomViewData.background.width;
+        final scaledHeight = kingdomViewData.background.height * scale;
+        final scaleX = scale;
+        final scaleY = scale;
 
-        return SizedBox(
+        // 計算建築物最底的 y 值（考慮高度後）再加 padding
+        final double buildingsBottomY = kingdomViewData.buildings
+            .map((b) => (b.y + b.height) * scaleY)
+            .reduce((a, b) => a > b ? a : b) + bottomPadding;
+
+        final screenHeight = MediaQuery
+            .of(context)
+            .size
+            .height;
+        final shouldScroll = buildingsBottomY > screenHeight;
+
+        final content = SizedBox(
           width: screenWidth,
           height: scaledHeight,
           child: Stack(
             children: [
-              // 背景圖
               Positioned.fill(
                 child: Image.asset(
                   'lib/assets/images/kingdom_$phase.png',
                   fit: BoxFit.fill,
                 ),
               ),
-
-              // 建築物們
-              ...kingdomViewData.buildings.map((building) {
-                final scaleX = screenWidth / kingdomViewData.background.width;
-                final scaleY = scaledHeight / kingdomViewData.background.height;
-
-                final left = building.x * scaleX;
-                final top = building.y * scaleY;
-
+              ...kingdomViewData.buildings.map((b) {
                 return Positioned(
-                  left: left,
-                  top: top,
+                  left: b.x * scaleX,
+                  top: b.y * scaleY,
                   child: _KingdomViewBuilding(
-                    name: building.name,
-                    onTap: building.onPress,
+                    name: b.name,
+                    onTap: b.onPress,
                     phase: phase,
-                    width: building.width * scaleX,
-                    height: building.height * scaleY,
+                    width: b.width * scaleX,
+                    height: b.height * scaleY,
                   ),
                 );
-              })
+              }),
             ],
           ),
         );
-      });
+
+        return shouldScroll
+            ? SingleChildScrollView(
+            child: ClipRect(
+              child: SizedBox(
+                height: buildingsBottomY,
+                child: content,
+              ),
+            )
+          )
+            : ClipRect(
+          child: SizedBox(
+            height: screenHeight,
+            child: content,
+          ),
+        );
+      }
+    );
   }
 }
 
