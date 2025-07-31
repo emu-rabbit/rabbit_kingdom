@@ -42,6 +42,7 @@ export async function createNewPoopPricesFromLatest(prefix: string) {
     buy: newBuy,
     sell: newSell,
     createAt: now,
+    issuer: "timer",
   });
 
   // eslint-disable-next-line max-len
@@ -93,6 +94,7 @@ export async function createNewPoopPricesFromAnnounce(
     buy: newBuy,
     sell: newSell,
     createAt: now,
+    issuer: "mood",
   });
 
   // eslint-disable-next-line max-len
