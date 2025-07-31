@@ -19,6 +19,14 @@ class ReleaseNotePopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<_ReleaseNote> notes = [
       _ReleaseNote(
+          title: "<2025/07/31>",
+          contents: [
+            "支援了ios設備",
+            "抓不到廣告現在有錯誤提示了",
+            "修正了會自動被退回主頁的錯誤",
+          ]
+      ),
+      _ReleaseNote(
           title: "<2025/07/30>",
           contents: [
             "調整了部分任務數值",
