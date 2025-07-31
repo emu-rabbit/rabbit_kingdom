@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -166,8 +167,8 @@ class _KingdomView extends StatelessWidget {
       builder: (themeController) {
         final kingdomViewData = (
         background: (
-        width: 552.0,
-        height: 1288.0
+          width: 552.0,
+          height: 1288.0,
         ),
         buildings: [
           (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: () {
@@ -183,37 +184,37 @@ class _KingdomView extends StatelessWidget {
             Get.to(() => BuildingTavernPage());
           }),
           (name: "Fountain", x: 58.0, y: 780.0, width: 146.0, height: 190.0, onPress: () {}),
-        ]
+        ],
         );
-        final double bottomPadding = 80.0;
 
-        final phase = themeController.brightness == Brightness.light
-            ? "day"
-            : "night";
+        final screenWidth = MediaQuery.of(context).size.width;
+        final screenHeight = MediaQuery.of(context).size.height;
+        final phase = themeController.brightness == Brightness.light ? "day" : "night";
 
-        final screenWidth = MediaQuery
-            .of(context)
-            .size
-            .width;
         final scale = screenWidth / kingdomViewData.background.width;
-        final scaledHeight = kingdomViewData.background.height * scale;
         final scaleX = scale;
         final scaleY = scale;
+        final scaledBgHeight = kingdomViewData.background.height * scaleY;
+        final double paddingTop = AppTextStyle.getFromDp(80);
+        final double paddingBottom = AppTextStyle.getFromDp(80);
 
-        // 計算建築物最底的 y 值（考慮高度後）再加 padding
-        final double buildingsBottomY = kingdomViewData.buildings
+        // 建築物頂部與底部的範圍
+        final minY = kingdomViewData.buildings
+            .map((b) => b.y * scaleY)
+            .reduce((a, b) => a < b ? a : b);
+        final maxY = kingdomViewData.buildings
             .map((b) => (b.y + b.height) * scaleY)
-            .reduce((a, b) => a > b ? a : b) + bottomPadding;
+            .reduce((a, b) => a > b ? a : b);
 
-        final screenHeight = MediaQuery
-            .of(context)
-            .size
-            .height;
-        final shouldScroll = buildingsBottomY > screenHeight;
+        double viewTop = (minY - paddingTop).clamp(0.0, scaledBgHeight);
+        double viewBottom = (maxY + paddingBottom).clamp(0.0, scaledBgHeight);
+        double viewHeight = viewBottom - viewTop;
+
+        final shouldScroll = screenHeight < viewHeight;
 
         final content = SizedBox(
           width: screenWidth,
-          height: scaledHeight,
+          height: scaledBgHeight,
           child: Stack(
             children: [
               Positioned.fill(
@@ -239,22 +240,50 @@ class _KingdomView extends StatelessWidget {
           ),
         );
 
-        return shouldScroll
-            ? SingleChildScrollView(
-            child: ClipRect(
-              child: SizedBox(
-                height: buildingsBottomY,
-                child: content,
+        if (shouldScroll) {
+          // 可滾動 → 顯示主要區域高度，從 top 開始裁切
+          return SingleChildScrollView(
+            child: SizedBox(
+              // scrollView 的 height 要包住整個內容
+              height: viewHeight + viewTop, // 包含整段裁切後的顯示區
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: -viewTop, // 把內容往上偏移，讓建築物區域落在正中央
+                    child: SizedBox(
+                      width: screenWidth,
+                      height: scaledBgHeight,
+                      child: content,
+                    ),
+                  ),
+                ],
               ),
-            )
-          )
-            : ClipRect(
-          child: SizedBox(
-            height: screenHeight,
-            child: content,
-          ),
-        );
-      }
+            ),
+          );
+        } else {
+          // 裁切置中主要區域 → 向上裁切，使其在畫面中置中
+          final double topOffset = ((viewTop + viewBottom) / 2 - screenHeight / 2)
+              .clamp(0.0, scaledBgHeight - screenHeight);
+
+          return ClipRect(
+            child: SizedBox(
+              height: screenHeight,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: -topOffset,
+                    child: SizedBox(
+                      width: screenWidth,
+                      height: scaledBgHeight,
+                      child: content,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
