@@ -26,7 +26,7 @@ class BuildingTavernPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              RText.titleLarge("酒館的們咿呀的一聲開了"),
+              RText.titleLarge("酒館的門咿呀的一聲開了"),
               RSpace(type: RSpaceType.small,),
               RText.labelSmall("撲鼻而來的酒氣和歡鬧的氣氛衝你而來"),
               RSpace(),
