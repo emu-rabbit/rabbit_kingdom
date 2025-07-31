@@ -39,6 +39,14 @@ class RText extends StatelessWidget {
   }) => RText._(text, AppTextStyle.displaySmall,
       color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
 
+  factory RText.headlineLarge(String text, {
+    Color? color,
+    TextAlign? textAlign,
+    TextOverflow? overflow,
+    int? maxLines,
+  }) => RText._(text, AppTextStyle.headlineLarge,
+      color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
+
   factory RText.headlineMedium(String text, {
     Color? color,
     TextAlign? textAlign,
@@ -101,6 +109,14 @@ class RText extends StatelessWidget {
     TextOverflow? overflow,
     int? maxLines,
   }) => RText._(text, AppTextStyle.labelLarge,
+      color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
+
+  factory RText.labelMedium(String text, {
+    Color? color,
+    TextAlign? textAlign,
+    TextOverflow? overflow,
+    int? maxLines,
+  }) => RText._(text, AppTextStyle.labelMedium,
       color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
 
   factory RText.labelSmall(String text, {

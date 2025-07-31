@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/models/poop_prices.dart';
+import 'package:rabbit_kingdom/models/trading_news.dart';
 
 import '../helpers/collection_names.dart';
 import '../models/kingdom_announcement.dart';
@@ -58,14 +60,17 @@ class EmpireService {
         .add(data);
   }
 
-  static Future<void> publishNewPrices(int buy) async {
+  static Future<void> publishNews(TradingNews news) async {
     final userController = Get.find<UserController>();
     if (userController.user?.group != KingdomUserGroup.empire) return;
+    
+    await FirebaseFirestore.instance
+      .collection(CollectionNames.news)
+      .add(news.toJson());
 
-    final data = PoopPrices.create(buy).toJson();
     await FirebaseFirestore.instance
       .collection(CollectionNames.prices)
-      .add(data);
+      .add(PoopPrices.createWithNews(news).toJson());
   }
 }
 

@@ -1,4 +1,4 @@
-import 'package:rabbit_kingdom/helpers/dynamic.dart';
+import '../helpers/dynamic.dart';
 
 class TradingNews {
   final DateTime createAt;
@@ -6,6 +6,8 @@ class TradingNews {
   final int newPrice;
   final String title;
   final String content;
+  final List<String> goods; // 贊成的 uid
+  final List<String> bads;  // 反對的 uid
 
   TradingNews._({
     required this.createAt,
@@ -13,6 +15,8 @@ class TradingNews {
     required this.newPrice,
     required this.title,
     required this.content,
+    required this.goods,
+    required this.bads,
   });
 
   /// 🔥 用於 Firestore 的 JSON 轉換
@@ -23,6 +27,8 @@ class TradingNews {
       newPrice: json?['newPrice'] ?? 0,
       title: json?['title'] ?? '',
       content: json?['content'] ?? '',
+      goods: List<String>.from(json?['goods'] ?? []),
+      bads: List<String>.from(json?['bads'] ?? []),
     );
   }
 
@@ -33,6 +39,8 @@ class TradingNews {
       'newPrice': newPrice,
       'title': title,
       'content': content,
+      'goods': goods,
+      'bads': bads,
     };
   }
 
@@ -49,6 +57,8 @@ class TradingNews {
       newPrice: newPrice,
       title: title,
       content: content,
+      goods: const [],
+      bads: const [],
     );
   }
 }

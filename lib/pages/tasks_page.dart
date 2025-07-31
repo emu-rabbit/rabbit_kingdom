@@ -48,7 +48,7 @@ class TasksPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                   color: AppColors.surfaceContainerHigh,
                                   border: Border.all(color: AppColors.onSurface, width: 2),
-                                  borderRadius: BorderRadius.all(Radius.circular(20))
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20))
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,

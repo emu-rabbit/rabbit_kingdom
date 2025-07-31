@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
+import 'package:rabbit_kingdom/pages/news_page.dart';
 import 'package:rabbit_kingdom/pages/trading_page.dart';
 import 'package:rabbit_kingdom/popups/trading_info_popup.dart';
 import 'package:rabbit_kingdom/popups/trading_note_popup.dart';
@@ -41,7 +42,8 @@ class BuildingTradingPage extends StatelessWidget {
               RButtonGroup(
                   "你看著那個高聳的水晶",
                   [
-                    RButtonData(text: "交易兔兔精華", onPress: (){ Get.to(() => TradingPage()); })
+                    RButtonData(text: "交易兔兔精華", onPress: (){ Get.to(() => TradingPage()); }),
+                    RButtonData(text: "瀏覽最近的新聞", onPress: (){ Get.to(() => NewsPage()); }),
                   ]
               ),
               RSpace(type: RSpaceType.large,),

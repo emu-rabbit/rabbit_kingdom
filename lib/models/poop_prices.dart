@@ -1,4 +1,5 @@
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
+import 'package:rabbit_kingdom/models/trading_news.dart';
 
 enum PriceIssuer {
   timer,
@@ -37,10 +38,10 @@ class PoopPrices {
     );
   }
 
-  factory PoopPrices.create(int buy) {
+  factory PoopPrices.createWithNews(TradingNews news) {
     return PoopPrices._(
-      buy: buy,
-      sell: buy + 6,
+      buy: news.newPrice,
+      sell: news.newPrice + 6,
       createAt: DateTime.now(),
       issuer: PriceIssuer.news,
     );
