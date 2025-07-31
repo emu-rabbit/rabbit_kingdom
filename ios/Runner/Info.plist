@@ -29,12 +29,12 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-			<string>com.googleusercontent.apps.689030757641-d6lrag0c858j89nppoknbijmi50hv8do</string>
+				<string>com.googleusercontent.apps.689030757641-d6lrag0c858j89nppoknbijmi50hv8do</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>25</string>
+	<string>26</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3770234564897287~5638564748</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
