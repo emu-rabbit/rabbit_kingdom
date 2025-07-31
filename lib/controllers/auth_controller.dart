@@ -44,7 +44,9 @@ class AuthController extends GetxController {
 
       final originalUser = firebaseUser.value;
       firebaseUser.value = user;
-      if (
+      if (originalUser == null && user == null) {
+        Get.offAll(() => LoginPage());
+      } else if (
         (originalUser == null && user != null) ||
         (originalUser != null && user != null && originalUser.emailVerified != user.emailVerified)
       ) {
