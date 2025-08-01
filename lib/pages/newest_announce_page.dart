@@ -40,6 +40,7 @@ class NewestAnnouncePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              RSpace(type: RSpaceType.small,),
               RAnnounceViewer(announce: announceController.announcement!),
               RSpace(),
               Expanded(

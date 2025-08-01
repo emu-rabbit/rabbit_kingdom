@@ -44,6 +44,7 @@ class AnnounceHistoryPage extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    RSpace(type: RSpaceType.small,),
                     ...c.announcements.map((announce) {
                       return [
                         RAnnounceViewer(announce: announce),
@@ -93,7 +94,7 @@ class _AnnounceHistoryController extends GetxController {
       errorMessage.value = null;
 
       final data = await KingdomUserService.getRecentAnnounce();
-      announcements.assignAll(data);
+      announcements.assignAll(data.sublist(1));
     } catch (e) {
       errorMessage.value = e.toString();
     } finally {

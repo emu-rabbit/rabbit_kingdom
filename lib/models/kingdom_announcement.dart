@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
@@ -63,6 +65,41 @@ class KingdomAnnouncement {
     'hearts': hearts.map((h) => h.toJson()).toList(),
     'comments': comments.map((c) => c.toJson()).toList(),
   };
+
+  /// 🆕 將這個物件編碼成 JSON 字串（for 儲存到本地）
+  String encode() {
+    final map = toJson();
+
+    // 轉換 createAt 為 ISO 字串
+    if (map['createAt'] is DateTime) {
+      map['createAt'] = (map['createAt'] as DateTime).toIso8601String();
+    }
+
+    // 將 comments 裡每個物件轉成 encode 字串再 decode 成 Map
+    map['comments'] = comments.map((c) => jsonDecode(c.encode())).toList();
+
+    return jsonEncode(map);
+  }
+
+  /// 🆕 從 JSON 字串還原成 KingdomAnnouncement
+  static KingdomAnnouncement decode(String raw) {
+    final map = jsonDecode(raw);
+    if (map is! Map<String, dynamic>) {
+      throw FormatException('Invalid KingdomAnnouncement JSON');
+    }
+
+    // 轉換 createAt 為 Timestamp
+    if (map['createAt'] is String) {
+      map['createAt'] = Timestamp.fromDate(DateTime.parse(map['createAt']));
+    }
+
+    // 還原 comments
+    map['comments'] = (map['comments'] as List<dynamic>? ?? []).map((e) {
+      return AnnounceComment.decode(jsonEncode(e));
+    }).toList();
+
+    return KingdomAnnouncement.fromJson(map);
+  }
 }
 
 enum AnnounceSticker {
@@ -155,4 +192,27 @@ class AnnounceComment {
     'message': message,
     'createAt': createAt
   };
+
+
+  /// 🆕 將這個物件編碼成 JSON 字串（for 儲存到本地）
+  String encode() {
+    final map = toJson();
+    if (map['createAt'] is DateTime) {
+      map['createAt'] = (map['createAt'] as DateTime).toIso8601String();
+    }
+    return jsonEncode(map);
+  }
+
+  /// 🆕 從 JSON 字串還原成 KingdomAnnouncement
+  static AnnounceComment decode(String raw) {
+    final map = jsonDecode(raw);
+    if (map is Map<String, dynamic>) {
+      if (map['createAt'] is String) {
+        map['createAt'] = Timestamp.fromDate(DateTime.parse(map['createAt']));
+      }
+      return AnnounceComment.fromJson(map);
+    } else {
+      throw FormatException('Invalid KingdomAnnouncement JSON');
+    }
+  }
 }
