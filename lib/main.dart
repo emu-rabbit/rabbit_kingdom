@@ -6,6 +6,7 @@ import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/controllers/records_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/pages/startup_gate.dart';
+import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 import 'package:rabbit_kingdom/widgets/r_blurred_overlay.dart';
 
 import 'controllers/announce_controller.dart';
@@ -23,11 +24,42 @@ void main() async {
   Get.put(RecordsController());
 
   // Run app
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      try {
+        final c = Get.find<UserController>();
+        if (c.user != null) {
+          c.triggerTaskComplete(KingdomTaskNames.login);
+        }
+      } catch (e) {
+        //
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

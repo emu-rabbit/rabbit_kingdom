@@ -289,6 +289,7 @@ class UserController extends GetxController {
     final docRef = _userDocRef.value;
 
     if (user == null || docRef == null) return;
+    if (user.group == KingdomUserGroup.unknown) return;
 
     // 1. 取得任務資料 (這裡的 taskData.completed 會是根據 get taskData 的新邏輯計算出來的)
     final taskData = user.taskData[name];

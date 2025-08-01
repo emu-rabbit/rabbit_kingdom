@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/pages/newest_announce_page.dart';
 import 'package:rabbit_kingdom/pages/trading_page.dart';
@@ -27,7 +28,12 @@ Map<KingdomTaskNames, KingdomTask> buildKingdomTasks() {
       limit: 1,
       coinReward: 150,
       expReward: 150,
-      navigator: () {},
+      navigator: () {
+        final c = Get.find<UserController>();
+        if (c.user != null) {
+          c.triggerTaskComplete(KingdomTaskNames.login);
+        }
+      },
     ),
     KingdomTaskNames.heart: KingdomTask(
       "點擊公告愛心",
