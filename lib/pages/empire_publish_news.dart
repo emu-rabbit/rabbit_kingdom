@@ -80,23 +80,6 @@ class EmpirePublishNews extends StatelessWidget {
               }
             ),
             RSpace(),
-            RNewsViewer(
-                news: TradingNews.create(
-                    originalPrice: 120,
-                    newPrice: 100,
-                    title: "兔兔大帝嚇到摔下床",
-                    content: "夢到巴丹國出兵攻打兔兔王國，令兔兔大帝感到悲傷並從床上驚醒後摔至地上。現在在王國的醫護室中療傷與休憩。"
-                )
-            ),
-            RSpace(),
-            RNewsViewer(
-                news: TradingNews.create(
-                    originalPrice: 120,
-                    newPrice: 160,
-                    title: "兔兔大帝嚇到摔下床",
-                    content: "夢到巴丹國出兵攻打兔兔王國，令兔兔大帝感到悲傷並從床上驚醒後摔至地上。現在在王國的醫護室中療傷與休憩。"
-                )
-            ),
             Obx((){
               return news.value != null ?
                 RNewsViewer(

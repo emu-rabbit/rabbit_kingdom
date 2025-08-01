@@ -62,3 +62,31 @@ class TradingNews {
     );
   }
 }
+
+class TradingNewsWithID extends TradingNews {
+  final String id;
+
+  TradingNewsWithID._({
+    required this.id,
+    required super.createAt,
+    required super.originalPrice,
+    required super.newPrice,
+    required super.title,
+    required super.content,
+    required super.goods,
+    required super.bads,
+  }) : super._();
+
+  factory TradingNewsWithID.create(String id, TradingNews news) {
+    return TradingNewsWithID._(
+      id: id,
+      createAt: news.createAt,
+      originalPrice: news.originalPrice,
+      newPrice: news.newPrice,
+      title: news.title,
+      content: news.content,
+      goods: news.goods,
+      bads: news.bads,
+    );
+  }
+}
