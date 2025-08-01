@@ -17,20 +17,20 @@ class RComment extends StatelessWidget {
       // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: vw(33),
+          width: vw(37),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RText.titleSmall("<${comment.group.toDisplay()}>", color: AppColors.onSurface.withAlpha(180),),
-              RSpace(type: RSpaceType.small,),
+              // RSpace(type: RSpaceType.small,),
               RText.titleLarge("${comment.name}：")
             ],
           ),
         ),
         RSpace(),
         SizedBox(
-          width: vw(65) - 70,
+          width: vw(61) - 70,
           child: RText.bodyMedium(comment.message, maxLines: 4,),
         )
       ],
