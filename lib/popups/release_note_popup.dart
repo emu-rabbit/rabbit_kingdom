@@ -19,6 +19,20 @@ class ReleaseNotePopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<_ReleaseNote> notes = [
       _ReleaseNote(
+          title: "<2025/08/01>",
+          contents: [
+            "新增交易所新聞系統"
+            "修正了王國建築物漂移的問題",
+            "提升了王國景觀在不同解析度手機的呈現",
+            "修正了信箱登入失敗沒有提示的問題",
+            "修正了輸入框會被鍵盤擋到的問題",
+            "修正了從背景喚醒時沒有觸發完成登入任務的問題",
+            "調整了精華交易頁面的標頭顯示",
+            "小幅調整了公告回覆區的版面",
+            "提升部分功能的效能"
+          ]
+      ),
+      _ReleaseNote(
           title: "<2025/07/31>",
           contents: [
             "支援了ios設備",
