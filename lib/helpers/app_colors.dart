@@ -11,18 +11,20 @@ class AppColors {
   /// 快速取得目前 ColorScheme
   static ColorScheme get colorScheme {
     final controller = Get.find<ThemeController>();
-    final mode = controller.themeMode.value;
-
-    final brightness = () {
-      if (mode == ThemeMode.system) {
-        return MediaQuery.platformBrightnessOf(Get.context!);
-      }
-      return mode == ThemeMode.dark ? Brightness.dark : Brightness.light;
-    }();
+    final brightness = controller.brightness;
 
     return brightness == Brightness.dark
         ? AppThemes.dark
         : AppThemes.light;
+  }
+
+  static ExtraColors get extraColors {
+    final controller = Get.find<ThemeController>();
+    final brightness = controller.brightness;
+
+    return brightness == Brightness.dark
+        ? AppThemes.darkExtra
+        : AppThemes.lightExtra;
   }
 
   /// 以下是各種色彩 getter（可自行擴充）
@@ -37,4 +39,6 @@ class AppColors {
   static Color get outline => colorScheme.outline;
   static Color get error => colorScheme.error;
   static Color get onError => colorScheme.onError;
+  static Color get green => extraColors.green;
+  static Color get red => extraColors.red;
 }

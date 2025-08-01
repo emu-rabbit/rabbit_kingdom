@@ -22,10 +22,7 @@ class RNewsViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     final change = news.newPrice - news.originalPrice;
     final changePercent = (change / news.originalPrice) * 100;
-    final lightColor = change < 0 ? Color(0xFF0D9312) : Color(0xFFC61C13);
-    final darkColor = change < 0 ? Color(0xFF2FBF8E) : Color(0xFFEF602B);
-    final tc = Get.find<ThemeController>();
-    final color = tc.brightness == Brightness.light ? lightColor : darkColor;
+    final color = change < 0 ? AppColors.green : AppColors.red;
     final isGood = news.goods.length > news.bads.length;
     final totalReacts = news.goods.length + news.bads.length;
     final reactsPercent = (isGood ? news.goods.length : news.bads.length) / (totalReacts == 0 ? 1 : totalReacts) * 100;
@@ -44,7 +41,7 @@ class RNewsViewer extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             decoration: BoxDecoration(
-              color: color.withAlpha(70),
+              color: color.withAlpha(50),
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20))
             ),
             child: Row(
@@ -57,7 +54,7 @@ class RNewsViewer extends StatelessWidget {
               ],
             ),
           ),
-          // Divider(color: color.withAlpha(200), thickness: 1, height: 1,),
+          Divider(color: color.withAlpha(80), thickness: 1, height: 1,),
           Container(
             padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 20),
             color: color.withAlpha(10),
@@ -73,10 +70,7 @@ class RNewsViewer extends StatelessWidget {
                   color: color.withAlpha(220),
                 ),
                 RSpace(),
-                SizedBox(
-                  width: vw(80),
-                  child: Divider(color: color.withAlpha(100), thickness: 1,),
-                ),
+                Divider(color: color.withAlpha(100), thickness: 1,),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -21,9 +21,6 @@ import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
-final Color colorBuy = Color(0xFFEF602B);
-final Color colorSell = Color(0xFF2FBF8E);
-
 enum TradeType { buy, sell }
 
 class TradingPage extends StatelessWidget {
@@ -71,11 +68,11 @@ class TradingPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RText.titleMedium("交易所賣出：${pc.prices!.sell ?? "-"}", color: colorSell,),
+                  RText.titleMedium("交易所賣出：${pc.prices!.sell ?? "-"}", color: AppColors.green,),
                   RSpace(type: RSpaceType.small,),
                   RText.bodyMedium(" | ", color: AppColors.onSurface,),
                   RSpace(type: RSpaceType.small,),
-                  RText.titleMedium("交易所買入：${pc.prices!.buy ?? "-"}", color: colorBuy,),
+                  RText.titleMedium("交易所買入：${pc.prices!.buy ?? "-"}", color: AppColors.red,),
                 ],
               ),
               RSpace(type: RSpaceType.large,),
@@ -246,6 +243,7 @@ class HistoryChart extends StatelessWidget {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              maxIncluded: false,
               reservedSize: vw(7),
               getTitlesWidget: (value, _) => RText.labelSmall(
                 value.toInt().toString(),
@@ -260,11 +258,12 @@ class HistoryChart extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               maxIncluded: false,
+              interval: 70,
               getTitlesWidget: (value, meta) {
                 final date = xToDate(value);
                 final formatted = DateFormat('HH:mm').format(date); // "7/25"
                 return Padding(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: EdgeInsets.only(top: 12, left: 8),
                   child: RText.labelSmall(formatted),
                 );
               },
@@ -286,14 +285,14 @@ class HistoryChart extends StatelessWidget {
         lineBarsData: [
           LineChartBarData(
             spots: buySpots,
-            color: colorBuy,
+            color: AppColors.red,
             barWidth: 3,
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(show: false),
           ),
           LineChartBarData(
             spots: sellSpots,
-            color: colorSell,
+            color: AppColors.green,
             barWidth: 3,
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(show: false),

@@ -17,6 +17,10 @@ class AppThemes {
     // background: Color(0xFFFFFFFF), // 已棄用
     // onBackground: Color(0xFF000000),
   );
+  static final lightExtra = const ExtraColors(
+    green: Color(0xFF11A616),
+    red: Color(0xFFD3251B)
+  );
 
   static final dark = const ColorScheme(
     brightness: Brightness.dark,
@@ -34,4 +38,17 @@ class AppThemes {
     // background: Color(0xFF000000), // 已棄用
     // onBackground: Color(0xFFFFFFFF),
   );
+  static final darkExtra = const ExtraColors(
+      green: Color(0xFF28AA7F),
+      red: Color(0xFFDF5827)
+  );
+}
+
+class ExtraColors {
+  final Color green;
+  final Color red;
+  const ExtraColors({
+    required this.green,
+    required this.red
+  });
 }
