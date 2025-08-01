@@ -21,7 +21,7 @@ class ReleaseNotePopup extends StatelessWidget {
       _ReleaseNote(
           title: "<2025/08/01>",
           contents: [
-            "新增交易所新聞系統"
+            "新增交易所新聞系統",
             "修正了王國建築物漂移的問題",
             "提升了王國景觀在不同解析度手機的呈現",
             "修正了信箱登入失敗沒有提示的問題",
