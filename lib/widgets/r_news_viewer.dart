@@ -98,6 +98,7 @@ class _NewsInfo extends StatelessWidget {
     final change = news.newPrice - news.originalPrice;
     final changePercent = (change / news.originalPrice) * 100;
     final color = change < 0 ? AppColors.green : AppColors.red;
+    final onColor = change < 0 ? AppColors.onGreen : AppColors.onRed;
     final isGood = news.goods.length > news.bads.length;
     final totalReacts = news.goods.length + news.bads.length;
     final reactsPercent = (isGood ? news.goods.length : news.bads.length) / (totalReacts == 0 ? 1 : totalReacts) * 100;
@@ -117,12 +118,12 @@ class _NewsInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              RText.headlineMedium(news.title, color: color,),
-              RText.titleSmall(news.createAt.toRelativeTimeString(), color: color,)
+              RText.headlineMedium(news.title, color: onColor,),
+              RText.titleSmall(news.createAt.toRelativeTimeString(), color: onColor,)
             ],
           ),
         ),
-        Divider(color: color.withAlpha(80), thickness: 1, height: 1,),
+        Divider(color: color.withAlpha(150), thickness: 1, height: 1,),
         Container(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 20),
           color: color.withAlpha(10),
@@ -131,25 +132,25 @@ class _NewsInfo extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RSpace(),
-              RText.bodyMedium(news.content, maxLines: 4, color: color.withAlpha(240),),
+              RText.bodyMedium(news.content, maxLines: 4, color: onColor.withAlpha(240),),
               RSpace(),
               RText.labelMedium(
                 "兔兔精華新價格：${news.newPrice}，漲跌幅：${change.toSignedString()} (${changePercent.toSignedString()}%)",
-                color: color.withAlpha(220),
+                color: onColor.withAlpha(220),
               ),
               RSpace(),
-              Divider(color: color.withAlpha(100), thickness: 1,),
+              Divider(color: color, thickness: 1,),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   totalReacts > 0 ?
-                  RIcon(isGood ? FontAwesomeIcons.thumbsUp : FontAwesomeIcons.thumbsDown, color: color, size: vw(4),):
+                  RIcon(isGood ? FontAwesomeIcons.thumbsUp : FontAwesomeIcons.thumbsDown, color: onColor, size: vw(4),):
                   SizedBox.shrink(),
                   totalReacts > 0 ? RSpace() : SizedBox.shrink(),
                   totalReacts > 0 ?
-                  RText.bodySmall("${reactsPercent.toStringAsFixed(0)}%的人覺得這新聞很${isGood ? "讚": "爛"}", color: color):
-                  RText.bodySmall("目前沒有人對這則新聞做出反應", color: color.withAlpha(180))
+                  RText.bodySmall("${reactsPercent.toStringAsFixed(0)}%的人覺得這新聞很${isGood ? "讚": "爛"}", color: onColor):
+                  RText.bodySmall("目前沒有人對這則新聞做出反應", color: onColor.withAlpha(180))
                 ],
               )
             ],
@@ -170,6 +171,7 @@ class _NewsReactor extends StatelessWidget {
   Widget build(BuildContext context) {
     final change = news.newPrice - news.originalPrice;
     final color = change < 0 ? AppColors.green : AppColors.red;
+    final onColor = change < 0 ? AppColors.onGreen : AppColors.onRed;
 
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
@@ -177,7 +179,7 @@ class _NewsReactor extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: () => requestOut(),
         child: Center(
-          child: RText.titleLarge("抓不到使用者資料", color: color,),
+          child: RText.titleLarge("抓不到使用者資料", color: onColor,),
         ),
       );
     }
@@ -191,9 +193,9 @@ class _NewsReactor extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                RIcon(reactedWithGood ? FontAwesomeIcons.thumbsUp : FontAwesomeIcons.thumbsDown, color: color, size: vw(8),),
+                RIcon(reactedWithGood ? FontAwesomeIcons.thumbsUp : FontAwesomeIcons.thumbsDown, color: onColor, size: vw(8),),
                 RSpace(),
-                RText.displaySmall("你覺得這新聞很${reactedWithGood ? "讚": "爛"}", color: color)
+                RText.displaySmall("你覺得這新聞很${reactedWithGood ? "讚": "爛"}", color: onColor)
               ],
             )
         ),
@@ -216,9 +218,9 @@ class _NewsReactor extends StatelessWidget {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            RIcon(FontAwesomeIcons.thumbsUp, color: color, size: vw(8),),
+                            RIcon(FontAwesomeIcons.thumbsUp, color: onColor, size: vw(8),),
                             RSpace(),
-                            RText.displaySmall("讚透了", color: color)
+                            RText.displaySmall("讚透了", color: onColor)
                           ]
                       ),
                     )
@@ -231,9 +233,9 @@ class _NewsReactor extends StatelessWidget {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            RIcon(FontAwesomeIcons.thumbsDown, color: color, size: vw(8),),
+                            RIcon(FontAwesomeIcons.thumbsDown, color: onColor, size: vw(8),),
                             RSpace(),
-                            RText.displaySmall("爛死了", color: color)
+                            RText.displaySmall("爛死了", color: onColor)
                           ]
                       ),
                     )
@@ -250,7 +252,7 @@ class _NewsReactor extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  child: RText.headlineLarge("我沒啥感覺 030", color: color,),
+                  child: RText.headlineLarge("我沒啥感覺 030", color: onColor,),
                 )
               ],
             ),

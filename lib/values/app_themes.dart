@@ -19,7 +19,9 @@ class AppThemes {
   );
   static final lightExtra = const ExtraColors(
     green: Color(0xFF11A616),
-    red: Color(0xFFD3251B)
+    onGreen: Color(0xFF0E780E),
+    red: Color(0xFFD3251B),
+    onRed: Color(0xFFAC201A),
   );
 
   static final dark = const ColorScheme(
@@ -39,16 +41,22 @@ class AppThemes {
     // onBackground: Color(0xFFFFFFFF),
   );
   static final darkExtra = const ExtraColors(
-      green: Color(0xFF28AA7F),
-      red: Color(0xFFDF5827)
+    green: Color(0xFF28AA7F),
+    onGreen: Color(0xFF70CAB0),
+    red: Color(0xFFDF5827),
+    onRed: Color(0xFFDF6C4B),
   );
 }
 
 class ExtraColors {
   final Color green;
+  final Color onGreen;
   final Color red;
+  final Color onRed;
   const ExtraColors({
     required this.green,
-    required this.red
+    required this.onGreen,
+    required this.red,
+    required this.onRed
   });
 }

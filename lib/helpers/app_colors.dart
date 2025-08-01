@@ -40,5 +40,7 @@ class AppColors {
   static Color get error => colorScheme.error;
   static Color get onError => colorScheme.onError;
   static Color get green => extraColors.green;
+  static Color get onGreen => extraColors.onGreen;
   static Color get red => extraColors.red;
+  static Color get onRed => extraColors.onRed;
 }
