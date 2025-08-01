@@ -95,6 +95,7 @@ class InitializePageController extends GetxController {
         appleProvider: !kDebugMode ? AppleProvider.appAttest : AppleProvider.debug,
         webProvider: ReCaptchaV3Provider('6Ld8NJArAAAAAKuha0NZH9GKA83OEjcEWcC2QiUj')
       );
+      FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
       if (!kDebugMode) FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
       setProgress(30);
