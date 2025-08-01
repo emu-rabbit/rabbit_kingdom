@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_text_input.dart';
 
 import '../controllers/auth_controller.dart';
@@ -76,7 +77,7 @@ class EmailPage extends StatelessWidget {
                                     );
                                   }
                                 } catch (e) {
-                                  //
+                                  RSnackBar.error("入境失敗", e.toString());
                                 } finally {
                                   RLoading.stop();
                                 }
