@@ -98,6 +98,7 @@ class ReleaseNotePopup extends StatelessWidget {
 
     return RPopup(
         title: "王國工程紀錄",
+        width: vw(85),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: vh(80)),
           child: SingleChildScrollView(
@@ -114,7 +115,7 @@ class ReleaseNotePopup extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          RText.titleMedium(note.title, color: AppColors.onSecondary,),
+                          RText.titleLarge(note.title, color: AppColors.onSecondary,),
                           RSpace(type: RSpaceType.small,),
                           ...note.contents.map((content) {
                             return [

@@ -29,9 +29,9 @@ class BuildingTradingPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              RText.titleLarge("你靠近了一個巨大的水晶"),
+              RText.headlineLarge("你靠近了一個巨大的水晶"),
               RSpace(type: RSpaceType.small,),
-              RText.labelSmall("交易所裡喧嘩聲此起彼落，有人面露笑容也有人失落"),
+              RText.bodySmall("交易所裡喧嘩聲此起彼落，有人笑著也有人失落"),
               RSpace(),
               Image.asset(
                 "lib/assets/images/trading_0.png",

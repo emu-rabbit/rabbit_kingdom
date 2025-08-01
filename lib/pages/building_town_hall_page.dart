@@ -29,9 +29,9 @@ class BuildingTownHallPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RText.titleLarge("你進到了王國的市政廳"),
+            RText.headlineLarge("你進到了王國的市政廳"),
             RSpace(type: RSpaceType.small,),
-            RText.labelSmall("忙碌的兔子們來來去去，差點撞到了你"),
+            RText.bodySmall("忙碌的兔子們來來去去，差點撞到了你"),
             RSpace(),
             Image.asset(
               "lib/assets/images/townhall_0.png",
@@ -47,7 +47,7 @@ class BuildingTownHallPage extends StatelessWidget {
             ),
             RSpace(type: RSpaceType.large,),
             RButtonGroup(
-                "櫃台後面有個可愛的兔兔公務員",
+                "櫃台有個可愛的兔兔公務員",
                 [
                   RButtonData(text: "我要申請護照改名", onPress: (){ Get.to(() => ModifyNamePage()); }),
                   RButtonData(text: "我有問題想問...", onPress: (){ Get.to(() => FaqPage()); }),

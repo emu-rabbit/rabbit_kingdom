@@ -12,13 +12,13 @@ class RButtonGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: vw(60),
+      width: vw(65),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           title.isNotEmpty ?
-            RText.titleSmall(title): SizedBox.shrink(),
+            RText.titleMedium(title): SizedBox.shrink(),
           title.isNotEmpty ?
             RSpace(): SizedBox.shrink(),
           ...buttons.whereType<RButtonData>().map((data) {

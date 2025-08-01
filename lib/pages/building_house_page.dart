@@ -30,9 +30,9 @@ class BuildingHousePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RText.titleLarge("你回到了溫暖的窩"),
+            RText.headlineLarge("你回到了溫暖的窩"),
             RSpace(type: RSpaceType.small,),
-            RText.labelSmall("看了混亂的房間，你決定明天再打掃"),
+            RText.bodySmall("看了混亂的房間，你決定明天再打掃"),
             RSpace(),
             Image.asset(
               "lib/assets/images/house_0.png",

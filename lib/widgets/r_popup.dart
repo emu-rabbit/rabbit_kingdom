@@ -9,8 +9,9 @@ import '../helpers/screen.dart';
 
 class RPopup extends StatelessWidget {
   final String? title;
+  final double? width;
   final Widget child;
-  const RPopup({ required this.child, this.title, super.key });
+  const RPopup({ required this.child, this.title, this.width, super.key });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class RPopup extends StatelessWidget {
         child: Center(
           child: IntrinsicHeight(
             child: Container(
-              width: vw(70),
+              width: width ?? vw(70),
               decoration: BoxDecoration(
                 color: AppColors.secondary.withAlpha(220),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
