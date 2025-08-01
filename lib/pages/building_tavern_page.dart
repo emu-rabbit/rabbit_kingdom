@@ -60,7 +60,7 @@ class BuildingTavernPage extends StatelessWidget {
                             width: vw(6),
                             height: vw(6),
                           ),
-                          RText.bodyLarge(": -${Prices.drink})", color: color,),
+                          RText.bodyLarge("-${Prices.drink})", color: color,),
                         ],
                       );
                     },
