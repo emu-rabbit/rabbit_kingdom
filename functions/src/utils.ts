@@ -25,3 +25,51 @@ export function limitConcurrency<T>(
     runNext();
   });
 }
+
+// 工具函式：補零
+function pad(num: number): string {
+  return num.toString().padStart(2, "0");
+}
+
+// 傳回「目前時間」對應的月份 key（以台灣時間早上 8 點為分界）
+export function getCurrentMonthKey(): string {
+  const now = new Date(Date.now() + 8 * 60 * 60 * 1000); // UTC+8 調整成台灣時間
+
+  const isBeforeCutoff = now.getUTCDate() === 1 && now.getUTCHours() < 8;
+
+  const year = isBeforeCutoff ?
+    now.getUTCMonth() === 0 ? now.getUTCFullYear() - 1 : now.getUTCFullYear() :
+    now.getUTCFullYear();
+
+  const month = isBeforeCutoff ?
+    now.getUTCMonth() === 0 ? 12 : now.getUTCMonth() :
+    now.getUTCMonth() + 1;
+
+  return `${year}-${pad(month)}`;
+}
+
+// 傳回「上個月」的月份 key（同樣以台灣時間早上 8 點為分界）
+export function getLastMonthKey(): string {
+  const now = new Date(Date.now() + 8 * 60 * 60 * 1000); // UTC+8
+
+  const isBeforeCutoff = now.getUTCDate() === 1 && now.getUTCHours() < 8;
+
+  let year = now.getUTCFullYear();
+  let month = now.getUTCMonth() + 1; // UTCMonth 是 0-based
+
+  if (isBeforeCutoff) {
+    month -= 1;
+    if (month === 0) {
+      month = 12;
+      year -= 1;
+    }
+  } else {
+    month -= 1;
+    if (month === 0) {
+      month = 12;
+      year -= 1;
+    }
+  }
+
+  return `${year}-${pad(month)}`;
+}

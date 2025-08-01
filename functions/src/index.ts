@@ -4,6 +4,7 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {sendNotificationToUsers} from "./sendNotificationToUsers";
 import {createNewPoopPricesFromAnnounce, createNewPoopPricesFromLatest} from "./createNewPoopPrices";
+import {updatePropertyRecords} from "./updatePropertyRecords";
 
 // announce 觸發
 export const onAnnounceCreated = onDocumentCreated({
@@ -38,3 +39,25 @@ export const scheduledPoopPricesCreation = onSchedule(
     await createNewPoopPricesFromLatest("dev_");
   }
 );
+
+export const onPricesCreated = onDocumentCreated({
+  document: "prices/{id}",
+  region: "asia-east2", // 可改成你要的地區
+}, async (event) => {
+  const data = event.data?.data();
+  if (!data) return;
+  const buy = data["buy"];
+  if (!buy || typeof buy != "number") return;
+  // await updatePropertyRecords("", buy);
+});
+
+export const onDevPricesCreated = onDocumentCreated({
+  document: "dev_prices/{id}",
+  region: "asia-east2", // 可改成你要的地區
+}, async (event) => {
+  const data = event.data?.data();
+  if (!data) return;
+  const buy = data["buy"];
+  if (!buy || typeof buy != "number") return;
+  await updatePropertyRecords("dev_", buy);
+});
