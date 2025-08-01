@@ -16,7 +16,9 @@ import '../widgets/r_text.dart';
 class EmailPage extends StatelessWidget {
   final emailController = RTextInputController();
   final passwordController = RTextInputController(obscure: true);
-  bool get loginAllow => emailController.text.value.isNotEmpty && passwordController.text.value.isNotEmpty;
+  bool get loginAllow =>
+      emailController.text.value.isNotEmpty &&
+      passwordController.text.value.isNotEmpty;
 
   EmailPage({super.key});
 
@@ -35,45 +37,50 @@ class EmailPage extends StatelessWidget {
             child: Stack(
               children: [
                 Align(
-                    alignment: Alignment.centerLeft,
-                    child: RIconButton.back()
-                )
+                  alignment: Alignment.centerLeft,
+                  child: RIconButton.back(),
+                ),
               ],
             ),
           ),
           Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                  'lib/assets/images/rabbit_empire_1.png',
-                    width: mainImageSize(),
-                    height: mainImageSize(),
-                    fit: BoxFit.cover,
-                  ),
-                  RSpace(),
-                  RText.bodySmall("要用信箱入境？希望你不會忘記密碼..."),
-                  RSpace(type: RSpaceType.large,),
-                  SizedBox(
-                    width: vw(75),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        RSpace(),
-                        RTextInput(label: "信箱", controller: emailController,),
-                        RSpace(),
-                        RTextInput(label: "密碼", controller: passwordController, obscureText: true,),
-                        RSpace(type: RSpaceType.large,),
-                        Obx(() {
-                          return RButton.surface(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'lib/assets/images/rabbit_empire_1.png',
+                      width: mainImageSize(),
+                      height: mainImageSize(),
+                      fit: BoxFit.cover,
+                    ),
+                    RSpace(),
+                    RText.bodySmall("要用信箱入境？希望你不會忘記密碼..."),
+                    RSpace(type: RSpaceType.large),
+                    SizedBox(
+                      width: vw(75),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RSpace(),
+                          RTextInput(label: "信箱", controller: emailController),
+                          RSpace(),
+                          RTextInput(
+                            label: "密碼",
+                            controller: passwordController,
+                            obscureText: true,
+                          ),
+                          RSpace(type: RSpaceType.large),
+                          Obx(() {
+                            return RButton.surface(
                               onPressed: () async {
                                 try {
                                   RLoading.start();
                                   if (loginAllow) {
                                     await authController.loginWithEmail(
-                                        emailController.text.value,
-                                        passwordController.text.value
+                                      emailController.text.value,
+                                      passwordController.text.value,
                                     );
                                   }
                                 } catch (e) {
@@ -88,24 +95,22 @@ class EmailPage extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    RText.bodyLarge(
-                                      "申請入境",
-                                      color: color,
-                                    )
+                                    RText.bodyLarge("申請入境", color: color),
                                   ],
                                 ),
-                              )
-                          );
-                        })
-                      ],
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              )
-            )
-          )
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
-      )
+      ),
     );
   }
 }
