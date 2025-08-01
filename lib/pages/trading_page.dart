@@ -32,8 +32,8 @@ class TradingPage extends StatelessWidget {
     final amountController = RAmountInputController();
 
     return RLayoutWithHeader(
-      "兔兔精華交易所",
-      topRight: RMoney(types: [MoneyType.property],),
+      "交易所",
+      topRight: RMoney(types: [MoneyType.coin, MoneyType.poop],),
       child: Obx((){
         final pc = Get.find<PricesController>();
         if (tc.historyPrices.value == null) {
@@ -243,7 +243,6 @@ class HistoryChart extends StatelessWidget {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              maxIncluded: false,
               reservedSize: vw(7),
               getTitlesWidget: (value, _) => RText.labelSmall(
                 value.toInt().toString(),
@@ -263,7 +262,7 @@ class HistoryChart extends StatelessWidget {
                 final date = xToDate(value);
                 final formatted = DateFormat('HH:mm').format(date); // "7/25"
                 return Padding(
-                  padding: EdgeInsets.only(top: 12, left: 8),
+                  padding: EdgeInsets.only(top: 8, left: 8),
                   child: RText.labelSmall(formatted),
                 );
               },
