@@ -7,6 +7,7 @@ import 'package:rabbit_kingdom/pages/tasks_page.dart';
 import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_money.dart';
 import 'package:rabbit_kingdom/widgets/r_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 
@@ -22,6 +23,7 @@ class BuildingTavernPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return RLayoutWithHeader(
         "",
+        topRight: RMoney(types: [MoneyType.coin],),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,7 +60,7 @@ class BuildingTavernPage extends StatelessWidget {
                             width: vw(6),
                             height: vw(6),
                           ),
-                          RText.bodyLarge(": ${Prices.drink})", color: color,),
+                          RText.bodyLarge(": -${Prices.drink})", color: color,),
                         ],
                       );
                     },
