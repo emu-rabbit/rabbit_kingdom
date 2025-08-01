@@ -48,7 +48,7 @@ class EmpirePublishNews extends StatelessWidget {
                   children: [
                     RTextInput(controller: priceController, label: "新買入價", keyboardType: TextInputType.number,),
                     RSpace(type: RSpaceType.small,),
-                    RTextInput(controller: titleController, label: "標題",),
+                    RTextInput(controller: titleController, label: "標題", maxLength: 10,),
                     RSpace(type: RSpaceType.small,),
                     RTextInput(controller: contentController, label: "內容",),
                   ],

@@ -117,7 +117,7 @@ class _NewsInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              RText.headlineLarge(news.title, color: color,),
+              RText.headlineMedium(news.title, color: color,),
               RText.titleSmall(news.createAt.toRelativeTimeString(), color: color,)
             ],
           ),
