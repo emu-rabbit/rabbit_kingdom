@@ -4,6 +4,7 @@ import * as admin from "firebase-admin";
 import {getCurrentMonthKey,
   getStartOfMonth8amInTaiwan,
   limitConcurrency} from "./utils";
+import {DocumentSnapshot, DocumentData} from "@google-cloud/firestore";
 
 const MAX_BATCH_SIZE = 200;
 const MAX_CONCURRENCY = 5;
@@ -65,15 +66,26 @@ async function processChunkProperty(
 ) {
   const batch = db.batch();
 
-  const recordSnaps = await getDocsByMultipleIds(
+  // 1. 取得所有 record 的文件快照
+  const recordQuerySnapshot = await getDocsByMultipleIds(
     recordsCollection,
     chunk.map((c) => c.id)
   );
 
-  chunk.forEach((userDoc, i) => {
+  // 2. 將文件快照轉換為以 ID 為鍵的 Map，方便快速查找
+  const recordSnapsMap =
+    new Map<string, DocumentSnapshot<DocumentData, DocumentData>>();
+  recordQuerySnapshot.forEach((doc) => {
+    recordSnapsMap.set(doc.id, doc);
+  });
+
+  chunk.forEach((userDoc) => {
     const uid = userDoc.id;
     const userData = userDoc.data();
-    const recordData = recordSnaps[i].exists ? recordSnaps[i].data() ?? {} : {};
+
+    // 3. 使用 Map 根據 UID 查找對應的 record，並安全地讀取資料
+    const recordSnap = recordSnapsMap.get(uid);
+    const recordData = recordSnap?.exists ? recordSnap.data() ?? {} : {};
 
     const budget = userData.budget ?? {};
     const coin = Number(budget.coin ?? 0);
