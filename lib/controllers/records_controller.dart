@@ -57,7 +57,7 @@ class RecordsController extends GetxController {
   Future<void> setRecord({
     required RecordName name,
     required RecordRound round,
-    required double value
+    required double? value
   }) async {
     if (_recordsDocRef.value == null) return;
 

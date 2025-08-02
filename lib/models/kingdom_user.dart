@@ -277,6 +277,9 @@ class KingdomUserTradingsNote {
   final double? buyAverage;
   final int sellAmount;
   final double? sellAverage;
+  double? get averageDif {
+    return buyAverage != null && sellAverage != null ? sellAverage! - buyAverage! : null;
+  }
 
   const KingdomUserTradingsNote._({
     required this.buyAmount,

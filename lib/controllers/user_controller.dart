@@ -254,11 +254,16 @@ class UserController extends GetxController {
       name: RecordName.tradingVolume, round: MonthlyRound.now(), value: record.amount.toDouble()
     );
     final f3 = recordsController.setRecord(
-        name: record.type == TradingType.buy ? RecordName.sellAvg : RecordName.buyAvg,
-        round: AllRound(),
-        value: record.type == TradingType.buy ? newNote.sellAverage! : newNote.buyAverage!
+      name: record.type == TradingType.buy ? RecordName.sellAvg : RecordName.buyAvg,
+      round: AllRound(),
+      value: record.type == TradingType.buy ? newNote.sellAverage! : newNote.buyAverage!
     );
-    return Future.wait([f1, f2, f3]).then((_){});
+    final f4 = recordsController.setRecord(
+      name: RecordName.tradingAvgDif,
+      round: AllRound(),
+      value: newNote.averageDif
+    );
+    return Future.wait([f1, f2, f3, f4]).then((_){});
   }
 
   /// 修改名字（可收費）
