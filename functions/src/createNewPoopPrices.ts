@@ -46,7 +46,7 @@ export async function createNewPoopPricesFromLatest(prefix: string) {
   });
 
   // eslint-disable-next-line max-len
-  console.log(` New price added: lastBuy: ${lastBuyPrice}, buy = ${newBuy}, sell = ${newSell}`);
+  console.log(` New price added: prefix:${prefix} lastBuy: ${lastBuyPrice}, buy = ${newBuy}, sell = ${newSell}`);
   return null;
 }
 
@@ -98,6 +98,6 @@ export async function createNewPoopPricesFromAnnounce(
   });
 
   // eslint-disable-next-line max-len
-  console.log(` New price added: mood=${mood}, buy = ${newBuy}, sell = ${newSell}`);
+  console.log(` New price added: prefix=${prefix} mood=${mood}, buy = ${newBuy}, sell = ${newSell}`);
   return null;
 }
