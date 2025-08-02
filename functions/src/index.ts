@@ -4,7 +4,7 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {sendNotificationToUsers} from "./sendNotificationToUsers";
 import {createNewPoopPricesFromAnnounce, createNewPoopPricesFromLatest} from "./createNewPoopPrices";
-import {updatePropertyRecords} from "./updateRecords";
+import {updatePropertyRecords, updateTradingAverageRecords} from "./updateRecords";
 
 const REGION = "asia-east1";
 
@@ -63,3 +63,14 @@ export const onDevPricesCreated = onDocumentCreated({
   if (!buy || typeof buy != "number") return;
   await updatePropertyRecords("dev_", buy);
 });
+
+export const scheduledUpdateTradingAvgRecord = onSchedule(
+  {
+    schedule: "5 8 * * *",
+    region: REGION, // 你可以改成自己的區域
+  },
+  async () => {
+    // await updateTradingAverageRecords("");
+    await updateTradingAverageRecords("dev_");
+  }
+);

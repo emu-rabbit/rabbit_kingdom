@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable require-jsdoc */
 import * as admin from "firebase-admin";
-import {getCurrentMonthKey, limitConcurrency} from "./utils";
+import {getCurrentMonthKey,
+  getStartOfMonth8amInTaiwan,
+  limitConcurrency} from "./utils";
 
 const MAX_BATCH_SIZE = 200;
 const MAX_CONCURRENCY = 5;
@@ -21,7 +24,7 @@ export async function updatePropertyRecords(
   }
 
   const tasks = chunks.map((chunk) => {
-    return () => processChunk(
+    return () => processChunkProperty(
       chunk, db, recordsCollection, buy, getCurrentMonthKey()
     );
   });
@@ -30,7 +33,30 @@ export async function updatePropertyRecords(
   console.log(`✅ 已更新 ${docs.length} 位使用者的資產紀錄（分批 ${chunks.length} 組）`);
 }
 
-async function processChunk(
+export async function updateTradingAverageRecords(prefix: string) {
+  const db = admin.firestore();
+  const userCollection = db.collection(`${prefix}user`);
+  const recordsCollection = db.collection(`${prefix}records`);
+  const tradingsCollection = db.collection(`${prefix}tradings`);
+
+  const snapshot = await userCollection.where("group", "!=", "unknown").get();
+  const docs = snapshot.docs;
+
+  const chunks: FirebaseFirestore.QueryDocumentSnapshot[][] = [];
+  for (let i = 0; i < docs.length; i += MAX_BATCH_SIZE) {
+    chunks.push(docs.slice(i, i + MAX_BATCH_SIZE));
+  }
+
+  const tasks = chunks.map((chunk) => {
+    return () => processChunkTradingAverage(
+      chunk, db, recordsCollection, tradingsCollection, getCurrentMonthKey()
+    );
+  });
+  await limitConcurrency(tasks, MAX_CONCURRENCY);
+  console.log(`✅ 已更新 ${docs.length} 位使用者的平均交易價格（分批 ${chunks.length} 組）`);
+}
+
+async function processChunkProperty(
   chunk: FirebaseFirestore.QueryDocumentSnapshot[],
   db: FirebaseFirestore.Firestore,
   recordsCollection: FirebaseFirestore.CollectionReference,
@@ -66,6 +92,90 @@ async function processChunk(
         },
         [monthKey]: {
           value: currentMonthValue + growth,
+        },
+      },
+    }, {merge: true});
+  });
+
+  await batch.commit();
+}
+
+async function processChunkTradingAverage(
+  chunk: FirebaseFirestore.QueryDocumentSnapshot[],
+  db: FirebaseFirestore.Firestore,
+  recordsCollection: FirebaseFirestore.CollectionReference,
+  tradingsCollection: FirebaseFirestore.CollectionReference,
+  monthKey: string
+) {
+  const batch = db.batch();
+  const startTime = getStartOfMonth8amInTaiwan();
+
+  const userIds = chunk.map((userDoc) => userDoc.id);
+  // 由於 'in' 運算子有 10 個值的限制，這裡需要對 userIds 進行分批
+  const tradingDataByUserId = new Map<string, any[]>();
+  const batchSize = 10;
+  for (let i = 0; i < userIds.length; i += batchSize) {
+    const batchUserIds = userIds.slice(i, i + batchSize);
+    const tradingSnaps = await tradingsCollection
+      .where("userID", "in", batchUserIds)
+      .where("createAt", ">=", startTime)
+      .get();
+
+    tradingSnaps.forEach((doc) => {
+      const data = doc.data();
+      const uid = data["userID"];
+      if (!tradingDataByUserId.has(uid)) {
+        tradingDataByUserId.set(uid, []);
+      }
+      tradingDataByUserId.get(uid)?.push(data);
+    });
+  }
+
+  userIds.forEach((uid) => {
+    const userTradings = tradingDataByUserId.get(uid) || [];
+    const summary = {
+      buyVolume: 0,
+      buyTotalPrice: 0,
+      sellVolume: 0,
+      sellTotalPrice: 0,
+    }; // 您的 summary 邏輯
+    userTradings.forEach((data) => {
+      // 執行計算
+      const type = data["type"];
+      const amount = data["amount"] ?? 0;
+      const price = data["price"] ?? 0;
+      if (type === "buy") {
+        summary.sellVolume += amount;
+        summary.sellTotalPrice += amount * price;
+      } else if (type === "sell") {
+        summary.buyVolume += amount;
+        summary.buyTotalPrice += amount * price;
+      }
+    });
+
+    // 批次寫入邏輯
+    const recordRef = recordsCollection.doc(uid);
+    const buyAvg = summary.buyVolume > 0 ?
+      summary.buyTotalPrice / summary.buyVolume :
+      null;
+    const sellAvg = summary.sellVolume > 0 ?
+      summary.sellTotalPrice / summary.sellVolume :
+      null;
+    batch.set(recordRef, {
+      buyAvg: {
+        [monthKey]: {
+          value: buyAvg,
+        },
+      },
+      sellAvg: {
+        [monthKey]: {
+          value: sellAvg,
+        },
+      },
+      tradingAvgDif: {
+        [monthKey]: {
+          value: buyAvg !== null && sellAvg !== null ?
+            sellAvg - buyAvg : null,
         },
       },
     }, {merge: true});

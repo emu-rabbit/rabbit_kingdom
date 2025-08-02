@@ -1,3 +1,6 @@
+
+import {Timestamp} from "firebase-admin/firestore";
+
 /* eslint-disable require-jsdoc */
 export function limitConcurrency<T>(
   tasks: (() => Promise<T>)[],
@@ -72,4 +75,21 @@ export function getLastMonthKey(): string {
   }
 
   return `${year}-${pad(month)}`;
+}
+
+export function getStartOfMonth8amInTaiwan(): Timestamp {
+  const now = new Date();
+
+  // 1. 建立一個表示「當月第一天，UTC 午夜 0 點」的 Date 物件
+  const startOfMonth8amUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0)
+  );
+
+  // 2. 判斷當前時間（now）是否早於這個 UTC 午夜 0 點
+  if (now.getTime() < startOfMonth8amUTC.getTime()) {
+    // 3. 如果是，表示台灣時間還沒到當月 1 號的 8 點，所以回溯到上個月
+    startOfMonth8amUTC.setUTCMonth(startOfMonth8amUTC.getUTCMonth() - 1);
+  }
+
+  return Timestamp.fromDate(startOfMonth8amUTC);
 }
