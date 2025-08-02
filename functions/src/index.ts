@@ -66,7 +66,7 @@ export const onDevPricesCreated = onDocumentCreated({
 
 export const scheduledUpdateTradingAvgRecord = onSchedule(
   {
-    schedule: "5 8 * * *",
+    schedule: "5 0,8,16 * * *",
     region: REGION, // 你可以改成自己的區域
   },
   async () => {
