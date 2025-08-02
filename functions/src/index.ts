@@ -6,10 +6,12 @@ import {sendNotificationToUsers} from "./sendNotificationToUsers";
 import {createNewPoopPricesFromAnnounce, createNewPoopPricesFromLatest} from "./createNewPoopPrices";
 import {updatePropertyRecords} from "./updateRecords";
 
+const REGION = "asia-east1";
+
 // announce 觸發
 export const onAnnounceCreated = onDocumentCreated({
   document: "announce/{uid}",
-  region: "asia-east2", // 可改成你要的地區
+  region: REGION, // 可改成你要的地區
 }, async (event) => {
   const data = event.data?.data();
   if (!data) return;
@@ -20,7 +22,7 @@ export const onAnnounceCreated = onDocumentCreated({
 // dev_announce 觸發
 export const onDevAnnounceCreated = onDocumentCreated({
   document: "dev_announce/{uid}",
-  region: "asia-east2", // 可改成你要的地區
+  region: REGION, // 可改成你要的地區
 }, async (event) => {
   const data = event.data?.data();
   if (!data) return;
@@ -32,7 +34,7 @@ export const onDevAnnounceCreated = onDocumentCreated({
 export const scheduledPoopPricesCreation = onSchedule(
   {
     schedule: "every 30 minutes",
-    region: "asia-east2", // 你可以改成自己的區域
+    region: REGION, // 你可以改成自己的區域
   },
   async () => {
     await createNewPoopPricesFromLatest("");
@@ -42,7 +44,7 @@ export const scheduledPoopPricesCreation = onSchedule(
 
 export const onPricesCreated = onDocumentCreated({
   document: "prices/{id}",
-  region: "asia-east2", // 可改成你要的地區
+  region: REGION, // 可改成你要的地區
 }, async (event) => {
   const data = event.data?.data();
   if (!data) return;
@@ -53,7 +55,7 @@ export const onPricesCreated = onDocumentCreated({
 
 export const onDevPricesCreated = onDocumentCreated({
   document: "dev_prices/{id}",
-  region: "asia-east2", // 可改成你要的地區
+  region: REGION, // 可改成你要的地區
 }, async (event) => {
   const data = event.data?.data();
   if (!data) return;
