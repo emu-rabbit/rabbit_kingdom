@@ -12,7 +12,7 @@ export async function updatePropertyRecords(
   const userCollection = db.collection(`${prefix}user`);
   const recordsCollection = db.collection(`${prefix}records`);
 
-  const snapshot = await userCollection.get();
+  const snapshot = await userCollection.where("group", "!=", "unknown").get();
   const docs = snapshot.docs;
 
   const chunks: FirebaseFirestore.QueryDocumentSnapshot[][] = [];
