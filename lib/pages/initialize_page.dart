@@ -88,14 +88,32 @@ class InitializePageController extends GetxController {
 
       setProgress(10);
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      if (!kIsWeb) FirebaseCrashlytics.instance.setCustomKey('platform', Platform.operatingSystem);
 
       setProgress(20);
-      await FirebaseAppCheck.instance.activate(
-        androidProvider: !kDebugMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
-        appleProvider: !kDebugMode ? AppleProvider.appAttest : AppleProvider.debug,
-        webProvider: ReCaptchaV3Provider('6Ld8NJArAAAAAKuha0NZH9GKA83OEjcEWcC2QiUj')
-      );
-      FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
+      try {
+        await FirebaseAppCheck.instance.activate(
+            androidProvider: !kDebugMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
+            appleProvider: !kDebugMode ? AppleProvider.appAttest : AppleProvider.debug,
+            webProvider: ReCaptchaV3Provider('6Ld8NJArAAAAAKuha0NZH9GKA83OEjcEWcC2QiUj')
+        );
+        FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
+      } catch(e, stack) {
+        FirebaseCrashlytics.instance.recordError(e, stack, reason: "AppCheck activation failed");
+      }
+      try {
+        final token = await FirebaseAppCheck.instance.getToken(kDebugMode ? true : false);
+        if (token == null || token.isEmpty) {
+          FirebaseCrashlytics.instance.log("AppCheck token is empty");
+        } else {
+          FirebaseCrashlytics.instance.setCustomKey("appCheck_token_short", token.substring(0, 10));
+          FirebaseCrashlytics.instance.log("AppCheck token retrieved successfully");
+        }
+      } catch (e, stack) {
+        FirebaseCrashlytics.instance.recordError(e, stack, reason: "AppCheck token fetch failed");
+      }
+
+      setProgress(25);
       if (!kDebugMode) FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
       setProgress(30);
@@ -114,7 +132,8 @@ class InitializePageController extends GetxController {
       Get.put(AuthController(), permanent: true);
 
       setProgress(100);
-    } catch (e) {
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack, reason: "InitializePageController failed");
       RSnackBar.error("王國加載失敗", e.toString());
     }
   }

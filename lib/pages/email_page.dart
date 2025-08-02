@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -83,7 +84,9 @@ class EmailPage extends StatelessWidget {
                                       passwordController.text.value,
                                     );
                                   }
-                                } catch (e) {
+                                } catch (e, stack) {
+                                  FirebaseCrashlytics.instance.setCustomKey("login_method", "email");
+                                  FirebaseCrashlytics.instance.recordError(e, stack);
                                   RSnackBar.error("入境失敗", e.toString());
                                 } finally {
                                   RLoading.stop();

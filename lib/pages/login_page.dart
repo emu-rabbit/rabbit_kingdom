@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:rabbit_kingdom/pages/terms_page.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
+import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
@@ -58,8 +60,10 @@ class LoginPage extends StatelessWidget {
                           try {
                             RLoading.start();
                             await authController.loginWithGoogle();
-                          } catch(e) {
-                            // Pass
+                          } catch(e, stack) {
+                            FirebaseCrashlytics.instance.setCustomKey("login_method", "google");
+                            FirebaseCrashlytics.instance.recordError(e, stack);
+                            RSnackBar.error("登入失敗", e.toString());
                           } finally {
                             RLoading.stop();
                           }
@@ -74,8 +78,10 @@ class LoginPage extends StatelessWidget {
                             try {
                               RLoading.start();
                               await authController.loginWithApple(); // 這裡也要改喔！
-                            } catch (e) {
-                              // Pass
+                            } catch (e, stack) {
+                              FirebaseCrashlytics.instance.setCustomKey("login_method", "apple");
+                              FirebaseCrashlytics.instance.recordError(e, stack);
+                              RSnackBar.error("登入失敗", e.toString());
                             } finally {
                               RLoading.stop();
                             }
