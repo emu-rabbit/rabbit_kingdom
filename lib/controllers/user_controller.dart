@@ -10,6 +10,7 @@ import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/widgets/r_task_compelete.dart';
 
 import '../helpers/collection_names.dart';
+import '../helpers/json.dart';
 import '../models/kingdom_user.dart';
 import '../values/consts.dart';
 import '../values/kingdom_tasks.dart';
@@ -42,14 +43,7 @@ class UserController extends GetxController {
       _user.value = userFromFirestore;
 
       final expectedData = userFromFirestore.toJson();
-      bool needsUpdate = false;
-
-      expectedData.forEach((key, value) {
-        if (!data.containsKey(key)) {
-          data[key] = value;
-          needsUpdate = true;
-        }
-      });
+      final bool needsUpdate = mergeMissingFields(data, expectedData);
 
       if (needsUpdate) {
         await docRef.update(data);
