@@ -4,7 +4,7 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {sendNotificationToUsers} from "./sendNotificationToUsers";
 import {createNewPoopPricesFromAnnounce, createNewPoopPricesFromLatest} from "./createNewPoopPrices";
-import {updatePropertyRecords} from "./updatePropertyRecords";
+import {updatePropertyRecords} from "./updateRecords";
 
 // announce 觸發
 export const onAnnounceCreated = onDocumentCreated({
