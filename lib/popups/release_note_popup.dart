@@ -22,6 +22,7 @@ class ReleaseNotePopup extends StatelessWidget {
           title: "<2025/08/02>",
           contents: [
             "調整部分畫面與文字",
+            "調整了小帳冊的排版與內容",
             "調整和修改了一些國人看不到的機制",
             "更換了兔兔大帝生氣和激動的樣子",
           ]
