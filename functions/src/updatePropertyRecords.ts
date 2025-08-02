@@ -39,8 +39,9 @@ async function processChunk(
 ) {
   const batch = db.batch();
 
-  const recordSnaps = await Promise.all(
-    chunk.map((doc) => recordsCollection.doc(doc.id).get())
+  const recordSnaps = await getDocsByMultipleIds(
+    recordsCollection,
+    chunk.map((c) => c.id)
   );
 
   chunk.forEach((userDoc, i) => {
@@ -73,3 +74,36 @@ async function processChunk(
   await batch.commit();
 }
 
+async function getDocsByMultipleIds(
+  collectionRef: FirebaseFirestore.CollectionReference,
+  ids: string[],
+  batchSize = 10
+// eslint-disable-next-line max-len
+): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>[]> {
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const allQueries: Promise<FirebaseFirestore.QuerySnapshot>[] = [];
+
+  // 將 IDs 陣列分割成小批次
+  for (let i = 0; i < ids.length; i += batchSize) {
+    const batchIds = ids.slice(i, i + batchSize);
+
+    // 對每個小批次建立一個查詢
+    const query = collectionRef
+      .where(admin.firestore.FieldPath.documentId(), "in", batchIds).get();
+    allQueries.push(query);
+  }
+
+  // 使用 Promise.all() 平行執行所有查詢
+  const allSnapshots = await Promise.all(allQueries);
+
+  // 將所有查詢結果合併成一個單一的快照陣列
+  const allDocs: FirebaseFirestore.DocumentSnapshot[] = [];
+  allSnapshots.forEach((snapshot) => {
+    allDocs.push(...snapshot.docs);
+  });
+
+  return allDocs;
+}
