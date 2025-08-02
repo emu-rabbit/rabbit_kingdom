@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 typedef KingdomRecords = Map<RecordName, Map<RecordRound, RankRecord>>;
 
 KingdomRecords kingdomRecordsFromJson(Map<String, dynamic>? json) {
@@ -6,10 +8,10 @@ KingdomRecords kingdomRecordsFromJson(Map<String, dynamic>? json) {
   final result = <RecordName, Map<RecordRound, RankRecord>>{};
 
   for (final entry in json.entries) {
-    final recordName = RecordName.values.firstWhere(
+    final recordName = RecordName.values.firstWhereOrNull(
           (e) => e.name == entry.key,
-      orElse: () => throw FormatException('Unknown RecordName: ${entry.key}'),
     );
+    if (recordName == null) continue;
 
     final roundMap = <RecordRound, RankRecord>{};
     final roundJson = entry.value as Map<String, dynamic>;
@@ -25,7 +27,7 @@ KingdomRecords kingdomRecordsFromJson(Map<String, dynamic>? json) {
 }
 
 enum RecordName {
-  property, coin, poop, exp, drink, tradingVolume, buyAvg, sellAvg
+  property, coin, poop, exp, drink, tradingVolume, tradingAvgDif, buyAvg, sellAvg
 }
 abstract class RecordRound {
   String toKey();
@@ -119,10 +121,10 @@ class UnknownRound implements RecordRound {
 }
 
 class RankRecord {
-  final double value;
+  final double? value;
   RankRecord._({ required this.value });
 
   factory RankRecord.fromJson(Map<String, dynamic>? json) {
-    return RankRecord._(value: (json?['value'] ?? 0).toDouble());
+    return RankRecord._(value: json?['value']?.toDouble());
   }
 }
