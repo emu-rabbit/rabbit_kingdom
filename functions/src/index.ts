@@ -50,7 +50,7 @@ export const onPricesCreated = onDocumentCreated({
   if (!data) return;
   const buy = data["buy"];
   if (!buy || typeof buy != "number") return;
-  // await updatePropertyRecords("", buy);
+  await updatePropertyRecords("", buy);
 });
 
 export const onDevPricesCreated = onDocumentCreated({
@@ -70,7 +70,7 @@ export const scheduledUpdateTradingAvgRecord = onSchedule(
     region: REGION, // 你可以改成自己的區域
   },
   async () => {
-    // await updateTradingAverageRecords("");
+    await updateTradingAverageRecords("");
     await updateTradingAverageRecords("dev_");
   }
 );
