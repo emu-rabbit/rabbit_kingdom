@@ -252,7 +252,7 @@ class RankViewer extends StatelessWidget {
                   final key = entry.key;
                   final value = entry.value;
                   return SizedBox(
-                    width: vw(75),
+                    width: vw(77),
                     height: vw(8),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
