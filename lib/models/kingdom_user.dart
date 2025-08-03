@@ -317,9 +317,9 @@ class KingdomUserTradingsNote {
   factory KingdomUserTradingsNote.fromJson(Map<String, dynamic>? json) {
     return KingdomUserTradingsNote._(
       buyAmount: json?['buyAmount'] ?? 0,
-      buyAverage: json?['buyAverage'],
+      buyAverage: safeToDouble(json?['buyAverage']),
       sellAmount: json?['sellAmount'] ?? 0,
-      sellAverage: json?['sellAverage'],
+      sellAverage: safeToDouble(json?['sellAverage']),
     );
   }
 
