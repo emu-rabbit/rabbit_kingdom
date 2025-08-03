@@ -3,19 +3,14 @@ import 'dart:convert';
 import 'dart:math' hide log;
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
-import 'package:rabbit_kingdom/controllers/records_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
-import 'package:rabbit_kingdom/helpers/collection_names.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/pages/home_page.dart';
 import 'package:rabbit_kingdom/pages/login_page.dart';
@@ -94,7 +89,6 @@ class AuthController extends GetxController {
         await NotificationService.initialize(user.uid);
         await Get.find<AnnounceController>().initAnnounce();
         await Get.find<PricesController>().initPrices();
-        await Get.find<RecordsController>().initRecords(user);
         await userController.triggerTaskComplete(KingdomTaskNames.login);
         Get.offAll(() => HomePage());
       }
@@ -110,7 +104,6 @@ class AuthController extends GetxController {
     Get.find<UserController>().onLogout();
     Get.find<AnnounceController>().onLogout();
     Get.find<PricesController>().onLogout();
-    Get.find<RecordsController>().onLogout();
     await _auth.signOut();
     await _googleSignIn.signOut();
     firebaseUser.value = null;

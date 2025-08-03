@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:rabbit_kingdom/controllers/records_controller.dart';
 import 'package:rabbit_kingdom/helpers/firestore_updater.dart';
 import 'package:rabbit_kingdom/models/kingdom_records.dart';
 import 'package:rabbit_kingdom/models/trading_record.dart';
@@ -93,15 +92,7 @@ class UserController extends GetxController {
       throw Exception('尚未載入使用者資訊');
     }
 
-    final f1 = _userUpdater.update('budget.coin', newCoin);
-
-    final recordsController = Get.find<RecordsController>();
-    final f2 = recordsController.setRecord(
-      name: RecordName.coin,
-      round: AllRound(),
-      value: newCoin.toDouble(),
-    );
-    return Future.wait([f1, f2]).then((_){});
+    return _userUpdater.update('budget.coin', newCoin);
   }
 
   /// 🪙 增加（或扣除）金幣
@@ -118,14 +109,7 @@ class UserController extends GetxController {
       throw Exception('金幣不足，無法扣除 ${amount.abs()}');
     }
 
-    final f1 = setCoin(newCoin);
-    final recordsController = Get.find<RecordsController>();
-    final f2 = recordsController.increaseRecord(
-      name: RecordName.coin,
-      round: MonthlyRound.now(),
-      value: amount.toDouble(),
-    );
-    return Future.wait([f1, f2]).then((_){});
+    return setCoin(newCoin);
   }
 
   /// 🪙 扣金幣
@@ -142,16 +126,7 @@ class UserController extends GetxController {
       throw Exception('尚未載入使用者資訊');
     }
 
-    final f1 = _userUpdater.update('budget.poop', newPoop);
-
-    final recordsController = Get.find<RecordsController>();
-    final f2 = recordsController.setRecord(
-      name: RecordName.poop,
-      round: AllRound(),
-      value: newPoop.toDouble(),
-    );
-
-    return Future.wait([f1, f2]).then((_) {});
+    return _userUpdater.update('budget.poop', newPoop);
   }
 
   /// 💩 增加（或扣除）便便
@@ -168,15 +143,7 @@ class UserController extends GetxController {
       throw Exception('精華數量不足，無法扣除 ${amount.abs()} ');
     }
 
-    final f1 = setPoop(newPoop);
-    final recordsController = Get.find<RecordsController>();
-    final f2 = recordsController.increaseRecord(
-      name: RecordName.poop,
-      round: MonthlyRound.now(),
-      value: amount.toDouble(),
-    );
-
-    return Future.wait([f1, f2]).then((_) {});
+    return setPoop(newPoop);
   }
 
   /// 💩 扣便便
@@ -193,15 +160,7 @@ class UserController extends GetxController {
       throw Exception('尚未載入使用者資訊');
     }
 
-    final f1 = _userUpdater.update('exp', newExp);
-
-    final recordsController = Get.find<RecordsController>();
-    final f2 = recordsController.setRecord(
-      name: RecordName.exp,
-      round: AllRound(),
-      value: newExp.toDouble(),
-    );
-    return Future.wait([f1, f2]).then((_){});
+    return _userUpdater.update('exp', newExp);
   }
 
   /// 🪙 增加（或扣除）經驗值
@@ -218,14 +177,7 @@ class UserController extends GetxController {
       newExp = 0;
     }
 
-    final f1 = setExp(newExp);
-    final recordsController = Get.find<RecordsController>();
-    final f2 = recordsController.increaseRecord(
-      name: RecordName.exp,
-      round: MonthlyRound.now(),
-      value: amount.toDouble(),
-    );
-    return Future.wait([f1, f2]).then((_){});
+    return setExp(newExp);
   }
 
   Future<void> applyTradingRecord(TradingRecord record) async {
@@ -237,27 +189,9 @@ class UserController extends GetxController {
     if (_userDocRef.value == null) {
       throw Exception('尚未載入使用者資訊');
     }
-    await _userDocRef.value!.update({
+    return _userDocRef.value!.update({
       'note': newNote.toJson()
     });
-    final recordsController = Get.find<RecordsController>();
-    final f1 = recordsController.increaseRecord(
-      name: RecordName.tradingVolume, round: AllRound(), value: record.amount.toDouble()
-    );
-    final f2 = recordsController.increaseRecord(
-      name: RecordName.tradingVolume, round: MonthlyRound.now(), value: record.amount.toDouble()
-    );
-    final f3 = recordsController.setRecord(
-      name: record.type == TradingType.buy ? RecordName.sellAvg : RecordName.buyAvg,
-      round: AllRound(),
-      value: record.type == TradingType.buy ? newNote.sellAverage! : newNote.buyAverage!
-    );
-    final f4 = recordsController.setRecord(
-      name: RecordName.tradingAvgDif,
-      round: AllRound(),
-      value: newNote.averageDif
-    );
-    return Future.wait([f1, f2, f3, f4]).then((_){});
   }
 
   /// 修改名字（可收費）
@@ -342,11 +276,7 @@ class UserController extends GetxController {
     });
     final f2 = triggerTaskComplete(KingdomTaskNames.drink);
 
-    final recordsController = Get.find<RecordsController>();
-    final f3 = recordsController.increaseRecord(name: RecordName.drink, round: AllRound());
-    final f4 = recordsController.increaseRecord(name: RecordName.drink, round: MonthlyRound.now());
-
-    return Future.wait([f1, f2, f3, f4]).then((_){});
+    return Future.wait([f1, f2]).then((_){});
   }
 
   Future<void> makeTrade(TradingRecord record) async {
