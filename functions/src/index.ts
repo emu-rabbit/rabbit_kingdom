@@ -4,7 +4,7 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {sendNotificationToUsers} from "./sendNotificationToUsers";
 import {createNewPoopPricesFromAnnounce, createNewPoopPricesFromLatest} from "./createNewPoopPrices";
-import {updatePropertyRecords, updateTradingAverageRecords} from "./updateRecords";
+import {updateRanks} from "./updateRanks";
 
 const REGION = "asia-east1";
 
@@ -42,35 +42,13 @@ export const scheduledPoopPricesCreation = onSchedule(
   }
 );
 
-export const onPricesCreated = onDocumentCreated({
-  document: "prices/{id}",
-  region: REGION, // 可改成你要的地區
-}, async (event) => {
-  const data = event.data?.data();
-  if (!data) return;
-  const buy = data["buy"];
-  if (!buy || typeof buy != "number") return;
-  await updatePropertyRecords("", buy);
-});
-
-export const onDevPricesCreated = onDocumentCreated({
-  document: "dev_prices/{id}",
-  region: REGION, // 可改成你要的地區
-}, async (event) => {
-  const data = event.data?.data();
-  if (!data) return;
-  const buy = data["buy"];
-  if (!buy || typeof buy != "number") return;
-  await updatePropertyRecords("dev_", buy);
-});
-
-export const scheduledUpdateTradingAvgRecord = onSchedule(
+export const scheduledUpdateRanks = onSchedule(
   {
-    schedule: "5 0,8,16 * * *",
+    schedule: "55 3,7,11,15,19,23 * * *",
     region: REGION, // 你可以改成自己的區域
   },
   async () => {
-    await updateTradingAverageRecords("");
-    await updateTradingAverageRecords("dev_");
+    await updateRanks("");
+    await updateRanks("dev_");
   }
 );
