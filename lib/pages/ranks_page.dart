@@ -173,6 +173,8 @@ class RankViewer extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            rank.descriptionBuilder(),
+            RSpace(),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -196,28 +198,30 @@ class RankViewer extends StatelessWidget {
               ],
             ),
             RSpace(type: RSpaceType.large,),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Image.asset(
-                  'lib/assets/images/no2.png',
-                  width: secondPlaceImageSize,
-                  height: secondPlaceImageSize,
-                ),
-                Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        RText.headlineMedium(data.get(1)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
-                        RSpace(type: RSpaceType.small,),
-                        RText.headlineMedium(data.get(1)?.formattedValue ?? "-")
-                      ],
-                    )
-                )
-              ],
-            ),
+            data.get(1) != null ?
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Image.asset(
+                    'lib/assets/images/no2.png',
+                    width: secondPlaceImageSize,
+                    height: secondPlaceImageSize,
+                  ),
+                  SizedBox(width: firstPlaceImageSize - secondPlaceImageSize,),
+                  Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          RText.headlineMedium(data.get(1)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
+                          RSpace(type: RSpaceType.small,),
+                          RText.headlineMedium(data.get(1)?.formattedValue ?? "-")
+                        ],
+                      )
+                  )
+                ],
+              ): SizedBox.shrink(),
             RSpace(type: RSpaceType.large,),
             data.get(2) != null ?
               Row(
@@ -228,6 +232,7 @@ class RankViewer extends StatelessWidget {
                     width: secondPlaceImageSize,
                     height: secondPlaceImageSize,
                   ),
+                  SizedBox(width: firstPlaceImageSize - secondPlaceImageSize,),
                   Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.max,

@@ -10,6 +10,7 @@ class RText extends StatelessWidget {
   final Color? color;
   final TextAlign? textAlign;
   final TextOverflow? overflow;
+  final FontStyle? fontStyle;
   final int? maxLines;
   final bool softWrap;
 
@@ -19,6 +20,7 @@ class RText extends StatelessWidget {
         this.color,
         this.textAlign,
         this.overflow,
+        this.fontStyle,
         this.maxLines,
         this.softWrap = true
       });
@@ -99,9 +101,10 @@ class RText extends StatelessWidget {
     Color? color,
     TextAlign? textAlign,
     TextOverflow? overflow,
+    FontStyle? fontStyle,
     int? maxLines,
   }) => RText._(text, AppTextStyle.bodySmall,
-      color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines);
+      color: color, textAlign: textAlign, overflow: overflow, maxLines: maxLines, fontStyle: fontStyle,);
 
   factory RText.labelLarge(String text, {
     Color? color,
@@ -135,8 +138,16 @@ class RText extends StatelessWidget {
           return Text(
             text,
             style: color != null ?
-            style.copyWith(color: color, decoration: TextDecoration.none) :
-            style.copyWith(color: AppColors.onSurface, decoration: TextDecoration.none),
+              style.copyWith(
+                color: color,
+                fontStyle: fontStyle ?? FontStyle.normal,
+                decoration: TextDecoration.none
+              ) :
+              style.copyWith(
+                color: AppColors.onSurface,
+                fontStyle: fontStyle ?? FontStyle.normal,
+                decoration: TextDecoration.none
+              ),
             textAlign: textAlign,
             overflow: overflow ?? TextOverflow.ellipsis,
             maxLines: maxLines,
