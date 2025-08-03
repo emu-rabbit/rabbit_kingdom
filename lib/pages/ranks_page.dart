@@ -77,7 +77,7 @@ class RanksPage extends StatelessWidget {
                                     width: vw(40),
                                     child: RText.titleLarge(data.name),
                                   ),
-                                  RText.titleLarge(data.value.toStringAsFixed(2)),
+                                  RText.titleLarge(data.formattedValue),
                                 ],
                               );
                             })
