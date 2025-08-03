@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
+import 'package:rabbit_kingdom/pages/ranks_page.dart';
 import 'package:rabbit_kingdom/pages/tasks_page.dart';
 import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
@@ -41,7 +42,8 @@ class BuildingTavernPage extends StatelessWidget {
               RButtonGroup(
                 "牆上貼著密密麻麻的紙片",
                 [
-                  RButtonData(text: "查看任務區", onPress: (){ Get.to(() => TasksPage()); })
+                  RButtonData(text: "當然是接任務賺錢！", onPress: (){ Get.to(() => TasksPage()); }),
+                  RButtonData(text: "看看最有名的國民們", onPress: (){ Get.to(() => RanksPage()); })
                 ]
               ),
               RSpace(type: RSpaceType.large,),

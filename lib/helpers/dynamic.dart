@@ -12,3 +12,19 @@ DateTime? toDateTime(dynamic data) {
   }
   return null;
 }
+
+double? safeToDouble(dynamic value) {
+  if (value == null) {
+    return null;
+  }
+  if (value is double) {
+    return value;
+  }
+  if (value is int) {
+    return value.toDouble();
+  }
+  if (value is String) {
+    return double.tryParse(value);
+  }
+  return null; // 如果是其他類型，返回 null
+}
