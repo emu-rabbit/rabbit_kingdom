@@ -18,6 +18,7 @@ class ShouldUpdatePopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return RPopup(
       title: "有新版本",
+      closable: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

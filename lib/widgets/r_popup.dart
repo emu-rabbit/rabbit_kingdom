@@ -11,7 +11,8 @@ class RPopup extends StatelessWidget {
   final String? title;
   final double? width;
   final Widget child;
-  const RPopup({ required this.child, this.title, this.width, super.key });
+  final bool closable;
+  const RPopup({ required this.child, this.title, this.width, this.closable = true, super.key });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class RPopup extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  Align(
+                  closable ? Align(
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
@@ -42,7 +43,7 @@ class RPopup extends StatelessWidget {
                           onPress: (){ Get.back(); }
                       ),
                     ),
-                  ),
+                  ): SizedBox.shrink(),
                   Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
