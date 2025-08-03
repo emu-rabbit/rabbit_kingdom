@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/extensions/list.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/values/kingdom_ranks.dart';
 import 'package:rabbit_kingdom/widgets/r_custom_dropdown.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
+import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
 import '../values/app_text_styles.dart';
@@ -57,40 +59,16 @@ class RanksPage extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Obx((){
-                        return c.rankData.value != null ?
+                    child: Obx((){
+                      return c.rankData.value != null ?
                         c.rankData.value!.isNotEmpty ?
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ...c
-                                .rankData
-                                .value
-                            !.map((data) {
-                              return Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: vw(40),
-                                    child: RText.titleLarge(data.name),
-                                  ),
-                                  RText.titleLarge(data.formattedValue),
-                                ],
-                              );
-                            })
-                          ],
-                        )
-                            : Center(
-                          child: RText.titleLarge("目前沒有資料QQ"),
-                        )
-                            : Center(
-                          child: RText.titleLarge("載入中..."),
-                        );
-                      }),
-                    ),
+                          RankViewer(
+                            kingdomRanks[c.selectedRank.value]!,
+                            c.rankData.value!
+                          ):
+                          Center(child: RText.titleLarge("目前沒有資料QQ")):
+                          Center(child: RText.titleLarge("載入中..."));
+                    }),
                   )
                 ),
                 Align(
@@ -176,5 +154,121 @@ class RankPageController extends GetxController {
     } finally {
       RLoading.stop();
     }
+  }
+}
+
+class RankViewer extends StatelessWidget {
+  final RankData data;
+  final KingdomRank rank;
+  const RankViewer(this.rank, this.data, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final firstPlaceImageSize = vw(35);
+    final secondPlaceImageSize = vw(25);
+
+    return Center(
+      child: SizedBox(
+        width: vw(90),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Image.asset(
+                  'lib/assets/images/no1.png',
+                  width: firstPlaceImageSize,
+                  height: firstPlaceImageSize,
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RText.headlineLarge(data.firstOrNull?.name ?? "-", textAlign: TextAlign.center,),
+                      RSpace(),
+                      RText.headlineLarge(data.firstOrNull?.formattedValue ?? "-")
+                    ],
+                  )
+                )
+              ],
+            ),
+            RSpace(type: RSpaceType.large,),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Image.asset(
+                  'lib/assets/images/no2.png',
+                  width: secondPlaceImageSize,
+                  height: secondPlaceImageSize,
+                ),
+                Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RText.headlineMedium(data.get(1)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
+                        RSpace(type: RSpaceType.small,),
+                        RText.headlineMedium(data.get(1)?.formattedValue ?? "-")
+                      ],
+                    )
+                )
+              ],
+            ),
+            RSpace(type: RSpaceType.large,),
+            data.get(2) != null ?
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Image.asset(
+                    'lib/assets/images/no3.png',
+                    width: secondPlaceImageSize,
+                    height: secondPlaceImageSize,
+                  ),
+                  Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          RText.headlineMedium(data.get(2)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
+                          RSpace(type: RSpaceType.small,),
+                          RText.headlineMedium(data.get(2)?.formattedValue ?? "-")
+                        ],
+                      )
+                  )
+                ],
+              ): SizedBox.shrink(),
+            RSpace(),
+            ...(data.length > 3 ?
+              data
+                .sublist(3)
+                .asMap()
+                .entries
+                .map((entry) {
+                  final key = entry.key;
+                  final value = entry.value;
+                  return SizedBox(
+                    width: vw(75),
+                    height: vw(8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RText.titleMedium("${key+4}th"),
+                        RText.titleMedium(value.name),
+                        RText.titleMedium(value.formattedValue)
+                      ],
+                    ),
+                  );
+              }): [SizedBox.shrink()]),
+            SizedBox(height: vw(15),)
+          ],
+        ),
+      ),
+    );
   }
 }

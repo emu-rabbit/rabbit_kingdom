@@ -88,7 +88,7 @@ class KingdomRank {
     final nameMap = await KingdomUserService.getNameByUID(
       rawData.map((data) => data.uid).toList()
     );
-    return rawData.map(
+    final result = rawData.map(
       (data) => RankSingleData(
         name: nameMap[data.uid] ?? "未命名",
         value: data.value,
@@ -97,6 +97,7 @@ class KingdomRank {
           data.value.toInt().toRDisplayString()
       )
     ).toList();
+    return result;
   }
 }
 final Map<RankName, KingdomRank> kingdomRanks = {
@@ -107,7 +108,8 @@ final Map<RankName, KingdomRank> kingdomRanks = {
     RankName.coin.name
   ),
   RankName.poop: KingdomRank(
-    RankName.poop.name
+    RankName.poop.name,
+    formatter: (value) => "${value.toInt()}個"
   ),
   RankName.exp: KingdomRank(
     RankName.exp.name,
@@ -126,7 +128,8 @@ final Map<RankName, KingdomRank> kingdomRanks = {
     }
   ),
   RankName.tradingVolume: KingdomRank(
-    RankName.tradingVolume.name
+    RankName.tradingVolume.name,
+    formatter: (value) => "${value.toInt()}個"
   ),
   RankName.maxTradingDif: KingdomRank(
     "tradingAvgDif",
