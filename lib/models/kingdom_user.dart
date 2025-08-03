@@ -243,16 +243,19 @@ class ComputedTaskData extends KingdomTask {
 
 class KingdomUserDrinks {
   final int count;
+  final int total;
   final DateTime lastAt;
 
   KingdomUserDrinks._({
     required this.count,
+    required this.total,
     required this.lastAt
   });
 
   factory KingdomUserDrinks.fromJson(Map<String, dynamic>? json) {
     return KingdomUserDrinks._(
       count: json?['count'] ?? 0,
+      total: json?['total'] ?? 0,
       lastAt: toDateTime(json?['lastAt']) ?? DateTime.fromMillisecondsSinceEpoch(0)
     );
   }
@@ -260,6 +263,7 @@ class KingdomUserDrinks {
   factory KingdomUserDrinks.create() {
     return KingdomUserDrinks._(
       count: 0,
+      total: 0,
       lastAt: DateTime.fromMillisecondsSinceEpoch(0)
     );
   }
@@ -267,6 +271,7 @@ class KingdomUserDrinks {
   Map<String, dynamic> toJson() {
     return {
       'count': count,
+      'total': total,
       'lastAt': lastAt
     };
   }

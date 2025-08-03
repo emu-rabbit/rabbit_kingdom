@@ -336,6 +336,7 @@ class UserController extends GetxController {
     final f1 = _userUpdater.updateJson({
       'drinks': {
         'count': fullyDecayed ? 1 : oldDrinks.count + 1,
+        'total': user.drinks.total + 1,
         'lastAt': now,
       }
     });
