@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/helpers/firestore_updater.dart';
-import 'package:rabbit_kingdom/models/kingdom_records.dart';
 import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/widgets/r_task_compelete.dart';
 
