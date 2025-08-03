@@ -54,6 +54,7 @@ class KingdomRank {
       .collection(CollectionNames.ranks)
       .where(queryField, isNotEqualTo: null)
       .orderBy(queryField, descending: descending)
+      .limit(10)
       .get()
       .then((snapshot){
         return snapshot
