@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/extensions/list.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/popups/rank_info_popup.dart';
 import 'package:rabbit_kingdom/values/kingdom_ranks.dart';
 import 'package:rabbit_kingdom/widgets/r_custom_dropdown.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
@@ -51,6 +54,15 @@ class RanksPage extends StatelessWidget {
                     ],
                   )
                 ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: RIconButton(
+                    icon: FontAwesomeIcons.circleQuestion,
+                    onPress: (){
+                      Get.rPopup(RRankInfoPopup());
+                    },
+                  ),
+                )
               ],
             ),
           ),
