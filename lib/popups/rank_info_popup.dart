@@ -32,6 +32,8 @@ class RRankInfoPopup extends StatelessWidget {
           RText.bodySmall("操盤高手：買賣差額(總計/月計)最好", color: AppColors.onSecondary,),
           RSpace(),
           RText.bodySmall("韭菜盒子：買賣差額(總計/月計)最差", color: AppColors.onSecondary,),
+          RSpace(type: RSpaceType.large,),
+          RText.labelLarge("月排行前三名可以獲得相對應稱號", color: AppColors.onSecondary, textAlign: TextAlign.center,),
           RSpace(),
           RText.labelLarge("(排行榜約每4小時更新一次)", color: AppColors.onSecondary, textAlign: TextAlign.center,),
         ],
