@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/double.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
@@ -37,10 +40,12 @@ enum RankType {
   all, currentMonth
 }
 class RankSingleData {
+  final String uid;
   final String name;
   final double value;
   final String formattedValue;
-  const RankSingleData({ 
+  const RankSingleData({
+    required this.uid,
     required this.name, 
     required this.value,
     required this.formattedValue
@@ -75,15 +80,11 @@ class KingdomRank {
       .then((snapshot){
         return snapshot
           .docs
-          .map((doc) {
-            print(doc.data());
-            return (
-              uid: doc.id,
-              value: doc.data()[firestoreField]?[type.name]
-            );
-          })
+          .map((doc) => (
+            uid: doc.id,
+            value: doc.data()[firestoreField]?[type.name]
+          ))
           .map((data) {
-            print(data);
             final value = safeToDouble(data.value);
             return value != null ?
               RawRankSingleData(uid: data.uid, value: value):
@@ -98,6 +99,7 @@ class KingdomRank {
     );
     final result = rawData.map(
       (data) => RankSingleData(
+        uid: data.uid,
         name: nameMap[data.uid] ?? "未命名",
         value: data.value,
         formattedValue: formatter != null ? 
@@ -106,6 +108,31 @@ class KingdomRank {
       )
     ).toList();
     return result;
+  }
+
+  Future<RankSingleData?> getSelfData(RankType type) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return null;
+    final ref = await FirebaseFirestore
+      .instance
+      .collection(CollectionNames.ranks)
+      .doc(uid)
+      .get();
+    if (ref.exists) {
+      final data = ref.data();
+      final rawValue = data?[firestoreField]?[type.name];
+      final value = safeToDouble(rawValue);
+      final uc = Get.find<UserController>();
+      final name = uc.user?.name ?? "未命名";
+      return RankSingleData(
+        uid: uid,
+        name: name,
+        value: value ?? -999999,
+        formattedValue: (value == null || value == -999999) ?
+          "<無資料>" : formatter != null ? formatter!(value): value.toInt().toRDisplayString()
+      );
+    }
+    return null;
   }
 }
 Widget descriptionTextBuilder(String text) =>

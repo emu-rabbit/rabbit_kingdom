@@ -309,10 +309,10 @@ function getTradingAvgDifField(
 ) {
   const buyAll = buy["all"] ?? null;
   const sellAll = sell["all"] ?? null;
-  const all = buyAll !== null && sellAll !== null ? sellAll - buyAll : null;
+  const all = buyAll !== null && sellAll !== null ? sellAll - buyAll : -999999;
   const buyMonth = buy["currentMonth"] ?? null;
   const sellMonth = sell["currentMonth"] ?? null;
-  const month = buyMonth !== null && sellMonth !== null ? sellMonth - buyMonth : null;
+  const month = buyMonth !== null && sellMonth !== null ? sellMonth - buyMonth : -999999;
   return {
     all: all,
     [monthKey]: month,

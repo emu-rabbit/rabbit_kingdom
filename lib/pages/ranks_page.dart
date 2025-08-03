@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -76,7 +77,8 @@ class RanksPage extends StatelessWidget {
                         c.rankData.value!.isNotEmpty ?
                           RankViewer(
                             kingdomRanks[c.selectedRank.value]!,
-                            c.rankData.value!
+                            c.rankData.value!,
+                            c.selfData.value
                           ):
                           Center(child: RText.titleLarge("目前沒有資料QQ")):
                           Center(child: RText.titleLarge("載入中..."));
@@ -143,6 +145,7 @@ class RankPageController extends GetxController {
   final selectedRank = RankName.property.obs;
   final selectedType = RankType.all.obs;
   final rankData = Rxn<RankData>();
+  final selfData = Rxn<RankSingleData>();
 
   @override
   void onReady() {
@@ -157,9 +160,16 @@ class RankPageController extends GetxController {
       rankData.value = null;
       RLoading.start();
       final rank = kingdomRanks[selectedRank.value];
-      rankData.value = rank != null ?
-        await rank.getRank(selectedType.value):
-        [];
+      rankData.value = await rank!.getRank(selectedType.value);
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (
+        uid != null &&
+        !rankData.value!.any((d) => d.uid == uid)
+      ) {
+        selfData.value = await rank.getSelfData(selectedType.value);
+      } else {
+        selfData.value = null;
+      }
     } catch (e) {
       rankData.value = [];
       RSnackBar.error("抓取失敗", e.toString());
@@ -171,8 +181,9 @@ class RankPageController extends GetxController {
 
 class RankViewer extends StatelessWidget {
   final RankData data;
+  final RankSingleData? self;
   final KingdomRank rank;
-  const RankViewer(this.rank, this.data, {super.key});
+  const RankViewer(this.rank, this.data, this.self, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -282,6 +293,20 @@ class RankViewer extends StatelessWidget {
                     ),
                   );
               }): [SizedBox.shrink()]),
+            self != null ?
+              SizedBox(
+                width: vw(77),
+                height: vw(8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RText.titleMedium("--"),
+                    RText.titleMedium(self!.name),
+                    RText.titleMedium(self!.formattedValue)
+                  ],
+                ),
+              ): SizedBox.shrink(),
             SizedBox(height: vw(15),)
           ],
         ),
