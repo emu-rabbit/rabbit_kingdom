@@ -10,7 +10,6 @@ import 'package:rabbit_kingdom/helpers/collection_names.dart';
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
 import 'package:rabbit_kingdom/services/kingdom_user_service.dart';
-import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
 enum RankName {
@@ -60,12 +59,12 @@ typedef RankData = List<RankSingleData>;
 class KingdomRank {
   final String firestoreField;
   final bool descending;
-  final String Function(double)? formatter;
+  final Map<RankType, String Function(double)> formatter;
   final Widget Function() descriptionBuilder;
   KingdomRank(this.firestoreField, {
     required this.descriptionBuilder,
+    required this.formatter,
     this.descending = true,
-    this.formatter
   });
   
   Future<RankData> getRank(RankType type) async {
@@ -102,9 +101,7 @@ class KingdomRank {
         uid: data.uid,
         name: nameMap[data.uid] ?? "未命名",
         value: data.value,
-        formattedValue: formatter != null ? 
-          formatter!(data.value):
-          data.value.toInt().toRDisplayString()
+        formattedValue: formatter[type]!(data.value)
       )
     ).toList();
     return result;
@@ -129,7 +126,7 @@ class KingdomRank {
         name: name,
         value: value ?? -999999,
         formattedValue: (value == null || value == -999999) ?
-          "<無資料>" : formatter != null ? formatter!(value): value.toInt().toRDisplayString()
+          "<無資料>" : formatter[type]!(value)
       );
     }
     return null;
@@ -149,6 +146,10 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("注意資產配置，小心明天精華大殺價！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) => value.toInt().toRDisplayString(),
+      RankType.currentMonth: (value) => value.toInt().toSignedRDisplayString(),
     }
   ),
   RankName.coin: KingdomRank(
@@ -161,11 +162,14 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("不求升值順風車，大帝的心情與我錢無關！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) => value.toInt().toRDisplayString(),
+      RankType.currentMonth: (value) => value.toInt().toSignedRDisplayString(),
     }
   ),
   RankName.poop: KingdomRank(
     RankName.poop.name,
-    formatter: (value) => "${value.toInt()}個",
     descriptionBuilder: () {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -174,16 +178,14 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("大帝明天心情會開心的，對吧！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) => "${value.toInt().toRDisplayString()}個",
+      RankType.currentMonth: (value) => "${value.toInt().toSignedRDisplayString()}個",
     }
   ),
   RankName.exp: KingdomRank(
     RankName.exp.name,
-    formatter: (value) {
-      final level = KingdomUserExp
-        .fromInt(value.toInt())
-        .level;
-      return "Lv.$level";
-    },
     descriptionBuilder: () {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -192,14 +194,19 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("兔兔王國最有經驗的居民非我不可！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) {
+        final level = KingdomUserExp
+            .fromInt(value.toInt())
+            .level;
+        return "Lv.$level";
+      },
+      RankType.currentMonth: (value) => "${value.toInt().toSignedRDisplayString()}點",
     }
   ),
   RankName.drink: KingdomRank(
     RankName.drink.name,
-    formatter: (value) {
-      final amount = value.toInt().toRDisplayString();
-      return "$amount杯";
-    },
     descriptionBuilder: () {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -208,11 +215,20 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("酒再苦視線在糊，也沒有腦袋糊，再來一杯！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) {
+        final amount = value.toInt().toRDisplayString();
+        return "$amount杯";
+      },
+      RankType.currentMonth: (value) {
+        final amount = value.toInt().toSignedRDisplayString();
+        return "$amount杯";
+      }
     }
   ),
   RankName.tradingVolume: KingdomRank(
     RankName.tradingVolume.name,
-    formatter: (value) => "${value.toInt()}個",
     descriptionBuilder: () {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -221,11 +237,14 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("打我啊笨蛋！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) => "${value.toInt().toRDisplayString()}個",
+      RankType.currentMonth: (value) => "${value.toInt().toSignedRDisplayString()}個",
     }
   ),
   RankName.maxTradingDif: KingdomRank(
     "tradingAvgDif",
-    formatter: (value) => value.toSignedString(fractionDigits: 2),
     descriptionBuilder: () {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -234,12 +253,15 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("什麼都不是真的，賣出去的那瞬間才是真的！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) => value.toSignedString(fractionDigits: 2),
+      RankType.currentMonth: (value) => value.toSignedString(fractionDigits: 2),
     }
   ),
   RankName.minTradingDif: KingdomRank(
     "tradingAvgDif",
     descending: false,
-    formatter: (value) => value.toSignedString(fractionDigits: 2),
     descriptionBuilder: () {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -248,6 +270,10 @@ final Map<RankName, KingdomRank> kingdomRanks = {
           descriptionTextBuilder("不小心看錯價格了咩！"),
         ],
       );
+    },
+    formatter: {
+      RankType.all: (value) => value.toSignedString(fractionDigits: 2),
+      RankType.currentMonth: (value) => value.toSignedString(fractionDigits: 2),
     }
   ),
 };
