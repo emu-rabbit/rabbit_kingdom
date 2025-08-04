@@ -159,7 +159,6 @@ class _HeaderMoney extends StatelessWidget {
     );
   }
 }
-
 class _KingdomView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -167,8 +166,8 @@ class _KingdomView extends StatelessWidget {
       builder: (themeController) {
         final kingdomViewData = (
         background: (
-          width: 552.0,
-          height: 1288.0,
+        width: 552.0,
+        height: 1288.0,
         ),
         buildings: [
           (name: "TownHall", x: 275.0, y: 212.0, width: 256.0, height: 373.0, onPress: () {
@@ -192,23 +191,20 @@ class _KingdomView extends StatelessWidget {
         final phase = themeController.brightness == Brightness.light ? "day" : "night";
 
         final scale = screenWidth / kingdomViewData.background.width;
-        final scaleX = scale;
-        final scaleY = scale;
-        final scaledBgHeight = kingdomViewData.background.height * scaleY;
+        final scaledBgHeight = kingdomViewData.background.height * scale;
         final double paddingTop = AppTextStyle.getFromDp(80);
         final double paddingBottom = AppTextStyle.getFromDp(80);
 
-        // 建築物頂部與底部的範圍
         final minY = kingdomViewData.buildings
-            .map((b) => b.y * scaleY)
+            .map((b) => b.y * scale)
             .reduce((a, b) => a < b ? a : b);
         final maxY = kingdomViewData.buildings
-            .map((b) => (b.y + b.height) * scaleY)
+            .map((b) => (b.y + b.height) * scale)
             .reduce((a, b) => a > b ? a : b);
 
-        double viewTop = (minY - paddingTop).clamp(0.0, scaledBgHeight);
-        double viewBottom = (maxY + paddingBottom).clamp(0.0, scaledBgHeight);
-        double viewHeight = viewBottom - viewTop;
+        final viewTop = (minY - paddingTop).clamp(0.0, scaledBgHeight);
+        final viewBottom = (maxY + paddingBottom).clamp(0.0, scaledBgHeight);
+        final viewHeight = viewBottom - viewTop;
 
         final shouldScroll = screenHeight < viewHeight;
 
@@ -225,14 +221,14 @@ class _KingdomView extends StatelessWidget {
               ),
               ...kingdomViewData.buildings.map((b) {
                 return Positioned(
-                  left: b.x * scaleX,
-                  top: b.y * scaleY,
+                  left: b.x * scale,
+                  top: b.y * scale,
                   child: _KingdomViewBuilding(
                     name: b.name,
                     onTap: b.onPress,
                     phase: phase,
-                    width: b.width * scaleX,
-                    height: b.height * scaleY,
+                    width: b.width * scale,
+                    height: b.height * scale,
                   ),
                 );
               }),
@@ -241,20 +237,15 @@ class _KingdomView extends StatelessWidget {
         );
 
         if (shouldScroll) {
-          // 可滾動 → 顯示主要區域高度，從 top 開始裁切
+          // 可滾動 → 顯示主要區域高度，從 viewTop 開始裁切
           return SingleChildScrollView(
             child: SizedBox(
-              // scrollView 的 height 要包住整個內容
-              height: viewHeight + viewTop, // 包含整段裁切後的顯示區
+              height: viewHeight, // 修正：滾動區域高度為建築物主要區域的高度
               child: Stack(
                 children: [
                   Positioned(
-                    top: -viewTop, // 把內容往上偏移，讓建築物區域落在正中央
-                    child: SizedBox(
-                      width: screenWidth,
-                      height: scaledBgHeight,
-                      child: content,
-                    ),
+                    top: -viewTop, // 讓內容從主要區域的頂部開始顯示
+                    child: content,
                   ),
                 ],
               ),
@@ -263,7 +254,7 @@ class _KingdomView extends StatelessWidget {
         } else {
           // 裁切置中主要區域 → 向上裁切，使其在畫面中置中
           final double topOffset = ((viewTop + viewBottom) / 2 - screenHeight / 2)
-              .clamp(0.0, scaledBgHeight - screenHeight);
+              .clamp(0.0, max(0.0, scaledBgHeight - screenHeight));
 
           return ClipRect(
             child: SizedBox(
@@ -272,11 +263,7 @@ class _KingdomView extends StatelessWidget {
                 children: [
                   Positioned(
                     top: -topOffset,
-                    child: SizedBox(
-                      width: screenWidth,
-                      height: scaledBgHeight,
-                      child: content,
-                    ),
+                    child: content,
                   ),
                 ],
               ),
