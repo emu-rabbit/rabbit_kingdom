@@ -41,16 +41,19 @@ class AnnounceHistoryPage extends StatelessWidget {
         return Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: c.announcements.length,
-                itemBuilder: (context, index) {
-                  final announce = c.announcements[index];
-                  // 這裡我們直接返回一個項目，而不是使用 SingleChildScrollView
-                  return _AnnounceHistoryItem(
-                    announce: announce,
-                    isLastItem: index == c.announcements.length - 1,
-                  );
-                },
+              child: SizedBox(
+                width: vw(100) * deviceFactor(),
+                  child: ListView.builder(
+                    itemCount: c.announcements.length,
+                    itemBuilder: (context, index) {
+                      final announce = c.announcements[index];
+                      // 這裡我們直接返回一個項目，而不是使用 SingleChildScrollView
+                      return _AnnounceHistoryItem(
+                      announce: announce,
+                      isLastItem: index == c.announcements.length - 1,
+                    );
+                  },
+                ),
               ),
             ),
             ColoredBox(

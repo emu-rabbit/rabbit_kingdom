@@ -19,6 +19,7 @@ class RAnnounceViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = vw(100) * deviceFactor();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -40,12 +41,12 @@ class RAnnounceViewer extends StatelessWidget {
               children: [
                 Image.asset(
                   announce.sticker.imagePath,
-                  width: vw(33),
-                  height: vw(33),
+                  width: width / 3,
+                  height: width / 3,
                 ),
                 RSpace(),
                 SizedBox(
-                  height: vw(33),
+                  height: width / 3,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +54,7 @@ class RAnnounceViewer extends StatelessWidget {
                       RSpace(type: RSpaceType.small,),
                       Expanded(
                         child: SizedBox(
-                          width: vw(65) - 70,
+                          width: width * 2 / 3 - 75,
                           child: ClipRect(
                             child: RText.bodySmall(announce.message, maxLines: 30)),
                           ),

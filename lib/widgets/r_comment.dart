@@ -17,7 +17,7 @@ class RComment extends StatelessWidget {
       // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: vw(37),
+          width: vw(37) * deviceFactor(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +30,7 @@ class RComment extends StatelessWidget {
         ),
         RSpace(),
         SizedBox(
-          width: vw(61) - 70,
+          width: vw(61) * deviceFactor() - 70,
           child: RText.bodyMedium(comment.message, maxLines: 4,),
         )
       ],

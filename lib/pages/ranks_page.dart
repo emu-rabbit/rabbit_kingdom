@@ -232,15 +232,11 @@ class _RankViewerState extends State<RankViewer> {
       return;
     }
 
-    // 取得用於測量的 TextStyle
-    const textStyle = TextStyle(fontSize: 16); // 假設 RText.titleMedium 的字體大小
-
     // 使用 TextPainter 測量每個 formattedValue 的寬度
     for (var item in itemsToMeasure) {
       final textPainter = TextPainter(
-        text: TextSpan(text: item.formattedValue, style: textStyle),
+        text: TextSpan(text: item.formattedValue, style: AppTextStyle.titleMedium),
         textDirection: TextDirection.ltr,
-        textScaleFactor: 1.0,
       );
       textPainter.layout();
       if (textPainter.width > maxWidth) {

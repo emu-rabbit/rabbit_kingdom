@@ -39,7 +39,7 @@ class RComments extends StatelessWidget {
           },
           separatorBuilder: (context, index) {
             return SizedBox(
-              width: vw(100) - 60,
+              width: vw(100) * deviceFactor() - 60,
               child: Divider(color: AppColors.onSurface.withAlpha(50)),
             );
           },

@@ -38,10 +38,13 @@ class NewestAnnouncePage extends StatelessWidget {
         if (announceController.announcement != null) {
           return Column(
             mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               RSpace(type: RSpaceType.small,),
-              RAnnounceViewer(announce: announceController.announcement!),
+              SizedBox(
+                width: vw(100) * deviceFactor(),
+                child: RAnnounceViewer(announce: announceController.announcement!),
+              ),
               RSpace(),
               // 修改這一段
               // 修改這裡：使用 Flexible 替換 Expanded
@@ -50,48 +53,54 @@ class NewestAnnouncePage extends StatelessWidget {
                   Center(
                     child: RText.titleLarge("目前沒留言，快搶頭香！"),
                   ):
-                  announceController.announcement!.comments.length < 10 ?
-                    SingleChildScrollView(
-                      child: RComments(
+                  SizedBox(
+                    width: vw(100) * deviceFactor(),
+                    child: announceController.announcement!.comments.length < 10 ?
+                      SingleChildScrollView(
+                        child: RComments(
+                          comments: announceController.announcement!.comments,
+                          isScrollable: false,
+                        ),
+                      ):
+                      RComments(
                         comments: announceController.announcement!.comments,
-                        isScrollable: false,
+                        isScrollable: true,
                       ),
-                    ):
-                    RComments(
-                      comments: announceController.announcement!.comments,
-                      isScrollable: true,
-                    ),
+                  ),
               ),
               RSpace(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Row(
-                  children: [
-                    Obx(() {
-                      final authController = Get.find<AuthController>();
-                      final uid = authController.firebaseUser.value?.uid ?? "";
-                      final isHearted = announceController.announcement!.hearts.any((e) => e.uid == uid);
-                      return RIconButton(
-                        icon: isHearted ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-                        size: vmin(10),
-                        color: AppColors.primary,
-                        onPress: () async {
-                          if (!isHearted) {
-                            try {
-                              RLoading.start();
-                              await announceController.markHeart();
-                            } catch(e) {
-                              RSnackBar.error("標記失敗", e.toString());
-                            } finally {
-                              RLoading.stop();
+                child: SizedBox(
+                  width: vw(100) * deviceFactor(),
+                  child: Row(
+                    children: [
+                      Obx(() {
+                        final authController = Get.find<AuthController>();
+                        final uid = authController.firebaseUser.value?.uid ?? "";
+                        final isHearted = announceController.announcement!.hearts.any((e) => e.uid == uid);
+                        return RIconButton(
+                          icon: isHearted ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                          size: vmin(10),
+                          color: AppColors.primary,
+                          onPress: () async {
+                            if (!isHearted) {
+                              try {
+                                RLoading.start();
+                                await announceController.markHeart();
+                              } catch(e) {
+                                RSnackBar.error("標記失敗", e.toString());
+                              } finally {
+                                RLoading.stop();
+                              }
                             }
-                          }
-                        },
-                      );
-                    }),
-                    RSpace(),
-                    Expanded(child: RButton.primary(text: "張貼新留言", onPressed: (){ Get.rPopup(PublishComment()); }))
-                  ],
+                          },
+                        );
+                      }),
+                      RSpace(),
+                      Expanded(child: RButton.primary(text: "張貼新留言", onPressed: (){ Get.rPopup(PublishComment()); }))
+                    ],
+                  ),
                 ),
               )
             ],
