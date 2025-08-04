@@ -19,6 +19,19 @@ class ReleaseNotePopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<_ReleaseNote> notes = [
       _ReleaseNote(
+          title: "<2025/08/04>",
+          contents: [
+            "修改了排行榜上的數值顯示方式",
+            "調整排行榜的版面，使其相互對齊",
+            "提升排行榜和公告頁的效能",
+            "修正了王國主頁在某些情況下會無法顯示的錯誤",
+            "調整了酒的相關計算公式",
+            "支援平板版面",
+            "修正了驗證信箱頁在黑暗模式的按鈕顏色錯誤",
+            "增加FAQ頁面中對於排行榜的說明"
+          ]
+      ),
+      _ReleaseNote(
           title: "<2025/08/03>",
           contents: [
             "新增了排行榜功能",
