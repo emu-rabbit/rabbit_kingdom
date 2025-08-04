@@ -43,14 +43,24 @@ class NewestAnnouncePage extends StatelessWidget {
               RSpace(type: RSpaceType.small,),
               RAnnounceViewer(announce: announceController.announcement!),
               RSpace(),
+              // 修改這一段
+              // 修改這裡：使用 Flexible 替換 Expanded
               Expanded(
-                child: announceController.announcement!.comments.isEmpty ?
+                  child: announceController.announcement!.comments.isEmpty ?
                   Center(
                     child: RText.titleLarge("目前沒留言，快搶頭香！"),
                   ):
-                  SingleChildScrollView(
-                    child: RComments(comments: announceController.announcement!.comments),
-                  )
+                  announceController.announcement!.comments.length < 10 ?
+                    SingleChildScrollView(
+                      child: RComments(
+                        comments: announceController.announcement!.comments,
+                        isScrollable: false,
+                      ),
+                    ):
+                    RComments(
+                      comments: announceController.announcement!.comments,
+                      isScrollable: true,
+                    ),
               ),
               RSpace(),
               Padding(
