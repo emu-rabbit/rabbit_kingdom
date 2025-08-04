@@ -70,7 +70,9 @@ class NotVerifiedPage extends StatelessWidget {
                           cooldown.value == 0
                               ? "去吧紅燒雞！"
                               : "請稍候 ${cooldown.value} 秒",
-                          textAlign: TextAlign.center),
+                          textAlign: TextAlign.center,
+                          color: color,
+                      ),
                     )),
                     RSpace(),
                     RButton.primary(
@@ -82,7 +84,8 @@ class NotVerifiedPage extends StatelessWidget {
                       },
                       child: (color) => RText.bodyLarge(
                           "我剛剛認證了！",
-                          textAlign: TextAlign.center
+                          textAlign: TextAlign.center,
+                          color: color,
                       ),
                     ),
                     RSpace(type: RSpaceType.large,),
