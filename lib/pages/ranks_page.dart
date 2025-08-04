@@ -7,6 +7,7 @@ import 'package:rabbit_kingdom/extensions/list.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/popups/rank_info_popup.dart';
+import 'package:rabbit_kingdom/values/caches.dart';
 import 'package:rabbit_kingdom/values/kingdom_ranks.dart';
 import 'package:rabbit_kingdom/widgets/r_custom_dropdown.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
@@ -159,14 +160,17 @@ class RankPageController extends GetxController {
     try {
       rankData.value = null;
       RLoading.start();
-      final rank = kingdomRanks[selectedRank.value];
-      rankData.value = await rank!.getRank(selectedType.value);
+      rankData.value = await Caches
+        .ranksData[selectedRank.value]![selectedType.value]
+        !.getData()
+        .then((cache) => cache.data);
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (
         uid != null &&
         !rankData.value!.any((d) => d.uid == uid)
       ) {
-        selfData.value = await rank.getSelfData(selectedType.value);
+        final rank = kingdomRanks[selectedRank.value];
+        selfData.value = await rank!.getSelfData(selectedType.value);
       } else {
         selfData.value = null;
       }

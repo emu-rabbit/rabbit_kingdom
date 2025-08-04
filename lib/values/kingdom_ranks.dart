@@ -49,6 +49,20 @@ class RankSingleData {
     required this.value,
     required this.formattedValue
   });
+
+  Map<String, dynamic> toJson() => {
+    'uid': uid,
+    'name': name,
+    'value': value,
+    'formattedValue': formattedValue,
+  };
+
+  factory RankSingleData.fromJson(Map<String, dynamic> json) => RankSingleData(
+    uid: json['uid'],
+    name: json['name'],
+    value: json['value'],
+    formattedValue: json['formattedValue'],
+  );
 }
 class RawRankSingleData {
   final String uid;
@@ -56,6 +70,21 @@ class RawRankSingleData {
   const RawRankSingleData({ required this.uid, required this.value });
 }
 typedef RankData = List<RankSingleData>;
+class CachedRankData {
+  final DateTime createAt;
+  final RankData data;
+  const CachedRankData({ required this.createAt, required this.data });
+
+  Map<String, dynamic> toJson() => {
+    'createAt': createAt.toIso8601String(),
+    'data': data.map((e) => e.toJson()).toList(),
+  };
+
+  factory CachedRankData.fromJson(Map<String, dynamic> json) => CachedRankData(
+    createAt: DateTime.parse(json['createAt']),
+    data: (json['data'] as List).map((e) => RankSingleData.fromJson(e)).toList(),
+  );
+}
 class KingdomRank {
   final String firestoreField;
   final bool descending;

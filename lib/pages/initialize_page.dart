@@ -17,6 +17,7 @@ import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/services/version_service.dart';
+import 'package:rabbit_kingdom/values/caches.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
@@ -85,6 +86,7 @@ class InitializePageController extends GetxController {
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]);
+      Caches.initialize();
 
       setProgress(10);
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

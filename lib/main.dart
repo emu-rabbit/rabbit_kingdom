@@ -14,8 +14,9 @@ import 'controllers/theme_controller.dart';
 void main() async {
   // Ensure binding
   WidgetsFlutterBinding.ensureInitialized();
-  await Future.delayed(Duration(milliseconds: 150));
+  await Future.delayed(Duration(milliseconds: 500));
 
+  // Controllers
   Get.put(ThemeController());
   Get.put(UserController());
   Get.put(AnnounceController());

@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controllers/prices_controller.dart';
 import '../models/poop_prices.dart';
-import '../models/trading_news.dart';
+import '../values/kingdom_ranks.dart';
 import 'collection_names.dart';
 
 abstract class AppDataCache<T> {
@@ -230,5 +230,82 @@ class RecentAnnouncesCache extends AppDataCache<List<KingdomAnnouncement>> {
     return result.docs
         .map((doc) => KingdomAnnouncement.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
+  }
+}
+
+class RankDataCache extends AppDataCache<CachedRankData> {
+  final RankName rankName;
+  final RankType rankType;
+
+  RankDataCache({
+    required this.rankName,
+    required this.rankType,
+  });
+
+  @override
+  String _storageKey() => 'rank_data_${rankName.name}_${rankType.name}_cache';
+
+  @override
+  CachedRankData decode(String raw) {
+    final Map<String, dynamic> json = jsonDecode(raw);
+    return CachedRankData.fromJson(json);
+  }
+
+  @override
+  String encode(CachedRankData data) {
+    final json = data.toJson();
+    return jsonEncode(json);
+  }
+
+  @override
+  Future<CachedRankData> _fetchNewData() async {
+    final rank = kingdomRanks[rankName];
+    final fetchedData = await rank!.getRank(rankType);
+
+    // 建立 CachedRankData 物件，特別注意建立時間
+    return CachedRankData(
+      createAt: DateTime.now(),
+      data: fetchedData,
+    );
+  }
+
+  @override
+  Future<bool> _isCacheExpire() async {
+    final storedData = _cacheData;
+    if (storedData == null) {
+      return true; // 快取為空，視為過期
+    }
+
+    // 取得裝置的本地時間，並轉換為 UTC 時間
+    final nowUtc = DateTime.now().toUtc();
+
+    // 伺服器產生新資料的時間點 (台灣時間)
+    const updateHoursTaipei = [0, 4, 8, 12, 16, 20];
+
+    // 找到伺服器最近一次更新的 UTC 時間點
+    DateTime lastUpdateTimeUtc = DateTime.utc(
+      nowUtc.year,
+      nowUtc.month,
+      nowUtc.day,
+    );
+
+    // 遍歷所有更新時間點（台灣時間），將其轉換為 UTC 時間進行比較
+    for (var hourTaipei in updateHoursTaipei) {
+      // 將台灣時間轉換為 UTC 時間
+      final updateTimeUtc = DateTime.utc(
+        nowUtc.year,
+        nowUtc.month,
+        nowUtc.day,
+        hourTaipei,
+      ).subtract(const Duration(hours: 8));
+
+      // 檢查當前 UTC 時間是否晚於或等於此更新時間點
+      if (!nowUtc.isBefore(updateTimeUtc)) {
+        lastUpdateTimeUtc = updateTimeUtc;
+      }
+    }
+
+    // 檢查快取建立時間是否在最後一次更新時間之前
+    return storedData.createAt.toUtc().isBefore(lastUpdateTimeUtc);
   }
 }
