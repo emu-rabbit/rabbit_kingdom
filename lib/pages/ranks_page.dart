@@ -33,7 +33,7 @@ class RanksPage extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            height: AppTextStyle.getFromDp(60),
+            height: getFromDp(60),
             child: Stack(
               children: [
                 Align(

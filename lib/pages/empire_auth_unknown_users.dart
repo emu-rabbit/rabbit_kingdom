@@ -78,7 +78,7 @@ class _UnknownUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: vw(80),
+      width: vw(80) * deviceFactor(),
       padding: EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
           color: AppColors.surfaceContainerHigh,

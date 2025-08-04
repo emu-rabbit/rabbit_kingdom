@@ -50,7 +50,7 @@ class InitializePage extends StatelessWidget {
               RText.displaySmall("兔兔王國正在努力載入中..."),
               RSpace(type: RSpaceType.large,),
               SizedBox(
-                width: vw(80),
+                width: vw(80) * deviceFactor(),
                 child: LinearProgressIndicator(
                   value: controller.progress.value / 100.0,
                   minHeight: 8,

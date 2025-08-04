@@ -33,10 +33,10 @@ class ModifyNamePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Obx((){
-                return RText.titleLarge(userController.user?.name ?? "未命名");
+                return RText.headlineLarge(userController.user?.name ?? "未命名");
               }),
               RSpace(type: RSpaceType.small,),
-              RText.labelSmall("兔兔公務員看了你的護照，念出了你的名字"),
+              RText.bodySmall("兔兔公務員看了你的護照，念出了你的名字"),
               RSpace(),
               Image.asset(
                 "lib/assets/images/modify_name.png",
@@ -45,7 +45,7 @@ class ModifyNamePage extends StatelessWidget {
               ),
               RSpace(),
               SizedBox(
-                width: vw(70),
+                width: vw(75) * deviceFactor(),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,

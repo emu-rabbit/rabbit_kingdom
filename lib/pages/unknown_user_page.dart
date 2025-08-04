@@ -39,7 +39,7 @@ class UnknownUserPage extends StatelessWidget {
             RText.bodyMedium("公文批准後請重新登入"),
             RSpace(type: RSpaceType.large,),
             SizedBox(
-              width: vw(60),
+              width: vw(60) * deviceFactor(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,

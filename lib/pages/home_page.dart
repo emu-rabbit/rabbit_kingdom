@@ -51,7 +51,7 @@ class _Header extends StatelessWidget {
         final userLevel = 'Lv.${userController.user?.exp.level ?? 0}';
 
         return Container(
-          height: AppTextStyle.getFromDp(50),
+          height: getFromDp(50),
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -98,12 +98,12 @@ class _HeaderText extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: fontSize ?? AppTextStyle.getFromDp(26),
+                  fontSize: fontSize ?? getFromDp(26),
                   fontFamily: 'JFHuninn',
                   decoration: TextDecoration.none,
                   foreground: Paint()
                     ..style = PaintingStyle.stroke
-                    ..strokeWidth = (fontSize ?? AppTextStyle.getFromDp(26)) / 26 * 4
+                    ..strokeWidth = (fontSize ?? getFromDp(26)) / 26 * 4
                     ..color = themeController.brightness == Brightness.light ?
                         Color(0xffe6723d)
                       : AppColors.surfaceContainerHigh,
@@ -115,7 +115,7 @@ class _HeaderText extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: fontSize ?? AppTextStyle.getFromDp(26),
+                  fontSize: fontSize ?? getFromDp(26),
                   decoration: TextDecoration.none,
                   fontFamily: 'JFHuninn',
                   color: themeController.brightness == Brightness.light ?
@@ -143,13 +143,13 @@ class _HeaderMoney extends StatelessWidget {
             children: [
               Image.asset(
                 'lib/assets/images/money_bag.png',
-                width: AppTextStyle.getFromDp(25),
-                height: AppTextStyle.getFromDp(25),
+                width: getFromDp(25),
+                height: getFromDp(25),
               ),
               SizedBox(width: 2,),
               GetBuilder<PricesController>(
                 builder: (_) {
-                  return _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: AppTextStyle.getFromDp(20),);
+                  return _HeaderText(userController.user?.budget.propertyText ?? "0", fontSize: getFromDp(20),);
                 }
               )
             ],
@@ -192,8 +192,8 @@ class _KingdomView extends StatelessWidget {
 
         final scale = screenWidth / kingdomViewData.background.width;
         final scaledBgHeight = kingdomViewData.background.height * scale;
-        final double paddingTop = AppTextStyle.getFromDp(80);
-        final double paddingBottom = AppTextStyle.getFromDp(80);
+        final double paddingTop = getFromDp(80);
+        final double paddingBottom = getFromDp(80);
 
         final minY = kingdomViewData.buildings
             .map((b) => b.y * scale)

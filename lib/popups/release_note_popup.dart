@@ -113,7 +113,7 @@ class ReleaseNotePopup extends StatelessWidget {
 
     return RPopup(
         title: "王國工程紀錄",
-        width: vw(85),
+        width: vw(85) * deviceFactor(),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: vh(80)),
           child: SingleChildScrollView(

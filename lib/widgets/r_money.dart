@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
+import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/popups/budget_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
@@ -40,8 +41,8 @@ class RMoney extends StatelessWidget {
                   return [
                     Image.asset(
                       imageName,
-                      width: 25,
-                      height: 25,
+                      width: getFromDp(25),
+                      height: getFromDp(25),
                     ),
                     SizedBox(width: 2,),
                     RText.bodySmall(value),

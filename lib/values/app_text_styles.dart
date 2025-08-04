@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 
 class AppTextStyle {
-  static final double _rootWidth = 411.4285714;
-  static double getFromDp(double dp) => vw(dp / _rootWidth * 100);
-  
   // 🐰 顯示級別（大招級別的文字）
   static TextStyle displayLarge = TextStyle(
     fontSize: getFromDp(38),

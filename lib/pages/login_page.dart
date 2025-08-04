@@ -48,7 +48,7 @@ class LoginPage extends StatelessWidget {
                 _RabbitEmpireImage(),
                 RSpace(),
                 SizedBox(
-                  width: vw(60),
+                  width: vw(60) * deviceFactor(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -107,12 +107,12 @@ class LoginPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppTextStyle.getFromDp(20), vertical: AppTextStyle.getFromDp(16)),
+              padding: EdgeInsets.symmetric(horizontal: getFromDp(20), vertical: getFromDp(16)),
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text: '點擊登入表示您同意',
-                  style: TextStyle(color: Colors.grey[600], fontSize: AppTextStyle.getFromDp(12)),
+                  style: TextStyle(color: Colors.grey[600], fontSize: getFromDp(12)),
                   children: [
                     TextSpan(
                       text: '《隱私政策》',
@@ -152,7 +152,7 @@ class _BrightnessIconSwitcher extends StatelessWidget {
         ),
         child: FaIcon(
           controller.themeMode.value == ThemeMode.light ? FontAwesomeIcons.sun : FontAwesomeIcons.moon,
-          size: AppTextStyle.getFromDp(30),
+          size: getFromDp(30),
           color: AppColors.secondary,
         ),
       );
@@ -191,7 +191,7 @@ class _LoginButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FaIcon(icon, color: color, size: AppTextStyle.getFromDp(20),),
+              FaIcon(icon, color: color, size: getFromDp(20),),
               RSpace(type: RSpaceType.small,),
               RText.bodyLarge(
                 text,

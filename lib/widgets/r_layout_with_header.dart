@@ -4,6 +4,8 @@ import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
+import '../helpers/screen.dart';
+
 class RLayoutWithHeader extends StatelessWidget {
   final String title;
   final Widget child;
@@ -19,7 +21,7 @@ class RLayoutWithHeader extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            height: AppTextStyle.getFromDp(60),
+            height: getFromDp(60),
             child: Stack(
               children: [
                 Align(

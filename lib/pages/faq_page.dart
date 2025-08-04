@@ -67,7 +67,7 @@ class FaqPage extends StatelessWidget {
             RText.headlineLarge("兔兔公務員正等待你發問"),
             RSpace(type: RSpaceType.large,),
             SizedBox(
-              width: vw(75),
+              width: vw(75) * deviceFactor(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,

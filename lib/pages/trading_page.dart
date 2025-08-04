@@ -53,14 +53,14 @@ class TradingPage extends StatelessWidget {
               RText.titleMedium("歷史報價"),
               RSpace(type: RSpaceType.small,),
               SizedBox(
-                width: vw(90),
+                width: vw(90) * deviceFactor(),
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
                   child: HistoryChart(prices: tc.historyPrices.value!),
                 ),
               ),
               RSpace(type: RSpaceType.large,),
-              Divider(color: AppColors.primary.withAlpha(180),),
+              Divider(color: AppColors.primary.withAlpha(180), thickness: 2, height: 4,),
               RSpace(type: RSpaceType.large,),
               RText.titleMedium("最新報價"),
               RSpace(type: RSpaceType.small,),
@@ -76,7 +76,7 @@ class TradingPage extends StatelessWidget {
                 ],
               ),
               RSpace(type: RSpaceType.large,),
-              Divider(color: AppColors.primary.withAlpha(180),),
+              Divider(color: AppColors.primary.withAlpha(180), thickness: 2, height: 4,),
               RSpace(type: RSpaceType.large,),
               RText.titleMedium("即時交易"),
               RSpace(),
@@ -243,7 +243,7 @@ class HistoryChart extends StatelessWidget {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: vw(7),
+              reservedSize: vw(7) * deviceFactor(),
               getTitlesWidget: (value, _) => RText.labelSmall(
                 value.toInt().toString(),
                 overflow: TextOverflow.visible,
@@ -258,6 +258,7 @@ class HistoryChart extends StatelessWidget {
               showTitles: true,
               maxIncluded: false,
               interval: 70,
+              reservedSize: 32,
               getTitlesWidget: (value, meta) {
                 final date = xToDate(value);
                 final formatted = DateFormat('HH:mm').format(date); // "7/25"

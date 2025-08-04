@@ -36,69 +36,71 @@ class NotVerifiedPage extends StatelessWidget {
 
     return RLayout(
       child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RText.displaySmall("喔不，這地址還沒驗證"),
-            RSpace(),
-            RText.bodyMedium("兔兔大帝可以請紅燒雞"),
-            RText.bodyMedium("寄送驗證信"),
-            Image.asset(
-              'lib/assets/images/red_parrot_0.png',
-              width: mainImageSize(),
-              height: mainImageSize(),
-              fit: BoxFit.cover,
-            ),
-            RSpace(),
-            RText.labelSmall("據說笨蛋紅燒雞可能會不小心丟進垃圾郵件夾...", textAlign: TextAlign.center,),
-            RSpace(),
-            SizedBox(
-              width: vw(60),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Obx(() => RButton.surface(
-                    isDisabled: cooldown.value > 0,
-                    onPressed: () async {
-                      startCooldown();
-                      RLoading.start();
-                      await authController.sendVerificationEmail();
-                      RLoading.stop();
-                    },
-                    child: (color) => RText.bodyLarge(
-                        cooldown.value == 0
-                            ? "去吧紅燒雞！"
-                            : "請稍候 ${cooldown.value} 秒",
-                        textAlign: TextAlign.center),
-                  )),
-                  RSpace(),
-                  RButton.primary(
-                    onPressed: () async {
-                      await authController.firebaseUser.value?.reload();
-                      if (!(FirebaseAuth.instance.currentUser?.emailVerified ?? false)) {
-                        RSnackBar.error("驗證失敗", "兔兔大帝還沒收到你的驗證內容，請稍後再試");
-                      }
-                    },
-                    child: (color) => RText.bodyLarge(
-                        "我剛剛認證了！",
-                        textAlign: TextAlign.center
-                    ),
-                  ),
-                  RSpace(type: RSpaceType.large,),
-                  RText.bodySmall("或是...", textAlign: TextAlign.center,),
-                  RSpace(),
-                  RButton.secondary(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RText.displaySmall("喔不，這地址還沒驗證"),
+              RSpace(),
+              RText.bodyMedium("兔兔大帝可以請紅燒雞"),
+              RText.bodyMedium("寄送驗證信"),
+              Image.asset(
+                'lib/assets/images/red_parrot_0.png',
+                width: mainImageSize(),
+                height: mainImageSize(),
+                fit: BoxFit.cover,
+              ),
+              RSpace(),
+              RText.labelSmall("據說笨蛋紅燒雞可能會不小心丟進垃圾郵件夾...", textAlign: TextAlign.center,),
+              RSpace(),
+              SizedBox(
+                width: vw(60) * deviceFactor(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Obx(() => RButton.surface(
+                      isDisabled: cooldown.value > 0,
                       onPressed: () async {
+                        startCooldown();
                         RLoading.start();
-                        await authController.logout();
+                        await authController.sendVerificationEmail();
                         RLoading.stop();
                       },
-                      child: (color) =>
-                          RText.bodyLarge("返回城門", textAlign: TextAlign.center, color: color,)),
-                ],
-              ),
-            )
-          ],
+                      child: (color) => RText.bodyLarge(
+                          cooldown.value == 0
+                              ? "去吧紅燒雞！"
+                              : "請稍候 ${cooldown.value} 秒",
+                          textAlign: TextAlign.center),
+                    )),
+                    RSpace(),
+                    RButton.primary(
+                      onPressed: () async {
+                        await authController.firebaseUser.value?.reload();
+                        if (!(FirebaseAuth.instance.currentUser?.emailVerified ?? false)) {
+                          RSnackBar.error("驗證失敗", "兔兔大帝還沒收到你的驗證內容，請稍後再試");
+                        }
+                      },
+                      child: (color) => RText.bodyLarge(
+                          "我剛剛認證了！",
+                          textAlign: TextAlign.center
+                      ),
+                    ),
+                    RSpace(type: RSpaceType.large,),
+                    RText.bodySmall("或是...", textAlign: TextAlign.center,),
+                    RSpace(),
+                    RButton.secondary(
+                        onPressed: () async {
+                          RLoading.start();
+                          await authController.logout();
+                          RLoading.stop();
+                        },
+                        child: (color) =>
+                            RText.bodyLarge("返回城門", textAlign: TextAlign.center, color: color,)),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

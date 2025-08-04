@@ -60,7 +60,7 @@ class EmailPage extends StatelessWidget {
                     RText.bodySmall("要用信箱入境？希望你不會忘記密碼..."),
                     RSpace(type: RSpaceType.large),
                     SizedBox(
-                      width: vw(75),
+                      width: vw(75) * deviceFactor(),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [

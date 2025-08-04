@@ -37,7 +37,7 @@ class _RNewsViewerState extends State<RNewsViewer> with SingleTickerProviderStat
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      width: vw(90),
+      width: vw(90) * deviceFactor(),
       decoration: BoxDecoration(
         color: color.withAlpha(20),
         border: Border.all(color: color, width: 2),

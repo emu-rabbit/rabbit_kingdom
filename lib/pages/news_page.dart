@@ -28,8 +28,8 @@ class NewsPage extends StatelessWidget {
         if (controller.news.value == null) {
           return Center(
             child: SizedBox(
-              width: vmin(20),  // ⬅️ 這裡改大小
-              height: vmin(20),
+              width: vmin(20) * deviceFactor(),
+              height: vmin(20) * deviceFactor(),
               child: CircularProgressIndicator(
                 strokeWidth: vmin(2),
                 color: AppColors.primary,
