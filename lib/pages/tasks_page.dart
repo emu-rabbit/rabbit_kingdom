@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
+import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/popups/task_info_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
@@ -26,7 +27,7 @@ class TasksPage extends StatelessWidget {
             builder: (userController) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ...userController
                     .user
@@ -36,36 +37,39 @@ class TasksPage extends StatelessWidget {
                       final task = entry.value;
                       final isComplete = task.completed >= task.limit;
                       return [
-                        GestureDetector(
-                          onTap: (){
-                            if (isComplete) return;
-                            task.navigator();
-                          },
-                          child: Opacity(
-                            opacity: isComplete ? 0.5 : 1,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                              decoration: BoxDecoration(
-                                  color: AppColors.surfaceContainerHigh,
-                                  border: Border.all(color: AppColors.onSurface, width: 2),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20))
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      RText.displaySmall(task.text),
-                                      RText.titleSmall("${task.completed} / ${task.limit}")
-                                    ],
-                                  ),
-                                  RSpace(),
-                                  RText.bodySmall("獎勵：經驗值（${task.expReward}）、兔兔幣（${task.coinReward}）")
-                                ],
+                        SizedBox(
+                          width: vw(80) * deviceFactor(),
+                          child: GestureDetector(
+                            onTap: (){
+                              if (isComplete) return;
+                              task.navigator();
+                            },
+                            child: Opacity(
+                              opacity: isComplete ? 0.5 : 1,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                decoration: BoxDecoration(
+                                    color: AppColors.surfaceContainerHigh,
+                                    border: Border.all(color: AppColors.onSurface, width: 2),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        RText.displaySmall(task.text),
+                                        RText.titleSmall("${task.completed} / ${task.limit}")
+                                      ],
+                                    ),
+                                    RSpace(),
+                                    RText.bodySmall("獎勵：經驗值（${task.expReward}）、兔兔幣（${task.coinReward}）")
+                                  ],
+                                ),
                               ),
                             ),
                           ),
