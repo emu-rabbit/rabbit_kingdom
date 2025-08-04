@@ -178,12 +178,80 @@ class RankPageController extends GetxController {
     }
   }
 }
-
-class RankViewer extends StatelessWidget {
+class RankViewer extends StatefulWidget {
   final RankData data;
   final RankSingleData? self;
   final KingdomRank rank;
   const RankViewer(this.rank, this.data, this.self, {super.key});
+
+  @override
+  State<RankViewer> createState() => _RankViewerState();
+}
+
+class _RankViewerState extends State<RankViewer> {
+  // 儲存計算後的最大寬度
+  double _maxFormattedValueWidth = vw(20); // 預設值
+
+  @override
+  void initState() {
+    super.initState();
+    // 在組件第一次建立時進行計算
+    _calculateMaxFormattedValueWidth();
+  }
+
+  @override
+  void didUpdateWidget(covariant RankViewer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 當傳入的 data 或 self 屬性改變時，重新計算
+    if (widget.data != oldWidget.data || widget.self != oldWidget.self) {
+      _calculateMaxFormattedValueWidth();
+    }
+  }
+
+  void _calculateMaxFormattedValueWidth() {
+    double maxWidth = 0.0;
+
+    // 遍歷所有需要測量的項目（第四名之後的及 self）
+    final List<RankSingleData> itemsToMeasure = [];
+    if (widget.data.length > 3) {
+      itemsToMeasure.addAll(widget.data.sublist(3));
+    }
+    if (widget.self != null) {
+      itemsToMeasure.add(widget.self!);
+    }
+
+    if (itemsToMeasure.isEmpty) {
+      // 如果沒有需要測量的項目，使用預設值並返回
+      setState(() {
+        _maxFormattedValueWidth = vw(20);
+      });
+      return;
+    }
+
+    // 取得用於測量的 TextStyle
+    const textStyle = TextStyle(fontSize: 16); // 假設 RText.titleMedium 的字體大小
+
+    // 使用 TextPainter 測量每個 formattedValue 的寬度
+    for (var item in itemsToMeasure) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: item.formattedValue, style: textStyle),
+        textDirection: TextDirection.ltr,
+        textScaleFactor: 1.0,
+      );
+      textPainter.layout();
+      if (textPainter.width > maxWidth) {
+        maxWidth = textPainter.width;
+      }
+    }
+
+    // 增加一些額外的空間，確保文字不會太擁擠
+    final double padding = 20;
+
+    // 更新狀態，觸發 build 方法重新繪製
+    setState(() {
+      _maxFormattedValueWidth = maxWidth + padding;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,8 +264,9 @@ class RankViewer extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            rank.descriptionBuilder(),
-            RSpace(),
+            widget.rank.descriptionBuilder(),
+            const RSpace(),
+            // 第一名
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -207,21 +276,22 @@ class RankViewer extends StatelessWidget {
                   height: firstPlaceImageSize,
                 ),
                 Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      RText.headlineLarge(data.firstOrNull?.name ?? "-", textAlign: TextAlign.center,),
-                      RSpace(),
-                      RText.headlineLarge(data.firstOrNull?.formattedValue ?? "-")
-                    ],
-                  )
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RText.headlineLarge(widget.data.firstOrNull?.name ?? "-", textAlign: TextAlign.center,),
+                        const RSpace(),
+                        RText.headlineLarge(widget.data.firstOrNull?.formattedValue ?? "-")
+                      ],
+                    )
                 )
               ],
             ),
-            RSpace(type: RSpaceType.large,),
-            data.get(1) != null ?
+            const RSpace(type: RSpaceType.large,),
+            // 第二名
+            if (widget.data.get(1) != null)
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -237,16 +307,17 @@ class RankViewer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          RText.headlineMedium(data.get(1)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
-                          RSpace(type: RSpaceType.small,),
-                          RText.headlineMedium(data.get(1)?.formattedValue ?? "-")
+                          RText.headlineMedium(widget.data.get(1)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
+                          const RSpace(type: RSpaceType.small,),
+                          RText.headlineMedium(widget.data.get(1)?.formattedValue ?? "-")
                         ],
                       )
                   )
                 ],
-              ): SizedBox.shrink(),
-            RSpace(type: RSpaceType.large,),
-            data.get(2) != null ?
+              ),
+            const RSpace(type: RSpaceType.large,),
+            // 第三名
+            if (widget.data.get(2) != null)
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -262,51 +333,63 @@ class RankViewer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          RText.headlineMedium(data.get(2)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
-                          RSpace(type: RSpaceType.small,),
-                          RText.headlineMedium(data.get(2)?.formattedValue ?? "-")
+                          RText.headlineMedium(widget.data.get(2)?.name ?? "-", maxLines: 2, textAlign: TextAlign.center,),
+                          const RSpace(type: RSpaceType.small,),
+                          RText.headlineMedium(widget.data.get(2)?.formattedValue ?? "-")
                         ],
                       )
                   )
                 ],
-              ): SizedBox.shrink(),
-            RSpace(),
-            ...(data.length > 3 ?
-              data
-                .sublist(3)
-                .asMap()
-                .entries
-                .map((entry) {
-                  final key = entry.key;
-                  final value = entry.value;
-                  return SizedBox(
-                    width: vw(77),
-                    height: vw(8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RText.titleMedium("${key+4}th"),
-                        RText.titleMedium(value.name),
-                        RText.titleMedium(value.formattedValue)
-                      ],
-                    ),
-                  );
-              }): [SizedBox.shrink()]),
-            self != null ?
+              ),
+            const RSpace(),
+            // 第四名之後的排名
+            if (widget.data.length > 3)
+              ...widget.data.sublist(3).asMap().entries.map((entry) {
+                final key = entry.key;
+                final value = entry.value;
+                return SizedBox(
+                  width: vw(80),
+                  height: vw(8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: vw(10),
+                        child: RText.titleMedium("${key+4}th"),
+                      ),
+                      RText.titleMedium(value.name),
+                      SizedBox(
+                        // 應用計算後的最大寬度
+                        width: _maxFormattedValueWidth,
+                        child: RText.titleMedium(value.formattedValue, textAlign: TextAlign.right,),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            // 自己的排名
+            if (widget.self != null)
               SizedBox(
-                width: vw(77),
+                width: vw(80),
                 height: vw(8),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RText.titleMedium("--"),
-                    RText.titleMedium(self!.name),
-                    RText.titleMedium(self!.formattedValue)
+                    SizedBox(
+                      width: vw(10),
+                      child: RText.titleMedium("---"),
+                    ),
+                    RText.titleMedium(widget.self!.name),
+                    SizedBox(
+                      // 應用計算後的最大寬度
+                      width: _maxFormattedValueWidth,
+                      child: RText.titleMedium(widget.self!.formattedValue, textAlign: TextAlign.right,),
+                    ),
                   ],
                 ),
-              ): SizedBox.shrink(),
+              ),
             SizedBox(height: vw(15),)
           ],
         ),
