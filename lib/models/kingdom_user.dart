@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
-import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
@@ -11,34 +10,40 @@ import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 class KingdomUser {
   final String name;
   final String email;
+  final DateTime createAt;
   final KingdomUserGroup group;
   final KingdomUserExp exp;
   final KingdomUserBudget budget;
   final KingdomUserTaskRecords records;
   final KingdomUserDrinks drinks;
   final KingdomUserTradingsNote note;
+  final KingdomUserAdInfo ad;
 
   KingdomUser._({
     required this.name,
     required this.email,
+    required this.createAt,
     required this.group,
     required this.exp,
     required this.budget,
     required this.records,
     required this.drinks,
-    required this.note
+    required this.note,
+    required this.ad
   });
 
   factory KingdomUser.fromJson(Map<String, dynamic> json) {
     return KingdomUser._(
       name: json['name'] ?? '',
       email: json['email'] ?? '',
+      createAt: toDateTime(json['createAt']) ?? DateTime.now(),
       group: KingdomUserGroup.fromString(json['group']),
       exp: KingdomUserExp.fromInt(json['exp']),
       budget: KingdomUserBudget.fromJson(json['budget']),
       records: KingdomUserTaskRecords.fromJson(json['records']),
       drinks: KingdomUserDrinks.fromJson(json['drinks']),
-      note: KingdomUserTradingsNote.fromJson(json['note'])
+      note: KingdomUserTradingsNote.fromJson(json['note']),
+      ad: KingdomUserAdInfo.fromJson(json['ad'])
     );
   }
 
@@ -46,12 +51,14 @@ class KingdomUser {
     return KingdomUser._(
       name: name,
       email: email,
+      createAt: DateTime.now(),
       group: KingdomUserGroup.unknown,
       exp: KingdomUserExp.fromInt(0),
       budget: KingdomUserBudget.fromJson(null),
       records: KingdomUserTaskRecords.create(),
       drinks: KingdomUserDrinks.create(),
-      note: KingdomUserTradingsNote.create()
+      note: KingdomUserTradingsNote.create(),
+      ad: KingdomUserAdInfo.create()
     );
   }
 
@@ -59,12 +66,14 @@ class KingdomUser {
     return {
       'name': name,
       'email': email,
+      'createAt': createAt,
       'group': group.name,
       'exp': exp.raw,
       'budget': budget.toJson(),
       'records': records.toJson(),
       'drinks': drinks.toJson(),
-      'note': note.toJson()
+      'note': note.toJson(),
+      'ad': ad.toJson()
     };
   }
 
@@ -392,5 +401,30 @@ class KingdomUserTradingsNote {
     final totalAmount = currentAmount + newAmount;
     final totalValue = currentAmount * currentAverage + newAmount * newPrice;
     return totalValue / totalAmount;
+  }
+}
+
+class KingdomUserAdInfo {
+  final int count;
+  const KingdomUserAdInfo._({
+    required this.count
+  });
+
+  factory KingdomUserAdInfo.fromJson(Map<String, dynamic>? json) {
+    return KingdomUserAdInfo._(
+      count: json?['count'] ?? 0
+    );
+  }
+
+  factory KingdomUserAdInfo.create() {
+    return KingdomUserAdInfo._(
+      count: 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'count': count
+    };
   }
 }

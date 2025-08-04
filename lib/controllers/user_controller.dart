@@ -293,4 +293,15 @@ class UserController extends GetxController {
       .add(record.toJson());
     return triggerTaskComplete(KingdomTaskNames.trade);
   }
+
+  Future<void> increaseAdCount() async {
+    final user = _user.value;
+    final docRef = _userDocRef.value;
+
+    if (user == null || docRef == null) return;
+
+    return docRef.update({
+      'ad.count': user.ad.count + 1
+    });
+  }
 }

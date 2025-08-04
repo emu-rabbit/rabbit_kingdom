@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/ad.dart';
@@ -73,6 +74,13 @@ Map<KingdomTaskNames, KingdomTask> buildKingdomTasks() {
       expReward: 150,
       navigator: () {
         showRewardedAd(
+          onReward: () {
+            final uc = Get.find<UserController>();
+            uc.increaseAdCount()
+              .catchError((e, stack) {
+                FirebaseCrashlytics.instance.recordError(e, stack);
+            });
+          },
           onFail: () {
             RSnackBar.error("抓取廣告失敗", "目前沒有廣告，請稍後再試");
           }
