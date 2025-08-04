@@ -83,10 +83,12 @@ class _RBlurredOverlayState extends State<RBlurredOverlay>
     final now = DateTime.now();
     final diffMinutes = now.difference(drinks.lastAt).inMinutes;
 
-    double maxBlur = (drinks.count * 3).clamp(0, 25).toDouble();
+    double maxBlur = (drinks.count * 2.5).clamp(0, 25).toDouble();
     double minBlur = (maxBlur * 0.35).clamp(0, maxBlur);
 
-    double decayFactor = (1 - (diffMinutes / Consts.drinkFullyDecay.inMinutes)).clamp(0.0, 1.0);
+    double decayFactor = (1 -
+        (diffMinutes / KingdomUserDrinks.getDrinkFullyDecay(drinks.count).inMinutes)
+    ).clamp(0.0, 1.0);
 
     maxBlur = maxBlur * decayFactor;
     minBlur = minBlur * decayFactor;

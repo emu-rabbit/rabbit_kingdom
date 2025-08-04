@@ -263,7 +263,7 @@ class UserController extends GetxController {
     final oldDrinks = user.drinks;
 
     final bool fullyDecayed =
-        now.difference(oldDrinks.lastAt) > Consts.drinkFullyDecay;
+        now.difference(oldDrinks.lastAt) > KingdomUserDrinks.getDrinkFullyDecay(oldDrinks.count);
 
     // 更新 firestore 上的資料
     final f1 = _userUpdater.updateJson({

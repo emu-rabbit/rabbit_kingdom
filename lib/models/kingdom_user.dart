@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/announce_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
@@ -274,6 +276,23 @@ class KingdomUserDrinks {
       'total': total,
       'lastAt': lastAt
     };
+  }
+
+  static Duration getDrinkFullyDecay(int count) {
+    // 處理邊界情況，如果沒有喝酒或輸入無效，則沒有酒醉時間。
+    if (count <= 0) {
+      return Duration.zero; // Dart 中表示零時間的標準方式
+    } else if (count > 8) {
+      return getDrinkFullyDecay(8);
+    }
+
+    // 應用我們的非線性方程式：f(x) = 10 * x^1.2
+    // 使用 dart:math 中的 pow() 函數進行次方計算。
+    final double minutes = 10.0 * pow(count, 1.2);
+
+    // 將計算出的分鐘數（double類型）四捨五入後，創建 Duration 物件。
+    // Dart 的 Duration 建構子可以直接接受分鐘數。
+    return Duration(minutes: minutes.round());
   }
 }
 
