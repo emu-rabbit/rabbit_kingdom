@@ -117,7 +117,7 @@ class KingdomUser {
 }
 
 enum KingdomUserGroup {
-  empire, girlfriend, dog, boss, friend, unknown;
+  empire, girlfriend, dog, boss, rabbit, friend, unknown;
 
   String toDisplay() {
     switch(this) {
@@ -129,6 +129,8 @@ enum KingdomUserGroup {
         return "貪吃狗狗";
       case KingdomUserGroup.boss:
         return "鄰國老大";
+      case KingdomUserGroup.rabbit:
+        return "兔子夥伴";
       case KingdomUserGroup.friend:
         return "要好朋朋";
       case KingdomUserGroup.unknown:
