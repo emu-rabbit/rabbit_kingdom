@@ -36,6 +36,19 @@ abstract class AppDataCache<T> {
     return _cacheData!;
   }
 
+  /// 清除記憶體快取與永久儲存中的資料
+  Future<void> clear() async {
+    // 1. 取得 SharedPreferences 實例
+    final prefs = await SharedPreferences.getInstance();
+
+    // 2. 根據子類別提供的 key，移除永久儲存中的資料
+    //    由於 SharedPreferences 的操作是異步的，這裡使用 await
+    await prefs.remove(_storageKey());
+
+    // 3. 將記憶體中的快取資料設為 null，立即釋放記憶體
+    _cacheData = null;
+  }
+
   /// 載入儲存資料：子類別需實作轉換
   Future<T?> _loadFromStorage() async {
     final prefs = await SharedPreferences.getInstance();
@@ -264,7 +277,7 @@ class RankDataCache extends AppDataCache<CachedRankData> {
 
     // 建立 CachedRankData 物件，特別注意建立時間
     return CachedRankData(
-      createAt: DateTime.now(),
+      createAt: DateTime.now().toUtc(),
       data: fetchedData,
     );
   }
@@ -276,36 +289,25 @@ class RankDataCache extends AppDataCache<CachedRankData> {
       return true; // 快取為空，視為過期
     }
 
-    // 取得裝置的本地時間，並轉換為 UTC 時間
+    // 1. 將所有時間點轉換為 UTC，建立統一的比較基準
     final nowUtc = DateTime.now().toUtc();
+    final cacheCreationUtc = storedData.createAt.toUtc();
 
-    // 伺服器產生新資料的時間點 (台灣時間)
-    const updateHoursTaipei = [0, 4, 8, 12, 16, 20];
+    // 2. 由於伺服器是根據「台北時間」(UTC+8) 更新，我們需要找出以 UTC 時間表示的「當前台北時間」
+    final nowInTaipei = nowUtc.add(const Duration(hours: 8));
 
-    // 找到伺服器最近一次更新的 UTC 時間點
-    DateTime lastUpdateTimeUtc = DateTime.utc(
-      nowUtc.year,
-      nowUtc.month,
-      nowUtc.day,
-    );
+    // 3. 使用台北時間來計算最近一次的更新時間點（幾點鐘）
+    final lastUpdateHourInTaipei = (nowInTaipei.hour ~/ 4) * 4;
 
-    // 遍歷所有更新時間點（台灣時間），將其轉換為 UTC 時間進行比較
-    for (var hourTaipei in updateHoursTaipei) {
-      // 將台灣時間轉換為 UTC 時間
-      final updateTimeUtc = DateTime.utc(
-        nowUtc.year,
-        nowUtc.month,
-        nowUtc.day,
-        hourTaipei,
-      ).subtract(const Duration(hours: 8));
+    // 4. 建立代表「最近一次更新時間」的 UTC DateTime 物件
+    final lastUpdateUtc = DateTime.utc(
+      nowInTaipei.year,
+      nowInTaipei.month,
+      nowInTaipei.day,
+      lastUpdateHourInTaipei,
+    ).subtract(const Duration(hours: 8));
 
-      // 檢查當前 UTC 時間是否晚於或等於此更新時間點
-      if (!nowUtc.isBefore(updateTimeUtc)) {
-        lastUpdateTimeUtc = updateTimeUtc;
-      }
-    }
-
-    // 檢查快取建立時間是否在最後一次更新時間之前
-    return storedData.createAt.toUtc().isBefore(lastUpdateTimeUtc);
+    // 5. 在 UTC 標準下，比較快取建立時間是否早于最近一次的更新時間
+    return cacheCreationUtc.isBefore(lastUpdateUtc);
   }
 }
