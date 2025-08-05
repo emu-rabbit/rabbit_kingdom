@@ -231,7 +231,7 @@ final Map<RankName, KingdomRank> kingdomRanks = {
             .level;
         return "Lv.$level";
       },
-      RankType.currentMonth: (value) => "${value.toInt().toSignedRDisplayString()}點",
+      RankType.currentMonth: (value) => "${value.toInt().toSignedRDisplayString()} Exp",
     }
   ),
   RankName.drink: KingdomRank(
