@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
-import {sendNotificationToUsers} from "./sendNotificationToUsers";
+import {sendAnnounceNotification, sendNewsNotification} from "./sendNotificationToUsers";
 import {createNewPoopPricesFromAnnounce, createNewPoopPricesFromLatest} from "./createNewPoopPrices";
 import {updateRanks} from "./updateRanks";
 
@@ -15,7 +15,7 @@ export const onAnnounceCreated = onDocumentCreated({
 }, async (event) => {
   const data = event.data?.data();
   if (!data) return;
-  await sendNotificationToUsers("", data);
+  await sendAnnounceNotification("", data);
   await createNewPoopPricesFromAnnounce("", data);
 });
 
@@ -26,8 +26,28 @@ export const onDevAnnounceCreated = onDocumentCreated({
 }, async (event) => {
   const data = event.data?.data();
   if (!data) return;
-  await sendNotificationToUsers("dev_", data);
+  await sendAnnounceNotification("dev_", data);
   await createNewPoopPricesFromAnnounce("dev_", data);
+});
+
+// news 觸發
+export const onNewsCreated = onDocumentCreated({
+  document: "news/{uid}",
+  region: REGION, // 可改成你要的地區
+}, async (event) => {
+  const data = event.data?.data();
+  if (!data) return;
+  await sendNewsNotification("", data);
+});
+
+// dev_news 觸發
+export const onDevNewsCreated = onDocumentCreated({
+  document: "dev_news/{uid}",
+  region: REGION, // 可改成你要的地區
+}, async (event) => {
+  const data = event.data?.data();
+  if (!data) return;
+  await sendNewsNotification("dev_", data);
 });
 
 // 🕒 每 20 分鐘觸發一次（你可以依需求修改 schedule）
