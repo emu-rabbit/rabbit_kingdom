@@ -38,7 +38,7 @@ class TasksPage extends StatelessWidget {
                       final isComplete = task.completed >= task.limit;
                       return [
                         SizedBox(
-                          width: vw(80) * deviceFactor(),
+                          width: vw(100) * deviceFactor(),
                           child: GestureDetector(
                             onTap: (){
                               if (isComplete) return;
