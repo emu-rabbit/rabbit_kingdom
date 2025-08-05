@@ -233,19 +233,27 @@ class HistoryChart extends StatelessWidget {
     final sellSpots = prices.map((p) => FlSpot(dateToX(p.createAt), p.sell.toDouble())).toList();
     final minY = [...buySpots, ...sellSpots].map((e) => e.y).reduce(min) - 3;
     final maxY = [...buySpots, ...sellSpots].map((e) => e.y).reduce(max) + 3;
+    final minX = [...buySpots, ...sellSpots].map((e) => e.x).reduce(min) - 3;
+    final maxX = [...buySpots, ...sellSpots].map((e) => e.x).reduce(max) + 3;
+    final parsedBuySpots = buySpots.map((p) => FlSpot(p.x, p.y - minY)).toList();
+    final parsedSellSpots = sellSpots.map((p) => FlSpot(p.x, p.y - minY)).toList();
+    final yInterval = ((maxY - minY) / 4).toInt();
+    final xInterval = ((maxX - minX) / 8).toInt();
     
     return LineChart(
       LineChartData(
         lineTouchData: LineTouchData(enabled: false),
-        minY: minY,
-        maxY: maxY,
+        minY: 0,
+        maxY: maxY - minY,
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              maxIncluded: false,
+              interval: yInterval.toDouble(),
               reservedSize: vw(7) * deviceFactor(),
               getTitlesWidget: (value, _) => RText.labelSmall(
-                value.toInt().toString(),
+                (value + minY).toInt().toString(),
                 overflow: TextOverflow.visible,
                 maxLines: 1,
                 softWrap: false,
@@ -257,7 +265,7 @@ class HistoryChart extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               maxIncluded: false,
-              interval: 70,
+              interval: xInterval.toDouble(),
               reservedSize: 32,
               getTitlesWidget: (value, meta) {
                 final date = xToDate(value);
@@ -284,14 +292,14 @@ class HistoryChart extends StatelessWidget {
         ),
         lineBarsData: [
           LineChartBarData(
-            spots: buySpots,
+            spots: parsedBuySpots,
             color: AppColors.red,
             barWidth: 3,
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(show: false),
           ),
           LineChartBarData(
-            spots: sellSpots,
+            spots: parsedSellSpots,
             color: AppColors.green,
             barWidth: 3,
             dotData: FlDotData(show: true),
