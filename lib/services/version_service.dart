@@ -11,15 +11,26 @@ import 'package:rabbit_kingdom/popups/should_update_popup.dart';
 class VersionService {
   static Future<void> checkUpdate() async {
     try {
+      await _activateRemoteConfig();
       final appVersion = await _getAppVersion();
       final latestVersion = await _getLatestVersion();
-      debugPrint("appVersion: $appVersion, latestVersion: $latestVersion");
-      if (_isVersionLessThan(appVersion, latestVersion)) {
+      final minimalVersion= await _getMinimalVersion();
+      debugPrint("appVersion: $appVersion, latestVersion: $latestVersion, minimalVersion: $minimalVersion");
+      if (_isVersionLessThan(appVersion, minimalVersion)) {
         await Get.rPopup(
           ShouldUpdatePopup(
+            type: UpdateType.force,
             appVersion: _toDisplayString(appVersion),
             latestVersion: _toDisplayString(latestVersion),
           )
+        );
+      } else if (_isVersionLessThan(appVersion, latestVersion)) {
+        await Get.rPopup(
+            ShouldUpdatePopup(
+              type: UpdateType.optional,
+              appVersion: _toDisplayString(appVersion),
+              latestVersion: _toDisplayString(latestVersion),
+            )
         );
       }
     } catch (e) {
@@ -27,12 +38,7 @@ class VersionService {
     }
   }
 
-  static Future<List<dynamic>> _getAppVersion() async {
-    final info = await PackageInfo.fromPlatform();
-    return _parseVersion('${info.version}+${info.buildNumber}');
-  }
-  
-  static Future<List<dynamic>> _getLatestVersion() async {
+  static Future<void> _activateRemoteConfig() async {
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       await FirebaseRemoteConfig.instance.setConfigSettings(
           RemoteConfigSettings(
@@ -41,12 +47,26 @@ class VersionService {
           )
       );
       await FirebaseRemoteConfig.instance.fetchAndActivate();
-      final version = FirebaseRemoteConfig.instance.getString("latest_available_version_${Platform.isAndroid ? "android": "ios"}");
-      if (version.isEmpty) throw Exception("Cannot get latest version");
-      return _parseVersion(version);
     } else {
       throw Exception("Platform error");
     }
+  }
+
+  static Future<List<dynamic>> _getAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    return _parseVersion('${info.version}+${info.buildNumber}');
+  }
+
+  static Future<List<dynamic>> _getLatestVersion() async {
+    final version = FirebaseRemoteConfig.instance.getString("latest_available_version_${Platform.isAndroid ? "android": "ios"}");
+    if (version.isEmpty) throw Exception("Cannot get latest version");
+    return _parseVersion(version);
+  }
+
+  static Future<List<dynamic>> _getMinimalVersion() async {
+    final version = FirebaseRemoteConfig.instance.getString("minimal_supported_version_${Platform.isAndroid ? "android": "ios"}");
+    if (version.isEmpty) throw Exception("Cannot get latest version");
+    return _parseVersion(version);
   }
 
   // 輔助函數：解析版本號為可比較的形式 (例如 [1, 0, 5])

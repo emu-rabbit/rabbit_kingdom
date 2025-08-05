@@ -9,16 +9,21 @@ import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+enum UpdateType {
+  optional, force
+}
+
 class ShouldUpdatePopup extends StatelessWidget {
+  final UpdateType type;
   final String appVersion;
   final String latestVersion;
-  const ShouldUpdatePopup({super.key, required this.appVersion, required this.latestVersion});
+  const ShouldUpdatePopup({super.key, required this.type, required this.appVersion, required this.latestVersion});
 
   @override
   Widget build(BuildContext context) {
     return RPopup(
       title: "有新版本",
-      closable: false,
+      closable: type != UpdateType.force,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
