@@ -31,7 +31,7 @@ class RComment extends StatelessWidget {
         RSpace(),
         SizedBox(
           width: vw(61) * deviceFactor() - 70,
-          child: RText.bodyMedium(comment.message, maxLines: 4,),
+          child: RText.bodySmall(comment.message, maxLines: 4,),
         )
       ],
     );
