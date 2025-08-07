@@ -6,7 +6,7 @@ import {logger} from "firebase-functions";
 import {admin} from "./admin";
 import GraphemeSplitter = require("grapheme-splitter");
 import {AppConfig, fetchConfig} from "./appConfig";
-import {getDrinkFullyDecay, getTodayEffectiveStart} from "./utils";
+import {applyTradingRecord, getDrinkFullyDecay, getTodayEffectiveStart} from "./utils";
 
 export async function processUserAction(request: CallableRequest<any>) {
   const uid = request.auth?.uid;
@@ -37,6 +37,8 @@ export async function processUserAction(request: CallableRequest<any>) {
     return await handleCommentAnnounce(prefix, uid, payload);
   case "HEART_ANNOUNCE":
     return await handleHeartAnnounce(prefix, uid, payload);
+  case "TRADE":
+    return await handleTrade(prefix, uid, payload);
   default:
     throw new HttpsError("invalid-argument", "NO_ACTION");
   }
@@ -316,5 +318,106 @@ async function handleHeartAnnounce(prefix: string, uid: string, payload: any) {
       }),
     });
     return {success: true, message: "成功回覆"};
+  });
+}
+async function handleTrade(prefix: string, uid: string, payload: any) {
+  const {type, amount, price} = payload;
+
+  if (!type || !amount || !price || !["buy", "sell"].includes(type) || amount <= 0 || price <= 0) {
+    throw new HttpsError("invalid-argument", "INVALID_ARGUMENTS");
+  }
+
+  // 1. 取得價格，並驗證前端傳來的價格
+  const pricesRef = admin.firestore().collection(`${prefix}prices`);
+  const pricesSnapshot = await pricesRef.orderBy("createAt", "desc").limit(3).get();
+
+  let isPriceValid = false;
+  let serverPrice = 0;
+
+  if (pricesSnapshot.empty) {
+    throw new HttpsError("internal", "NO_PRICES");
+  }
+
+  // 比對前端價格與後端最新三筆價格
+  pricesSnapshot.forEach((doc) => {
+    const priceData = doc.data();
+    if (type === "buy" && priceData.buy === price) {
+      isPriceValid = true;
+      serverPrice = priceData.buy;
+    } else if (type === "sell" && priceData.sell === price) {
+      isPriceValid = true;
+      serverPrice = priceData.sell;
+    }
+  });
+
+  if (!isPriceValid) {
+    throw new HttpsError("failed-precondition", "INVALID_PRICE");
+  }
+
+  // 2. 進行交易，使用事務確保原子性
+  return admin.firestore().runTransaction(async (transaction) => {
+    const userRef = admin.firestore().doc(`${prefix}user/${uid}`);
+    const tradingsRef = admin.firestore().collection(`${prefix}tradings`);
+    const userDoc = await transaction.get(userRef);
+
+    if (!userDoc.exists) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+
+    const userData = userDoc.data();
+    if (!userData || !userData.budget) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+
+    const cost = amount * serverPrice;
+    let newCoinAmount = userData.budget.coin;
+    let newPoopAmount = userData.budget.poop;
+    let newTradingsNote = userData.note || { // 確保有預設值
+      buyAmount: 0,
+      buyAverage: 0,
+      sellAmount: 0,
+      sellAverage: 0,
+    };
+
+    // 處理賣出（付出 poop，獲得 coin）
+    if (type === "buy") {
+      if (userData.budget.poop < amount) {
+        throw new HttpsError("failed-precondition", "NO_POOP");
+      }
+      newPoopAmount -= amount;
+      newCoinAmount += cost;
+
+      newTradingsNote = applyTradingRecord(newTradingsNote, "sell", amount, serverPrice);
+    // eslint-disable-next-line brace-style
+    }
+    // 處理買入（獲得 poop，付出 coin）
+    else if (type === "sell") {
+      if (userData.budget.coin < cost) {
+        throw new HttpsError("failed-precondition", "NO_COIN");
+      }
+      newCoinAmount -= cost;
+      newPoopAmount += amount;
+
+      newTradingsNote = applyTradingRecord(newTradingsNote, "buy", amount, serverPrice);
+    }
+
+    // 3. 更新使用者資料
+    transaction.update(userRef, {
+      "budget.coin": newCoinAmount,
+      "budget.poop": newPoopAmount,
+      "note": newTradingsNote,
+    });
+
+    // 4. 新增交易記錄
+    const tradingRecord = {
+      userID: uid,
+      type: type,
+      amount: amount,
+      price: serverPrice,
+      createAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+    transaction.set(tradingsRef.doc(), tradingRecord);
+
+    return {success: true, message: "交易成功！"};
   });
 }

@@ -5,7 +5,6 @@ import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
-import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 class KingdomUser {
@@ -351,58 +350,6 @@ class KingdomUserTradingsNote {
       sellAmount: json?['sellAmount'] ?? 0,
       sellAverage: safeToDouble(json?['sellAverage']),
     );
-  }
-
-  /// 套用一筆交易紀錄，計算新的統計資訊（不會修改原物件）
-  KingdomUserTradingsNote applyRecord(TradingRecord record) {
-    switch (record.type) {
-      case TradingType.buy:
-      // 對使用者來說是「賣出」
-        final newSellAmount = sellAmount + record.amount;
-        final newSellAverage = _calcNewAverage(
-          currentAmount: sellAmount,
-          currentAverage: sellAverage,
-          newAmount: record.amount,
-          newPrice: record.price,
-        );
-        return KingdomUserTradingsNote._(
-          buyAmount: buyAmount,
-          buyAverage: buyAverage,
-          sellAmount: newSellAmount,
-          sellAverage: newSellAverage,
-        );
-
-      case TradingType.sell:
-      // 對使用者來說是「買入」
-        final newBuyAmount = buyAmount + record.amount;
-        final newBuyAverage = _calcNewAverage(
-          currentAmount: buyAmount,
-          currentAverage: buyAverage,
-          newAmount: record.amount,
-          newPrice: record.price,
-        );
-        return KingdomUserTradingsNote._(
-          buyAmount: newBuyAmount,
-          buyAverage: newBuyAverage,
-          sellAmount: sellAmount,
-          sellAverage: sellAverage,
-        );
-    }
-  }
-
-  /// 計算新的加權平均價格
-  double _calcNewAverage({
-    required int currentAmount,
-    required double? currentAverage,
-    required int newAmount,
-    required int newPrice,
-  }) {
-    if (currentAmount == 0 || currentAverage == null) {
-      return newPrice.toDouble();
-    }
-    final totalAmount = currentAmount + newAmount;
-    final totalValue = currentAmount * currentAverage + newAmount * newPrice;
-    return totalValue / totalAmount;
   }
 }
 

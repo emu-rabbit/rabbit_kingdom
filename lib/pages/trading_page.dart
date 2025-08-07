@@ -8,9 +8,9 @@ import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
+import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/models/poop_prices.dart';
-import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/services/kingdom_user_service.dart';
 import 'package:rabbit_kingdom/widgets/r_amount_input.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
@@ -113,7 +113,7 @@ class TradingPage extends StatelessWidget {
                         if (uc.user != null) {
                           final totalBuyCoin = amountController.value * pc.prices!.sell * -1;
                           final totalSellCoin = amountController.value * pc.prices!.buy;
-                          final canBuy = uc.user!.budget.coin + totalBuyCoin > 0;
+                          final canBuy = uc.user!.budget.coin + totalBuyCoin >= 0;
                           final canSell = uc.user!.budget.poop >= amountController.value;
                           return SizedBox(
                             width: vw(75),
@@ -131,11 +131,9 @@ class TradingPage extends StatelessWidget {
                                             onPressed: () async {
                                               try {
                                                 RLoading.start();
-                                                final record = TradingRecord.createSell(
-                                                  amount: amountController.value,
-                                                  price: pc.prices!.sell
+                                                await CloudFunctions.trade(
+                                                  TradeType.sell, amountController.value, pc.prices!.sell
                                                 );
-                                                await uc.makeTrade(record);
                                                 RSnackBar.show("交易成功", "祝你發大財");
                                               } catch (e) {
                                                 RSnackBar.error("交易失敗", e.toString());
@@ -167,11 +165,9 @@ class TradingPage extends StatelessWidget {
                                           onPressed: () async {
                                             try {
                                               RLoading.start();
-                                              final record = TradingRecord.createBuy(
-                                                  amount: amountController.value,
-                                                  price: pc.prices!.buy
+                                              await CloudFunctions.trade(
+                                                  TradeType.buy, amountController.value, pc.prices!.buy
                                               );
-                                              await uc.makeTrade(record);
                                               RSnackBar.show("交易成功", "祝你發大財");
                                             } catch (e) {
                                               RSnackBar.error("交易失敗", e.toString());

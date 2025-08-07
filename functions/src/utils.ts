@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc */
 /* eslint-disable max-len */
 
 import {Timestamp} from "firebase-admin/firestore";
@@ -126,4 +127,42 @@ export function getTodayEffectiveStart(now: Date): Date {
     // 如果在早上8點後，起始時間是當天早上8點
     return new Date(nowTaiwan.getFullYear(), nowTaiwan.getMonth(), nowTaiwan.getDate(), 8, 0, 0);
   }
+}
+
+interface UserTradingsNote {
+  buyAmount: number;
+  buyAverage: number;
+  sellAmount: number;
+  sellAverage: number;
+}
+export function applyTradingRecord(note: UserTradingsNote, userTradeType: "buy" | "sell", amount: number, price: number): UserTradingsNote {
+  if (userTradeType === "buy") {
+    const newBuyAmount = note.buyAmount + amount;
+    const newBuyAverage = calcNewAverage(note.buyAmount, note.buyAverage, amount, price);
+    return {
+      ...note,
+      buyAmount: newBuyAmount,
+      buyAverage: newBuyAverage,
+    };
+  } else { // userTradeType === 'sell'
+    const newSellAmount = note.sellAmount + amount;
+    const newSellAverage = calcNewAverage(note.sellAmount, note.sellAverage, amount, price);
+    return {
+      ...note,
+      sellAmount: newSellAmount,
+      sellAverage: newSellAverage,
+    };
+  }
+}
+
+/**
+ * 計算新的加權平均價格。
+ */
+export function calcNewAverage(currentAmount: number, currentAverage: number, newAmount: number, newPrice: number): number {
+  if (currentAmount === 0) {
+    return newPrice;
+  }
+  const totalAmount = currentAmount + newAmount;
+  const totalValue = currentAmount * currentAverage + newAmount * newPrice;
+  return totalValue / totalAmount;
 }

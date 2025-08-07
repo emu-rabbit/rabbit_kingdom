@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rabbit_kingdom/pages/trading_page.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 class CloudFunctions {
@@ -51,6 +52,18 @@ class CloudFunctions {
       'action': "HEART_ANNOUNCE",
       'payload': {
         'id': id
+      }
+    });
+  }
+
+  static Future<void> trade(TradeType type, int amount, int price) async {
+    await userAction.call({
+      'env': env,
+      'action': "TRADE",
+      'payload': {
+        'type': type.name,
+        'amount': amount,
+        'price': price
       }
     });
   }
