@@ -203,7 +203,7 @@ async function handleTaskComplete(prefix: string, uid: string, payload: any) {
     const todayEffectiveStart = getTodayEffectiveStart(now);
 
     // eslint_disable_next_line max_len
-    const oldRecords = (userData.records?.record?.[taskName] ?? []) as admin.firestore.Timestamp[];
+    const oldRecords = (userData.records?.[taskName] ?? []) as admin.firestore.Timestamp[];
     const recordsToday = oldRecords.filter((recordTimestamp) => {
       // 確保 Timestamp 物件存在，並與 todayEffectiveStart 比較
       const localTime = recordTimestamp.toDate();
