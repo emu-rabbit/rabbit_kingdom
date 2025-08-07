@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 
 import {Timestamp} from "firebase-admin/firestore";
 
@@ -109,4 +110,20 @@ export function getDrinkFullyDecay(count: number): number {
   const milliseconds = Math.round(minutes * 60 * 1000);
 
   return milliseconds;
+}
+
+export function getTodayEffectiveStart(now: Date): Date {
+  const utcOffsetHours = 8; // 台灣時區為 UTC+8
+  const nowUtc = new Date(now.getTime() + now.getTimezoneOffset() * 60000); // 轉換為 UTC
+  const nowTaiwan = new Date(nowUtc.getTime() + utcOffsetHours * 3600000); // 轉換為台灣時間
+
+  if (nowTaiwan.getHours() < 8) {
+    // 如果在早上8點前，起始時間是前一天的早上8點
+    const prevDay = new Date(nowTaiwan);
+    prevDay.setDate(prevDay.getDate() - 1);
+    return new Date(prevDay.getFullYear(), prevDay.getMonth(), prevDay.getDate(), 8, 0, 0);
+  } else {
+    // 如果在早上8點後，起始時間是當天早上8點
+    return new Date(nowTaiwan.getFullYear(), nowTaiwan.getMonth(), nowTaiwan.getDate(), 8, 0, 0);
+  }
 }

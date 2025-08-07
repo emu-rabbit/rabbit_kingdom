@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 class CloudFunctions {
   static FirebaseFunctions get functions => FirebaseFunctions.instanceFor(region: "asia-east1");
@@ -20,6 +21,16 @@ class CloudFunctions {
     await userAction.call({
       'env': env,
       'action': 'DRINK'
+    });
+  }
+
+  static Future<void> completeTask(KingdomTaskNames task) async {
+    await userAction.call({
+      'env': env,
+      'action': "COMPLETE_TASK",
+      'payload': {
+        'taskName': task.name
+      }
     });
   }
 }

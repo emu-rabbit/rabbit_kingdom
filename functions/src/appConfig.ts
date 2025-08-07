@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import {admin} from "./admin";
 
 // 定義 AppConfig 介面，確保資料類型安全
@@ -6,6 +7,16 @@ export interface AppConfig {
   name_max_length: number;
   price_modify_name: number;
   price_drink: number;
+  kingdom_tasks: { [key: string]: KingdomTaskConfig };
+}
+
+// 定義單一任務的介面
+export interface KingdomTaskConfig {
+  text: string;
+  limit: number;
+  coin_reward: number;
+  exp_reward: number;
+  navigator: string;
 }
 
 // 記憶體中的快取，用於儲存不同環境的配置
@@ -34,14 +45,38 @@ function toAppConfig(snapshot: FirebaseFirestore.DocumentSnapshot):
   if (!data) {
     return undefined;
   }
+
+  // 處理 kingdom_tasks 欄位
+  const tasks: { [key: string]: KingdomTaskConfig } = {};
+  if (data.kingdomTasks && typeof data.kingdomTasks === "object") {
+    for (const key in data.kingdomTasks) {
+      if (Object.prototype.hasOwnProperty.call(data.kingdomTasks, key)) {
+        tasks[key] = toKingdomTaskConfig(data.kingdomTasks[key]);
+      }
+    }
+  }
+
   // 執行類型檢查與轉換，並提供預設值
   return {
-    default_name: data.defaultName || "未命名",
-    name_max_length: data.nameMaxLength || 10,
-    price_modify_name: data.priceModifyName || 100,
-    price_drink: data.priceDrink || 75,
+    default_name: (data.defaultName as string) ?? "未命名",
+    name_max_length: (data.nameMaxLength as number) ?? 10,
+    price_modify_name: (data.priceModifyName as number) ?? 100,
+    price_drink: (data.priceDrink as number) ?? 75,
+    kingdom_tasks: tasks,
   };
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toKingdomTaskConfig(data: any): KingdomTaskConfig {
+  return {
+    text: (data.text as string) ?? "",
+    limit: (data.limit as number) ?? 1,
+    coin_reward: (data.coin_reward as number) ?? 0,
+    exp_reward: (data.exp_reward as number) ?? 0,
+    navigator: (data.navigator as string) ?? "none",
+  };
+}
+
 
 /**
  * 設置 Firestore 監聽器，並將配置儲存在記憶體中。

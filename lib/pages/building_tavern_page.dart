@@ -7,6 +7,7 @@ import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/pages/ranks_page.dart';
 import 'package:rabbit_kingdom/pages/tasks_page.dart';
+import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_money.dart';
@@ -73,6 +74,8 @@ class BuildingTavernPage extends StatelessWidget {
                       try {
                         RLoading.start();
                         await CloudFunctions.drink();
+                        final uc = Get.find<UserController>();
+                        await uc.triggerTaskComplete(KingdomTaskNames.drink);
                         Get.rPopup(
                           RPopup(
                             child: Column(

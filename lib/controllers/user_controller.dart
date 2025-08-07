@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
+import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/helpers/firestore_updater.dart';
 import 'package:rabbit_kingdom/models/app_config.dart';
 import 'package:rabbit_kingdom/models/trading_record.dart';
@@ -208,28 +209,7 @@ class UserController extends GetxController {
     // 檢查是否已達上限 (此檢查現在會基於 get taskData 的正確計算)
     if (taskData.completed >= taskData.limit) return;
 
-    // 2. 清理舊紀錄 - 調整清理的起始點
-    final nowTaiwanTime = DateTime.now().toUtc().add(const Duration(hours: 8)); // 當前台灣時間
-
-    // 計算「今天的有效起始時間」，也就是最近的早上8點
-    // 這個邏輯必須與 get taskData 中的 todayEffectiveStart 完全一致
-    final DateTime todayEffectiveStartForCleanup;
-    if (nowTaiwanTime.hour < 8) {
-      todayEffectiveStartForCleanup = DateTime(nowTaiwanTime.year, nowTaiwanTime.month, nowTaiwanTime.day - 1, 8); // 前一天早上8點
-    } else {
-      todayEffectiveStartForCleanup = DateTime(nowTaiwanTime.year, nowTaiwanTime.month, nowTaiwanTime.day, 8); // 當天早上8點
-    }
-
-    final oldList = List<DateTime>.from(user.records.record[name] ?? []);
-    final newList = oldList
-      ..removeWhere((dt) => dt.toUtc().add(const Duration(hours: 8)).isBefore(todayEffectiveStartForCleanup))
-      ..add(DateTime.now()); // 使用 UTC 儲存新的完成紀錄
-
-    // 3. 更新 Firestore
-    final f1 = _userUpdater.update('records.${name.name}', newList);
-    final f2 = increaseExp(taskData.expReward);
-    final f3 = increaseCoin(taskData.coinReward);
-    await Future.wait([f1, f2, f3]);
+    await CloudFunctions.completeTask(name);
 
     RTaskComplete.show(name);
   }
