@@ -33,4 +33,25 @@ class CloudFunctions {
       }
     });
   }
+
+  static Future<void> commentAnnounce(String id, String comment) async {
+    await userAction.call({
+      'env': env,
+      'action': "COMMENT_ANNOUNCE",
+      'payload': {
+        'id': id,
+        'comment': comment
+      }
+    });
+  }
+
+  static Future<void> heartAnnounce(String id) async {
+    await userAction.call({
+      'env': env,
+      'action': "HEART_ANNOUNCE",
+      'payload': {
+        'id': id
+      }
+    });
+  }
 }

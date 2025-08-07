@@ -33,6 +33,10 @@ export async function processUserAction(request: CallableRequest<any>) {
     return await handleDrink(prefix, uid);
   case "COMPLETE_TASK":
     return await handleTaskComplete(prefix, uid, payload);
+  case "COMMENT_ANNOUNCE":
+    return await handleCommentAnnounce(prefix, uid, payload);
+  case "HEART_ANNOUNCE":
+    return await handleHeartAnnounce(prefix, uid, payload);
   default:
     throw new HttpsError("invalid-argument", "NO_ACTION");
   }
@@ -241,5 +245,76 @@ async function handleTaskComplete(prefix: string, uid: string, payload: any) {
         exp: taskConfig.exp_reward,
       },
     };
+  });
+}
+
+async function handleCommentAnnounce(prefix: string, uid: string, payload: any) {
+  const {comment, id: announceID} = payload || {};// 1. 檢查新名稱是否有效
+  if (!comment || typeof comment !== "string") {
+    throw new HttpsError("invalid-argument", "INVALID_COMMENT");
+  }
+
+  // 2. 檢查名稱長度 (使用 grapheme_splitter)
+  // const splitter = new GraphemeSplitter();
+  // const graphemeCount = splitter.countGraphemes(newName);
+  // if (graphemeCount > maxLength) {
+  //   throw new HttpsError("invalid-argument", "NAME_TOO_LONG");
+  // }
+
+  const userRef = admin.firestore().doc(`${prefix}user/${uid}`);
+  const announceRef = admin.firestore().doc(`${prefix}announce/${announceID}`);
+  return admin.firestore().runTransaction(async (transaction) => {
+    // 5. 讀取使用者資料
+    const userDoc = await transaction.get(userRef);
+    if (!userDoc.exists) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+    const userData = userDoc.data();
+    if (!userData) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+    const announceDoc = await transaction.get(announceRef);
+    if (!announceDoc.exists) {
+      throw new HttpsError("not-found", "ANNOUNCE_NOT_FOUND");
+    }
+    transaction.update(announceRef, {
+      "comments": admin.firestore.FieldValue.arrayUnion({
+        "uid": uid,
+        "name": userData.name,
+        "group": userData.group,
+        "message": comment,
+        "createAt": admin.firestore.Timestamp.now(),
+      }),
+    });
+    return {success: true, message: "成功回覆"};
+  });
+}
+
+async function handleHeartAnnounce(prefix: string, uid: string, payload: any) {
+  const {id: announceID} = payload || {};
+
+  const userRef = admin.firestore().doc(`${prefix}user/${uid}`);
+  const announceRef = admin.firestore().doc(`${prefix}announce/${announceID}`);
+  return admin.firestore().runTransaction(async (transaction) => {
+    // 5. 讀取使用者資料
+    const userDoc = await transaction.get(userRef);
+    if (!userDoc.exists) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+    const userData = userDoc.data();
+    if (!userData) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+    const announceDoc = await transaction.get(announceRef);
+    if (!announceDoc.exists) {
+      throw new HttpsError("not-found", "ANNOUNCE_NOT_FOUND");
+    }
+    transaction.update(announceRef, {
+      "hearts": admin.firestore.FieldValue.arrayUnion({
+        "uid": uid,
+        "name": userData.name,
+      }),
+    });
+    return {success: true, message: "成功回覆"};
   });
 }

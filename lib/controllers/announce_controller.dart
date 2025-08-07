@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 import '../helpers/collection_names.dart';
@@ -49,38 +50,28 @@ class AnnounceController extends GetxController {
 
   /// 💖 在目前公告中標記一個愛心
   Future<void> markHeart() async {
-    if (_announcementRef == null) return;
+    if (_announcementRef == null) throw Exception("Announce not exist");
 
-    final newHeart = AnnounceHeart.create();
-    final heartJson = newHeart.toJson();
-
-    await _announcementRef!.update({
-      'hearts': FieldValue.arrayUnion([heartJson]),
-    }).then((_) async {
-      final c = Get.find<UserController>();
-      await c.triggerTaskComplete(KingdomTaskNames.heart);
-    }).then((_) {
-      update();
-    });
+    await CloudFunctions.heartAnnounce(_announcementRef!.id)
+      .then((_) async {
+        final c = Get.find<UserController>();
+        await c.triggerTaskComplete(KingdomTaskNames.heart);
+      }).then((_) {
+        update();
+      });
   }
 
   /// 💬 發表一則留言
   Future<void> publishComment(String message) async {
-    if (_announcementRef == null) return;
+    if (_announcementRef == null) throw Exception("Announce not exist");
 
-    // 建立新的留言
-    final newComment = AnnounceComment.create(message);
-    final commentJson = newComment.toJson();
-
-    // 寫入 Firestore 的 comments 陣列
-    await _announcementRef!.update({
-      'comments': FieldValue.arrayUnion([commentJson]),
-    }).then((_) async {
-      final c = Get.find<UserController>();
-      await c.triggerTaskComplete(KingdomTaskNames.comment);
-    }).then((_) {
-      update();
-    });
+    await CloudFunctions.commentAnnounce(_announcementRef!.id, message)
+      .then((_) async {
+        final c = Get.find<UserController>();
+        await c.triggerTaskComplete(KingdomTaskNames.comment);
+      }).then((_) {
+        update();
+      });
   }
 
   void onLogout() {
