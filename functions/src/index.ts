@@ -2,9 +2,11 @@
 /* eslint-disable max-len */
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
+import {onCall} from "firebase-functions/v2/https";
 import {sendAnnounceNotification, sendNewsNotification} from "./sendNotificationToUsers";
 import {createNewPoopPricesFromAnnounce, createNewPoopPricesFromLatest} from "./createNewPoopPrices";
 import {updateRanks} from "./updateRanks";
+import {processUserAction} from "./processUserAction";
 
 const REGION = "asia-east1";
 
@@ -50,7 +52,7 @@ export const onDevNewsCreated = onDocumentCreated({
   await sendNewsNotification("dev_", data);
 });
 
-// 🕒 每 20 分鐘觸發一次（你可以依需求修改 schedule）
+// 每 30 分鐘觸發一次（你可以依需求修改 schedule）
 export const scheduledPoopPricesCreation = onSchedule(
   {
     schedule: "every 30 minutes",
@@ -70,5 +72,14 @@ export const scheduledUpdateRanks = onSchedule(
   async () => {
     await updateRanks("");
     await updateRanks("dev_");
+  }
+);
+
+export const onUserAction = onCall(
+  {
+    region: REGION,
+  },
+  async (request) => {
+    await processUserAction(request);
   }
 );

@@ -67,5 +67,5 @@ export async function sendNotificationToUsers(prefix: string, notification: Toke
     }),
     5 // 你可以調整這個併發數量
   );
-  console.log(`Send notifications to ${docs.length} users in ${prefix} `);
+  logger.log(`Send notifications to ${docs.length} users in ${prefix} `);
 }

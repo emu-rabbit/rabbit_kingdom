@@ -3,6 +3,7 @@
 import {Timestamp} from "firebase-admin/firestore";
 import {getCurrentMonthKey, getStartOfMonth8amInTaiwan, limitConcurrency} from "./utils";
 import {admin} from "./admin";
+import {logger} from "firebase-functions";
 
 /* eslint-disable require-jsdoc */
 export async function updateRanks(prefix: string) {
@@ -130,10 +131,10 @@ export async function updateRanks(prefix: string) {
 
     await limitConcurrency(tasks, 5);
 
-    console.log(`已處理 ${userSnapshot.docs.length} 個使用者與其排行文件，下一頁將繼續...`);
+    logger.log(`已處理 ${userSnapshot.docs.length} 個使用者與其排行文件，下一頁將繼續...`);
   }
   // TODO set meta
-  console.log("所有使用者與排行文件都已處理完畢。");
+  logger.log("所有使用者與排行文件都已處理完畢。");
 }
 
 

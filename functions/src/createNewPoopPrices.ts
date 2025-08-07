@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 import {admin} from "./admin";
+import {logger} from "firebase-functions";
 
 export async function createNewPoopPricesFromLatest(prefix: string) {
   const db = admin.firestore();
@@ -46,7 +47,7 @@ export async function createNewPoopPricesFromLatest(prefix: string) {
   });
 
   // eslint-disable-next-line max-len
-  console.log(` New price added: prefix:${prefix} lastBuy: ${lastBuyPrice}, buy = ${newBuy}, sell = ${newSell}`);
+  logger.log(` New price added: prefix:${prefix} lastBuy: ${lastBuyPrice}, buy = ${newBuy}, sell = ${newSell}`);
   return null;
 }
 
@@ -98,6 +99,6 @@ export async function createNewPoopPricesFromAnnounce(
   });
 
   // eslint-disable-next-line max-len
-  console.log(` New price added: prefix=${prefix} mood=${mood}, buy = ${newBuy}, sell = ${newSell}`);
+  logger.log(` New price added: prefix=${prefix} mood=${mood}, buy = ${newBuy}, sell = ${newSell}`);
   return null;
 }

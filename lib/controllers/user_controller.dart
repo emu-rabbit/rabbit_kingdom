@@ -193,24 +193,6 @@ class UserController extends GetxController {
     });
   }
 
-  /// 修改名字（可收費）
-  Future<void> changeName(String newName, bool isFirstTime) async {
-    final docRef = _userDocRef.value;
-    if (docRef == null) {
-      throw Exception('尚未載入使用者資訊');
-    }
-
-    if (isFirstTime) {
-      try {
-        await deductCoin(Prices.modifyName);
-      } catch (_) {
-        throw Exception('修改名稱失敗，金幣不足');
-      }
-    }
-
-    return _userUpdater.update('name', newName);
-  }
-
   Future<void> triggerTaskComplete(KingdomTaskNames name) async {
     final user = this.user;
     final docRef = _userDocRef.value;

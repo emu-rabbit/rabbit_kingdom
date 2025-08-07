@@ -1,7 +1,9 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
+import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/values/consts.dart';
 import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
@@ -27,8 +29,8 @@ class ModifyNamePage extends StatelessWidget {
     return RLayoutWithHeader(
       "",
       topRight: RMoney(types: [MoneyType.coin],),
-      child: SingleChildScrollView(
-        child: Center(
+      child: Center(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -70,13 +72,11 @@ class ModifyNamePage extends StatelessWidget {
                             if (nameController.text.value.isNotEmpty) {
                               try {
                                 RLoading.start();
-                                await userController.changeName(
-                                    nameController.text.value,
-                                    !(authController.firebaseUser.value?.displayName == userController.user?.name ||
-                                        userController.user?.name == Consts.defaultUserName)
-                                );
+                                await CloudFunctions.modifyName(nameController.text.value);
                                 Get.back();
                                 RSnackBar.show("更名成功", "邁上新的旅途吧！");
+                              } on FirebaseFunctionsException catch(e) {
+                                RSnackBar.error("更名失敗", e.message ?? e.code);
                               } catch(e) {
                                 RSnackBar.error("更名失敗", e.toString());
                               } finally {
