@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/models/kingdom_user.dart';
-import 'package:rabbit_kingdom/values/consts.dart';
 
 import '../controllers/user_controller.dart';
 

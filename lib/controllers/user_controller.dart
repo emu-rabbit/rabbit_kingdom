@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
 import 'package:rabbit_kingdom/helpers/firestore_updater.dart';
+import 'package:rabbit_kingdom/models/app_config.dart';
 import 'package:rabbit_kingdom/models/trading_record.dart';
 import 'package:rabbit_kingdom/widgets/r_task_compelete.dart';
 
 import '../helpers/collection_names.dart';
 import '../helpers/json.dart';
 import '../models/kingdom_user.dart';
-import '../values/consts.dart';
 import '../values/kingdom_tasks.dart';
-import '../values/prices.dart';
 
 class UserController extends GetxController {
   final _user = Rxn<KingdomUser>();
@@ -26,8 +26,9 @@ class UserController extends GetxController {
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
+    final config = Get.find<AppConfigController>().config;
     final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty
-        ? Consts.defaultUserName
+        ? (config?.defaultName ?? "未命名")
         : firebaseUser.displayName!;
     final email = firebaseUser.email ?? '';
     final docRef = FirebaseFirestore.instance.collection(CollectionNames.user).doc(uid);
@@ -239,7 +240,8 @@ class UserController extends GetxController {
 
     if (user == null || docRef == null) return;
 
-    await deductCoin(Prices.drink);
+    final config = Get.find<AppConfigController>().config;
+    await deductCoin(config?.priceDrink ?? 75);
 
     final now = DateTime.now();
     final oldDrinks = user.drinks;

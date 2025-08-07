@@ -4,6 +4,7 @@ import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 import {logger} from "firebase-functions";
 import {admin} from "./admin";
 import GraphemeSplitter = require("grapheme-splitter");
+import {AppConfig, fetchConfig} from "./appConfig";
 
 export async function processUserAction(request: CallableRequest<any>) {
   const uid = request.auth?.uid;
@@ -33,9 +34,15 @@ export async function processUserAction(request: CallableRequest<any>) {
 
 async function handleModifyName(prefix: string, uid: string, payload: any) {
   const {name: newName} = payload || {};
-  const cost = 100;
-  const defaultName = "未命名";
-  const maxLength = 10;
+  let config: AppConfig;
+  try {
+    config = await fetchConfig(prefix);
+  } catch (e) {
+    throw new HttpsError("internal", "CONFIG_NOT_FOUND");
+  }
+  const cost = config.price_modify_name;
+  const defaultName = config.default_name;
+  const maxLength = config.name_max_length;
 
   // 1. 檢查新名稱是否有效
   if (!newName || typeof newName !== "string") {

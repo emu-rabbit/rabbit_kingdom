@@ -12,6 +12,7 @@ import 'package:flutter/material.dart'; // ← 為了 LinearProgressIndicator
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
@@ -126,6 +127,10 @@ class InitializePageController extends GetxController {
         await AppTrackingTransparency.requestTrackingAuthorization();
         await MobileAds.instance.initialize();
       }
+
+      setProgress(60);
+      final configController = Get.find<AppConfigController>();
+      configController.initConfig();
 
       setProgress(70);
       await NotificationService.requestPermission();

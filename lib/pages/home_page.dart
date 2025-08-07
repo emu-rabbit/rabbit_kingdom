@@ -98,7 +98,7 @@ class _HeaderText extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: fontSize ?? getFromDp(26),
+                  fontSize: fontSize ?? getFromDp(24),
                   fontFamily: 'JFHuninn',
                   decoration: TextDecoration.none,
                   foreground: Paint()
@@ -115,7 +115,7 @@ class _HeaderText extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: fontSize ?? getFromDp(26),
+                  fontSize: fontSize ?? getFromDp(24),
                   decoration: TextDecoration.none,
                   fontFamily: 'JFHuninn',
                   color: themeController.brightness == Brightness.light ?

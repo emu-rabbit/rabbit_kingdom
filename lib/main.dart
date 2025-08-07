@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/pages/login_page.dart';
@@ -19,6 +20,7 @@ void main() async {
 
   // Controllers
   Get.put(ThemeController());
+  Get.put(AppConfigController());
   Get.put(UserController());
   Get.put(AnnounceController());
   Get.put(PricesController());

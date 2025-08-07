@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/pages/ranks_page.dart';
 import 'package:rabbit_kingdom/pages/tasks_page.dart';
-import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_money.dart';
@@ -22,6 +22,8 @@ class BuildingTavernPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = Get.find<AppConfigController>().config;
+    final priceDrink = config?.priceDrink ?? 75;
     return RLayoutWithHeader(
         "",
         topRight: RMoney(types: [MoneyType.coin],),
@@ -62,7 +64,7 @@ class BuildingTavernPage extends StatelessWidget {
                             width: vw(6),
                             height: vw(6),
                           ),
-                          RText.bodyLarge("-${Prices.drink})", color: color,),
+                          RText.bodyLarge("-$priceDrink)", color: color,),
                         ],
                       );
                     },

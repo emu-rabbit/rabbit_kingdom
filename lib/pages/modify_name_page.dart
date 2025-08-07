@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
-import 'package:rabbit_kingdom/values/consts.dart';
-import 'package:rabbit_kingdom/values/prices.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
@@ -13,6 +11,7 @@ import 'package:rabbit_kingdom/widgets/r_money.dart';
 import 'package:rabbit_kingdom/widgets/r_snack_bar.dart';
 import 'package:rabbit_kingdom/widgets/r_text_input.dart';
 
+import '../controllers/app_config_controller.dart';
 import '../helpers/screen.dart';
 import '../widgets/r_space.dart';
 import '../widgets/r_text.dart';
@@ -25,6 +24,8 @@ class ModifyNamePage extends StatelessWidget {
     final userController = Get.find<UserController>();
     final authController = Get.find<AuthController>();
     final nameController = RTextInputController();
+    final config = Get.find<AppConfigController>().config;
+    final priceModifyName = config?.priceModifyName ?? 100;
 
     return RLayoutWithHeader(
       "",
@@ -55,11 +56,11 @@ class ModifyNamePage extends StatelessWidget {
                     Obx((){
                       if (
                       authController.firebaseUser.value?.displayName == userController.user?.name ||
-                          userController.user?.name == Consts.defaultUserName
+                          userController.user?.name == "未命名"
                       ) {
                         return RText.titleSmall("看來是第一次改名呢，這次是免費唷！");
                       }
-                      return RText.titleSmall("改名的話，這邊要跟你收費${Prices.modifyName}兔兔幣唷");
+                      return RText.titleSmall("改名的話，這邊要跟你收費$priceModifyName兔兔幣唷");
                     }),
                     RSpace(),
                     RTextInput(label: "新名字", controller: nameController, maxLength: 10,),
