@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
+import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
@@ -92,11 +93,10 @@ class KingdomUser {
       todayEffectiveStart = DateTime(now.year, now.month, now.day, 8); // 當天早上8點
     }
 
-    for (final entry in kingdomTasks.entries) {
+    for (final entry in Get.find<AppConfigController>().config?.tasks.entries ?? <KingdomTaskNames, KingdomTask>{}.entries) {
       final name = entry.key;
       final task = entry.value;
       final recordList = records.record[name] ?? [];
-
       final completedToday = recordList.where((dt) {
         final localTime = dt.toUtc().add(const Duration(hours: 8)); // 轉為台灣時間
         return localTime.isAfter(todayEffectiveStart); // 判斷是否在有效起始時間之後
@@ -211,7 +211,7 @@ class KingdomUserTaskRecords {
 
   factory KingdomUserTaskRecords.fromJson(Map<String, dynamic>? json) {
     final r = <KingdomTaskNames, List<DateTime>>{};
-    for (var entry in kingdomTasks.entries) {
+    for (var entry in Get.find<AppConfigController>().config?.tasks.entries ?? <KingdomTaskNames, KingdomTask>{}.entries) {
        final taskRecords = json?[entry.key.name];
        if (taskRecords != null && taskRecords is List<dynamic>) {
          r.putIfAbsent(entry.key, () => taskRecords.map((e) => toDateTime(e)).whereType<DateTime>().toList());
@@ -225,7 +225,7 @@ class KingdomUserTaskRecords {
 
   factory KingdomUserTaskRecords.create() {
     final r = <KingdomTaskNames, List<DateTime>>{};
-    for (var entry in kingdomTasks.entries) {
+    for (var entry in Get.find<AppConfigController>().config?.tasks.entries ?? {}.entries) {
       r.putIfAbsent(entry.key, () => []);
     }
     return KingdomUserTaskRecords._(record: r);
