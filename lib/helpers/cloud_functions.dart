@@ -15,4 +15,11 @@ class CloudFunctions {
       }
     });
   }
+
+  static Future<void> drink() async {
+    await userAction.call({
+      'env': env,
+      'action': 'DRINK'
+    });
+  }
 }

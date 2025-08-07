@@ -5,6 +5,7 @@ export interface AppConfig {
   default_name: string;
   name_max_length: number;
   price_modify_name: number;
+  price_drink: number;
 }
 
 // 記憶體中的快取，用於儲存不同環境的配置
@@ -38,6 +39,7 @@ function toAppConfig(snapshot: FirebaseFirestore.DocumentSnapshot):
     default_name: data.defaultName || "未命名",
     name_max_length: data.nameMaxLength || 10,
     price_modify_name: data.priceModifyName || 100,
+    price_drink: data.priceDrink || 75,
   };
 }
 

@@ -93,3 +93,20 @@ export function getStartOfMonth8amInTaiwan(): Timestamp {
 
   return Timestamp.fromDate(startOfMonth8amUTC);
 }
+
+export function getDrinkFullyDecay(count: number): number {
+  // 處理邊界情況
+  if (count <= 0) {
+    return 0;
+  } else if (count > 8) {
+    return getDrinkFullyDecay(8);
+  }
+
+  // 應用非線性方程式：f(x) = 10 * x^1.2
+  const minutes = 10.0 * Math.pow(count, 1.2);
+
+  // 將分鐘轉換為毫秒並四捨五入
+  const milliseconds = Math.round(minutes * 60 * 1000);
+
+  return milliseconds;
+}

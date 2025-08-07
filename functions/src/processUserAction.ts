@@ -5,6 +5,7 @@ import {logger} from "firebase-functions";
 import {admin} from "./admin";
 import GraphemeSplitter = require("grapheme-splitter");
 import {AppConfig, fetchConfig} from "./appConfig";
+import {getDrinkFullyDecay} from "./utils";
 
 export async function processUserAction(request: CallableRequest<any>) {
   const uid = request.auth?.uid;
@@ -27,6 +28,8 @@ export async function processUserAction(request: CallableRequest<any>) {
   switch (action) {
   case "MODIFY_NAME":
     return await handleModifyName(prefix, uid, payload);
+  case "DRINK":
+    return await handleDrink(prefix, uid);
   default:
     throw new HttpsError("invalid-argument", "NO-ACTION");
   }
@@ -104,5 +107,54 @@ async function handleModifyName(prefix: string, uid: string, payload: any) {
     transaction.update(userRef, updateData);
 
     return {success: true, message: "名稱更新成功！"};
+  });
+}
+
+async function handleDrink(prefix: string, uid: string) {
+  let config: AppConfig;
+  try {
+    config = await fetchConfig(prefix);
+  } catch (e) {
+    throw new HttpsError("internal", "CONFIG_NOT_FOUND");
+  }
+  const cost = config.price_drink;
+
+  return admin.firestore().runTransaction(async (transaction) => {
+    const userRef = admin.firestore().doc(`${prefix}user/${uid}`);
+    const userDoc = await transaction.get(userRef);
+    if (!userDoc.exists) {
+      throw new HttpsError("not-found", "USER-NOT-FOUND");
+    }
+
+    const userData = userDoc.data();
+    if (!userData) throw new HttpsError("not-found", "USER-NOT-FOUND");
+
+    const currentCoins = userData.budget?.coin || 0;
+    const currentDrinks = userData.drinks || {};
+
+    if (currentCoins < cost) {
+      throw new HttpsError("failed-precondition", "COIN-NOT-ENOUGH");
+    }
+
+    const now = new Date();
+
+    // 🌟 修正點 1: 處理 Firestore Timestamp
+    const lastDrinkTime = currentDrinks.lastAt?.toDate() ||
+      new Date(0); // 如果沒有 lastAt，則使用一個很早的時間
+    const timeDifference = now.getTime() - lastDrinkTime.getTime();
+    const decayTime = getDrinkFullyDecay(currentDrinks.count || 0);
+
+    // 檢查是否完全消散
+    const fullyDecayed: boolean = timeDifference > decayTime;
+
+    // 🌟 修正點 2: 正確呼叫 serverTimestamp 屬性
+    transaction.update(userRef, {
+      "budget.coin": admin.firestore.FieldValue.increment(-cost),
+      "drinks.count": fullyDecayed ? 1 : (currentDrinks.count || 0) + 1,
+      "drinks.total": admin.firestore.FieldValue.increment(1),
+      "drinks.lastAt": admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    return {success: true, message: "喝酒成功！"};
   });
 }

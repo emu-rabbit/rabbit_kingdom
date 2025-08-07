@@ -234,34 +234,6 @@ class UserController extends GetxController {
     RTaskComplete.show(name);
   }
 
-  Future<void> drink() async {
-    final user = _user.value;
-    final docRef = _userDocRef.value;
-
-    if (user == null || docRef == null) return;
-
-    final config = Get.find<AppConfigController>().config;
-    await deductCoin(config?.priceDrink ?? 75);
-
-    final now = DateTime.now();
-    final oldDrinks = user.drinks;
-
-    final bool fullyDecayed =
-        now.difference(oldDrinks.lastAt) > KingdomUserDrinks.getDrinkFullyDecay(oldDrinks.count);
-
-    // 更新 firestore 上的資料
-    final f1 = _userUpdater.updateJson({
-      'drinks': {
-        'count': fullyDecayed ? 1 : oldDrinks.count + 1,
-        'total': user.drinks.total + 1,
-        'lastAt': now,
-      }
-    });
-    final f2 = triggerTaskComplete(KingdomTaskNames.drink);
-
-    return Future.wait([f1, f2]).then((_){});
-  }
-
   Future<void> makeTrade(TradingRecord record) async {
     if (record.type == TradingType.buy) {
       await deductPoop(record.amount);
