@@ -27,6 +27,8 @@ export async function processUserAction(request: CallableRequest<any>) {
   logger.info(`User: ${uid} with action ${action} in ${env}`, {payload});
 
   switch (action) {
+  case "CREATE_USER":
+    return await handleCreateUser(prefix, uid);
   case "MODIFY_NAME":
     return await handleModifyName(prefix, uid, payload);
   case "DRINK":
@@ -46,6 +48,67 @@ export async function processUserAction(request: CallableRequest<any>) {
   default:
     throw new HttpsError("invalid-argument", "NO_ACTION");
   }
+}
+
+async function handleCreateUser(prefix: string, uid: string) {
+  let config: AppConfig;
+  try {
+    config = await fetchConfig(prefix);
+  } catch (e) {
+    throw new HttpsError("internal", "CONFIG_NOT_FOUND");
+  }
+  const userRef = admin.firestore().doc(`${prefix}user/${uid}`);
+
+  return await admin.firestore().runTransaction(async (transaction) => {
+    // 1. 在事務中讀取文件
+    const userDoc = await transaction.get(userRef);
+
+    // 2. 檢查文件是否存在
+    if (!userDoc.exists) {
+      let userRecord;
+      try {
+        // 3. 如果不存在，則在事務中創建它
+        userRecord = await admin.auth().getUser(uid);
+      } catch (error) {
+        // 捕獲 auth 錯誤，例如使用者不存在
+        throw new HttpsError("internal", "USER_NOT_FOUND", error);
+      }
+      const records: { [key in string]: admin.firestore.Timestamp[] } = {};
+      Object.entries(config.kingdom_tasks).forEach(([key]) => {
+        records[key] = [];
+      });
+      const newUser = {
+        name: userRecord.displayName || config.default_name,
+        email: userRecord.email || "unknown",
+        createAt: admin.firestore.FieldValue.serverTimestamp(),
+        group: "unknown",
+        exp: 0,
+        budget: {
+          "coin": 0,
+          "poop": 0,
+        },
+        records: records,
+        drinks: {
+          "count": 0,
+          "total": 0,
+          "lastAt": admin.firestore.Timestamp.now(),
+        },
+        note: {
+          "buyAmount": 0,
+          "buyAverage": null,
+          "sellAmount": 0,
+          "sellAverage": null,
+        },
+        ad: {
+          "count": 0,
+        },
+      };
+      transaction.set(userRef, newUser);
+      return {success: true, message: "名稱更新成功！"};
+    } else {
+      throw new HttpsError("already-exists", "USER_EXIST");
+    }
+  });
 }
 
 async function handleModifyName(prefix: string, uid: string, payload: any) {
@@ -186,6 +249,7 @@ async function handleTaskComplete(prefix: string, uid: string, payload: any) {
 
   // 檢查任務名稱是否有效
   const taskConfig = config.kingdom_tasks?.[taskName]; // 假設 AppConfig 有 tasks 欄位
+  console.log(taskConfig);
   if (!taskConfig) {
     throw new HttpsError("invalid-argument", "TASK_NOT_FOUND");
   }
@@ -226,11 +290,7 @@ async function handleTaskComplete(prefix: string, uid: string, payload: any) {
     }
 
     // 2. 清理舊紀錄並新增新紀錄
-    const newRecords = oldRecords.filter((recordTimestamp) => {
-      // 邏輯同上，過期的記錄會被移除
-      const localTime = recordTimestamp.toDate();
-      return localTime.getTime() >= todayEffectiveStart.getTime();
-    });
+    const newRecords = recordsToday;
     newRecords.push(admin.firestore.Timestamp.now());
 
     // 3. 執行更新

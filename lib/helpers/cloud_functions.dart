@@ -7,7 +7,14 @@ class CloudFunctions {
   static FirebaseFunctions get functions => FirebaseFunctions.instanceFor(region: "asia-east1");
   static HttpsCallable get userAction => functions.httpsCallable("onUserAction");
   static String get env => kDebugMode ? 'debug': 'production';
-  
+
+  static Future<void> createUser() async {
+    await userAction.call({
+      'env': env,
+      'action': "CREATE_USER"
+    });
+  }
+
   static Future<void> modifyName(String name) async {
     await userAction.call({
       'env': env,

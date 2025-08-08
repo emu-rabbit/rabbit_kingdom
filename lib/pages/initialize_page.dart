@@ -130,7 +130,7 @@ class InitializePageController extends GetxController {
 
       setProgress(60);
       final configController = Get.find<AppConfigController>();
-      configController.initConfig();
+      await configController.initConfig();
 
       setProgress(70);
       await NotificationService.requestPermission();

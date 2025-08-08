@@ -114,19 +114,30 @@ export function getDrinkFullyDecay(count: number): number {
 }
 
 export function getTodayEffectiveStart(now: Date): Date {
-  const utcOffsetHours = 8; // 台灣時區為 UTC+8
-  const nowUtc = new Date(now.getTime() + now.getTimezoneOffset() * 60000); // 轉換為 UTC
-  const nowTaiwan = new Date(nowUtc.getTime() + utcOffsetHours * 3600000); // 轉換為台灣時間
+  const TAIWAN_OFFSET_MS = 8 * 3600 * 1000;
 
-  if (nowTaiwan.getHours() < 8) {
-    // 如果在早上8點前，起始時間是前一天的早上8點
-    const prevDay = new Date(nowTaiwan);
-    prevDay.setDate(prevDay.getDate() - 1);
-    return new Date(prevDay.getFullYear(), prevDay.getMonth(), prevDay.getDate(), 8, 0, 0);
-  } else {
-    // 如果在早上8點後，起始時間是當天早上8點
-    return new Date(nowTaiwan.getFullYear(), nowTaiwan.getMonth(), nowTaiwan.getDate(), 8, 0, 0);
+  // 建立一個代表當前台灣時間的 Date 物件
+  const nowInTaiwan = new Date(now.getTime() + TAIWAN_OFFSET_MS);
+
+  // 使用 UTC 方法來取得台灣時間的年、月、日，避免本地時區干擾
+  let year = nowInTaiwan.getUTCFullYear();
+  let month = nowInTaiwan.getUTCMonth();
+  let day = nowInTaiwan.getUTCDate();
+
+  // 檢查台灣時間是否在早上 8 點之前
+  if (nowInTaiwan.getUTCHours() < 8) {
+    // 如果是，生效日就是「前一天」。
+    // 我們從台灣當前時間減去 24 小時來安全地取得前一天的日期。
+    const yesterdayInTaiwan = new Date(nowInTaiwan.getTime() - 24 * 3600 * 1000);
+    year = yesterdayInTaiwan.getUTCFullYear();
+    month = yesterdayInTaiwan.getUTCMonth();
+    day = yesterdayInTaiwan.getUTCDate();
   }
+
+  // 有效起始時間是該日期的台灣時間早上 8 點，
+  // 這等同於 UTC 時間的凌晨 0 點。
+  // 使用 Date.UTC() 來建立精確的 UTC 時間戳。
+  return new Date(Date.UTC(year, month, day, 0, 0, 0));
 }
 
 interface UserTradingsNote {

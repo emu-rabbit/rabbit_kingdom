@@ -84,8 +84,8 @@ Function() _getNavigatorFunction(String navigatorStr) {
     case 'ad_reward':
       return () {
         showRewardedAd(
-            onReward: () {
-              CloudFunctions.adWatched().catchError((e, stack) {
+            onReward: () async {
+              await CloudFunctions.adWatched().catchError((e, stack) {
                 FirebaseCrashlytics.instance.recordError(e, stack);
               });
             },

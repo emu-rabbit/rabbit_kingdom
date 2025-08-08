@@ -23,41 +23,42 @@ class UserController extends GetxController {
 
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
-    final config = Get.find<AppConfigController>().config;
-    final displayName = firebaseUser.displayName == null || firebaseUser.displayName!.isEmpty
-        ? (config?.defaultName ?? "未命名")
-        : firebaseUser.displayName!;
-    final email = firebaseUser.email ?? '';
     final docRef = FirebaseFirestore.instance.collection(CollectionNames.user).doc(uid);
     _userDocRef.value = docRef;
 
-    final docSnapshot = await docRef.get();
+    // 1. 創建一個 Completer 來等待第一筆有效資料
+    final Completer<void> userLoadedCompleter = Completer();
 
-    if (docSnapshot.exists) {
-      final data = docSnapshot.data()!;
-      final userFromFirestore = KingdomUser.fromJson(data);
-      _user.value = userFromFirestore;
-
-      final expectedData = userFromFirestore.toJson();
-      final bool needsUpdate = mergeMissingFields(data, expectedData);
-
-      if (needsUpdate) {
-        await docRef.update(data);
-      }
-    } else {
-      final newUser = KingdomUser.newUser(displayName, email);
-      await docRef.set(newUser.toJson());
-      _user.value = newUser;
-    }
-
-    // 監聽 Firestore
-    _userListener = docRef.snapshots().listen((snapshot) {
+    // 2. 建立監聽器，這是唯一的資料來源
+    _userListener = docRef.snapshots().listen((snapshot) async {
       if (snapshot.exists && snapshot.data() != null) {
+        // 🌟 情況 A: 文件存在，解析資料
         final newUser = KingdomUser.fromJson(snapshot.data()!);
         _user.value = newUser;
         update();
+
+        // 首次載入完成，完成 Completer
+        if (!userLoadedCompleter.isCompleted) {
+          userLoadedCompleter.complete();
+        }
+      } else {
+        // 🌟 情況 B: 文件不存在，呼叫 Cloud Function 創建
+        // 這裡只在第一次監聽到文件不存在時執行
+        if (!userLoadedCompleter.isCompleted) {
+          try {
+            await CloudFunctions.createUser();
+          } catch (e) {
+            // 如果創建失敗，讓 Completer 拋出錯誤
+            if (!userLoadedCompleter.isCompleted) {
+              userLoadedCompleter.completeError(Exception("Create user failed"));
+            }
+          }
+        }
       }
     });
+
+    // 3. 等待第一筆資料載入，避免後續程式碼抓不到資料
+    await userLoadedCompleter.future;
   }
 
   void onLogout() {

@@ -24,6 +24,9 @@ class AppConfigController extends GetxController {
       final data = docSnapshot.data()!;
       final configFromFirestore = AppConfig.fromJson(data);
       _config.value = configFromFirestore;
+      update();
+    } else {
+      throw Exception("App config not exist");
     }
 
     // 監聽 Firestore

@@ -43,10 +43,10 @@ Future<void> showRewardedAd({
         );
 
         ad.show(
-          onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+          onUserEarnedReward: (AdWithoutView ad, RewardItem reward) async {
             RLoading.stop();
             final c = Get.find<UserController>();
-            c.triggerTaskComplete(KingdomTaskNames.ad);
+            await c.triggerTaskComplete(KingdomTaskNames.ad);
             if(onReward != null) onReward(); // ✅ 給予獎勵的地方
           },
         );
