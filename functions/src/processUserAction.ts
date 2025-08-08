@@ -249,7 +249,6 @@ async function handleTaskComplete(prefix: string, uid: string, payload: any) {
 
   // 檢查任務名稱是否有效
   const taskConfig = config.kingdom_tasks?.[taskName]; // 假設 AppConfig 有 tasks 欄位
-  console.log(taskConfig);
   if (!taskConfig) {
     throw new HttpsError("invalid-argument", "TASK_NOT_FOUND");
   }
