@@ -21,8 +21,6 @@ class UserController extends GetxController {
   final _userDocRef = Rxn<DocumentReference<Map<String, dynamic>>>();
   StreamSubscription<DocumentSnapshot>? _userListener;
 
-  late final _userUpdater = FirestoreUpdater(docRef: _userDocRef);
-
   Future<void> initUser(User firebaseUser) async {
     final uid = firebaseUser.uid;
     final config = Get.find<AppConfigController>().config;
@@ -100,16 +98,5 @@ class UserController extends GetxController {
     await CloudFunctions.completeTask(name);
 
     RTaskComplete.show(name);
-  }
-
-  Future<void> increaseAdCount() async {
-    final user = _user.value;
-    final docRef = _userDocRef.value;
-
-    if (user == null || docRef == null) return;
-
-    return docRef.update({
-      'ad.count': user.ad.count + 1
-    });
   }
 }

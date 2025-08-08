@@ -15,6 +15,14 @@ class AppConfig {
     required this.tasks
   });
 
+  static final defaultConfig = AppConfig._(
+    defaultName: "未命名",
+    nameMaxLength: 10,
+    priceModifyName: 100,
+    priceDrink: 75,
+    tasks: {}
+  );
+
   factory AppConfig.fromJson(Map<String, dynamic> json) {
     return AppConfig._(
       defaultName: (json['defaultName'] ?? "未命名") as String,

@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
+import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/helpers/collection_names.dart';
 
 import '../controllers/user_controller.dart';
@@ -84,8 +85,7 @@ Function() _getNavigatorFunction(String navigatorStr) {
       return () {
         showRewardedAd(
             onReward: () {
-              final uc = Get.find<UserController>();
-              uc.increaseAdCount().catchError((e, stack) {
+              CloudFunctions.adWatched().catchError((e, stack) {
                 FirebaseCrashlytics.instance.recordError(e, stack);
               });
             },

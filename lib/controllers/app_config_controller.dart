@@ -9,7 +9,7 @@ import '../helpers/collection_names.dart';
 
 class AppConfigController extends GetxController {
   final _config = Rxn<AppConfig>();
-  AppConfig? get config => _config.value;
+  AppConfig get config => _config.value ?? AppConfig.defaultConfig;
 
   final _configDocRef = Rxn<DocumentReference<Map<String, dynamic>>>();
   StreamSubscription<DocumentSnapshot>? _configListener;

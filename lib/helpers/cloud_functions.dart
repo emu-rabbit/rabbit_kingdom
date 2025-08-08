@@ -67,4 +67,22 @@ class CloudFunctions {
       }
     });
   }
+
+  static Future<void> adWatched() async {
+    await userAction.call({
+      'env': env,
+      'action': "AD_WATCHED"
+    });
+  }
+
+  static Future<void> reactNews(String id, bool good) async {
+    await userAction.call({
+      'env': env,
+      'action': "REACT_NEWS",
+      'payload': {
+        'id': id,
+        'good': good
+      }
+    });
+  }
 }

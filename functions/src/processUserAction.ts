@@ -39,6 +39,10 @@ export async function processUserAction(request: CallableRequest<any>) {
     return await handleHeartAnnounce(prefix, uid, payload);
   case "TRADE":
     return await handleTrade(prefix, uid, payload);
+  case "AD_WATCHED":
+    return await handleAdWatched(prefix, uid);
+  case "REACT_NEWS":
+    return await handleReactNews(prefix, uid, payload);
   default:
     throw new HttpsError("invalid-argument", "NO_ACTION");
   }
@@ -320,6 +324,7 @@ async function handleHeartAnnounce(prefix: string, uid: string, payload: any) {
     return {success: true, message: "成功回覆"};
   });
 }
+
 async function handleTrade(prefix: string, uid: string, payload: any) {
   const {type, amount, price} = payload;
 
@@ -419,5 +424,55 @@ async function handleTrade(prefix: string, uid: string, payload: any) {
     transaction.set(tradingsRef.doc(), tradingRecord);
 
     return {success: true, message: "交易成功！"};
+  });
+}
+
+async function handleAdWatched(prefix: string, uid: string) {
+  const userRef = admin.firestore().doc(`${prefix}user/${uid}`);
+  return userRef.update({
+    "ad.count": admin.firestore.FieldValue.increment(1),
+  });
+}
+
+async function handleReactNews(prefix: string, uid: string, payload: any) {
+  const {id, good} = payload;
+
+  // 1. 驗證傳入參數
+  if (!id || typeof good !== "boolean") {
+    throw new HttpsError("invalid-argument", "INVALID_ARGUMENTS");
+  }
+
+  const newsRef = admin.firestore().doc(`${prefix}news/${id}`);
+
+  // 2. 使用事務確保操作的原子性
+  return admin.firestore().runTransaction(async (transaction) => {
+    const newsDoc = await transaction.get(newsRef);
+
+    if (!newsDoc.exists) {
+      throw new HttpsError("not-found", "NEWS_NOT_FOUND");
+    }
+
+    const newsData = newsDoc.data();
+    if (!newsData) {
+      throw new HttpsError("internal", "NEWS_NOT_FOUND");
+    }
+
+    // 3. 檢查使用者是否已回應過
+    if (newsData.goods.includes(uid) || newsData.bads.includes(uid)) {
+      throw new HttpsError("failed-precondition", "ALREADY_REACTED");
+    }
+
+    // 4. 根據 good 值更新對應的陣列
+    if (good) {
+      transaction.update(newsRef, {
+        goods: admin.firestore.FieldValue.arrayUnion(uid),
+      });
+    } else {
+      transaction.update(newsRef, {
+        bads: admin.firestore.FieldValue.arrayUnion(uid),
+      });
+    }
+
+    return {success: true, message: "回應成功！"};
   });
 }

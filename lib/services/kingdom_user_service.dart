@@ -26,22 +26,6 @@ class KingdomUserService {
     }
   }
 
-  static Future<void> reactToNews(String id, bool good) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) {
-      throw Exception("User not login");
-    }
-
-    final field = good ? 'goods' : 'bads';
-
-    await FirebaseFirestore.instance
-        .collection(CollectionNames.news)
-        .doc(id)
-        .update({
-      field: FieldValue.arrayUnion([uid])
-    });
-  }
-
   static Future<Map<String, String>> getNameByUID(List<String> uids) async {
     final Map<String, String> result = {};
     final List<String> uidsToFetch = [];

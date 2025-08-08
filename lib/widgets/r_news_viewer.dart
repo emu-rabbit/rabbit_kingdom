@@ -7,6 +7,7 @@ import 'package:rabbit_kingdom/controllers/theme_controller.dart';
 import 'package:rabbit_kingdom/extensions/date_time.dart';
 import 'package:rabbit_kingdom/extensions/double.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
+import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/models/trading_news.dart';
 import 'package:rabbit_kingdom/services/kingdom_user_service.dart';
@@ -270,7 +271,7 @@ class _NewsReactor extends StatelessWidget {
     final newsId = (news as TradingNewsWithID).id;
     try {
       RLoading.start();
-      await KingdomUserService.reactToNews(newsId, good);
+      await CloudFunctions.reactNews(newsId, good);
       RSnackBar.show("反應成功", good ? "這個不讚不行": "氣噗噗氣噗噗");
       requestOut();
     } catch (e) {
