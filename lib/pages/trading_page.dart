@@ -12,6 +12,7 @@ import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
 import 'package:rabbit_kingdom/models/poop_prices.dart';
 import 'package:rabbit_kingdom/services/kingdom_user_service.dart';
+import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 import 'package:rabbit_kingdom/widgets/r_amount_input.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
@@ -134,6 +135,8 @@ class TradingPage extends StatelessWidget {
                                                 await CloudFunctions.trade(
                                                   TradeType.sell, amountController.value, pc.prices!.sell
                                                 );
+                                                final uc = Get.find<UserController>();
+                                                await uc.triggerTaskComplete(KingdomTaskNames.trade);
                                                 RSnackBar.show("交易成功", "祝你發大財");
                                               } catch (e) {
                                                 RSnackBar.error("交易失敗", e.toString());
@@ -168,6 +171,8 @@ class TradingPage extends StatelessWidget {
                                               await CloudFunctions.trade(
                                                   TradeType.buy, amountController.value, pc.prices!.buy
                                               );
+                                              final uc = Get.find<UserController>();
+                                              await uc.triggerTaskComplete(KingdomTaskNames.trade);
                                               RSnackBar.show("交易成功", "祝你發大財");
                                             } catch (e) {
                                               RSnackBar.error("交易失敗", e.toString());
