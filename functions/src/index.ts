@@ -78,6 +78,7 @@ export const scheduledUpdateRanks = onSchedule(
 export const onUserAction = onCall(
   {
     region: REGION,
+    maxInstances: 4,
   },
   async (request) => {
     await processUserAction(request);
