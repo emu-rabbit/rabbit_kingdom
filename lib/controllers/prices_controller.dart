@@ -9,6 +9,7 @@ import '../helpers/collection_names.dart';
 class PricesController extends GetxController {
   final _prices = Rxn<PoopPrices>();
   PoopPrices? get prices => _prices.value;
+  Rxn<PoopPrices> get rxnPrices => _prices;
 
   StreamSubscription<QuerySnapshot>? _collectionListener;
   StreamSubscription<DocumentSnapshot>? _documentListener;

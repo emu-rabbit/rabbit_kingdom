@@ -214,6 +214,15 @@ class TradingController extends GetxController {
   final historyPrices = Rxn<List<PoopPrices>>();
 
   @override
+  void onInit() {
+    super.onInit();
+    final pc = Get.find<PricesController>();
+    ever(pc.rxnPrices, (_) async {
+      historyPrices.value = await KingdomUserService.getRecentPrices();
+    });
+  }
+
+  @override
   void onReady() async {
     super.onReady();
     historyPrices.value = await KingdomUserService.getRecentPrices();
