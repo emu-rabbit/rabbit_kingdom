@@ -7,7 +7,10 @@ export interface AppConfig {
   name_max_length: number;
   price_modify_name: number;
   price_drink: number;
+  price_simple_pray: number;
+  price_advance_pray: number;
   kingdom_tasks: { [key: string]: KingdomTaskConfig };
+  pray_pool: PrayPoolConfig;
 }
 
 // 定義單一任務的介面
@@ -17,6 +20,24 @@ export interface KingdomTaskConfig {
   coin_reward: number;
   exp_reward: number;
   navigator: string;
+}
+
+// 祈禱池設定
+export interface PrayPoolConfig {
+  simple: PrayPoolEntry[];
+  advance: PrayPoolEntry[];
+}
+
+// 單一祈禱池項目
+export interface PrayPoolEntry {
+  probability: number;
+  rewards: PrayReward[];
+}
+
+// 單一獎勵項目
+export interface PrayReward {
+  type: string; // coin, exp, poop, drink...
+  amount: number;
 }
 
 // 記憶體中的快取，用於儲存不同環境的配置
@@ -56,13 +77,24 @@ function toAppConfig(snapshot: FirebaseFirestore.DocumentSnapshot):
     }
   }
 
+  // prayPool
+  let prayPool: PrayPoolConfig;
+  if (data.prayPool && typeof data.prayPool === "object") {
+    prayPool = toPrayPoolConfig(data.prayPool);
+  } else {
+    prayPool = {simple: [], advance: []};
+  }
+
   // 執行類型檢查與轉換，並提供預設值
   return {
     default_name: (data.defaultName as string) ?? "未命名",
     name_max_length: (data.nameMaxLength as number) ?? 10,
     price_modify_name: (data.priceModifyName as number) ?? 100,
     price_drink: (data.priceDrink as number) ?? 75,
+    price_simple_pray: (data.priceSimplePray as number) ?? 50,
+    price_advance_pray: (data.priceAdvancePray as number) ?? 1,
     kingdom_tasks: tasks,
+    pray_pool: prayPool,
   };
 }
 
@@ -74,6 +106,34 @@ function toKingdomTaskConfig(data: any): KingdomTaskConfig {
     coin_reward: (data.coin_reward as number) ?? 0,
     exp_reward: (data.exp_reward as number) ?? 0,
     navigator: (data.navigator as string) ?? "none",
+  };
+}
+
+// PrayPool 轉換
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toPrayPoolConfig(data: any): PrayPoolConfig {
+  return {
+    simple: Array.isArray(data.simple) ? data.simple.map(toPrayPoolEntry) : [],
+    // eslint-disable-next-line max-len
+    advance: Array.isArray(data.advance) ? data.advance.map(toPrayPoolEntry) : [],
+  };
+}
+
+// PrayPool 單一項目轉換
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toPrayPoolEntry(data: any): PrayPoolEntry {
+  return {
+    probability: (data.probability as number) ?? 0,
+    rewards: Array.isArray(data.rewards) ? data.rewards.map(toPrayReward) : [],
+  };
+}
+
+// PrayReward 單一獎勵轉換
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toPrayReward(data: any): PrayReward {
+  return {
+    type: (data.type as string) ?? "",
+    amount: (data.amount as number) ?? 0,
   };
 }
 

@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rabbit_kingdom/models/pray.dart';
 import 'package:rabbit_kingdom/pages/trading_page.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
@@ -89,6 +90,16 @@ class CloudFunctions {
       'payload': {
         'id': id,
         'good': good
+      }
+    });
+  }
+
+  static Future<void> makePray(PrayType type) async {
+    await userAction.call({
+      'env': env,
+      'action': "MAKE_PRAY",
+      'payload': {
+        'type': type.name
       }
     });
   }

@@ -2,6 +2,7 @@
 /* eslint-disable max-len */
 
 import {Timestamp} from "firebase-admin/firestore";
+import {PrayPoolEntry, PrayReward} from "./appConfig";
 
 /* eslint-disable require-jsdoc */
 export function limitConcurrency<T>(
@@ -176,4 +177,34 @@ export function calcNewAverage(currentAmount: number, currentAverage: number, ne
   const totalAmount = currentAmount + newAmount;
   const totalValue = currentAmount * currentAverage + newAmount * newPrice;
   return totalValue / totalAmount;
+}
+
+/**
+ * 從祈禱池中抽取一個獎勵
+ * @param entries PrayPoolEntry 陣列
+ * @returns PrayReward | null
+ */
+export function drawFromPrayPool(entries: PrayPoolEntry[]): PrayReward | null {
+  if (!entries.length) return null;
+
+  // 計算總機率
+  const totalProbability = entries.reduce((sum, e) => sum + e.probability, 0);
+
+  // 抽選 Entry
+  let rand = Math.random() * totalProbability;
+  let selectedEntry: PrayPoolEntry | null = null;
+
+  for (const entry of entries) {
+    if (rand < entry.probability) {
+      selectedEntry = entry;
+      break;
+    }
+    rand -= entry.probability;
+  }
+
+  if (!selectedEntry || !selectedEntry.rewards.length) return null;
+
+  // 從該 Entry 的 rewards 中等機率選一個
+  const rewardIndex = Math.floor(Math.random() * selectedEntry.rewards.length);
+  return selectedEntry.rewards[rewardIndex];
 }

@@ -5,6 +5,7 @@ import 'package:rabbit_kingdom/controllers/app_config_controller.dart';
 import 'package:rabbit_kingdom/controllers/prices_controller.dart';
 import 'package:rabbit_kingdom/extensions/int.dart';
 import 'package:rabbit_kingdom/helpers/dynamic.dart';
+import 'package:rabbit_kingdom/models/pray.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 
 class KingdomUser {
@@ -18,6 +19,7 @@ class KingdomUser {
   final KingdomUserDrinks drinks;
   final KingdomUserTradingsNote note;
   final KingdomUserAdInfo ad;
+  final KingdomUserPray pray;
 
   KingdomUser._({
     required this.name,
@@ -29,7 +31,8 @@ class KingdomUser {
     required this.records,
     required this.drinks,
     required this.note,
-    required this.ad
+    required this.ad,
+    required this.pray
   });
 
   factory KingdomUser.fromJson(Map<String, dynamic> json) {
@@ -43,38 +46,9 @@ class KingdomUser {
       records: KingdomUserTaskRecords.fromJson(json['records']),
       drinks: KingdomUserDrinks.fromJson(json['drinks']),
       note: KingdomUserTradingsNote.fromJson(json['note']),
-      ad: KingdomUserAdInfo.fromJson(json['ad'])
+      ad: KingdomUserAdInfo.fromJson(json['ad']),
+      pray: KingdomUserPray.fromJson(json['pray'])
     );
-  }
-
-  factory KingdomUser.newUser(String name, String email) {
-    return KingdomUser._(
-      name: name,
-      email: email,
-      createAt: DateTime.now(),
-      group: KingdomUserGroup.unknown,
-      exp: KingdomUserExp.fromInt(0),
-      budget: KingdomUserBudget.fromJson(null),
-      records: KingdomUserTaskRecords.create(),
-      drinks: KingdomUserDrinks.create(),
-      note: KingdomUserTradingsNote.create(),
-      ad: KingdomUserAdInfo.create()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'email': email,
-      'createAt': createAt,
-      'group': group.name,
-      'exp': exp.raw,
-      'budget': budget.toJson(),
-      'records': records.toJson(),
-      'drinks': drinks.toJson(),
-      'note': note.toJson(),
-      'ad': ad.toJson()
-    };
   }
 
   Map<KingdomTaskNames, ComputedTaskData> get taskData {
@@ -177,29 +151,26 @@ class KingdomUserExp {
 }
 
 class KingdomUserBudget {
-  int coin;
-  int poop;
+  final int coin;
+  final int poop;
+  final int drink;
   int get property {
     final controller = Get.find<PricesController>();
     final buyPrice = controller.prices?.buy ?? 0;
-    return coin + poop * buyPrice;
+    final config = Get.find<AppConfigController>().config;
+    final drinkPrice = config.priceDrink;
+    return coin + poop * buyPrice + drink * drinkPrice;
   }
   String get propertyText => property.toRDisplayString();
   
-  KingdomUserBudget._({ this.coin = 0, this.poop = 0 });
+  KingdomUserBudget._({ required this.coin, required this.poop, required this.drink });
   
   factory KingdomUserBudget.fromJson(Map<String, dynamic>? json) {
     return KingdomUserBudget._(
       coin: json?['coin'] ?? 0,
-      poop: json?['poop'] ?? 0
+      poop: json?['poop'] ?? 0,
+      drink: json?['drink'] ?? 0
     );
-  }
-  
-  Map<String, dynamic> toJson() {
-    return {
-      'coin': coin,
-      'poop': poop
-    };
   }
 }
 
@@ -228,14 +199,6 @@ class KingdomUserTaskRecords {
       r.putIfAbsent(entry.key, () => []);
     }
     return KingdomUserTaskRecords._(record: r);
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> result = {};
-    record.forEach((taskName, dateList) {
-      result[taskName.name] = dateList;
-    });
-    return result;
   }
 }
 
@@ -278,14 +241,6 @@ class KingdomUserDrinks {
       total: 0,
       lastAt: DateTime.fromMillisecondsSinceEpoch(0)
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'count': count,
-      'total': total,
-      'lastAt': lastAt
-    };
   }
 
   static Duration getDrinkFullyDecay(int count) {
@@ -332,16 +287,6 @@ class KingdomUserTradingsNote {
     );
   }
 
-  /// 轉換為 JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'buyAmount': buyAmount,
-      'buyAverage': buyAverage,
-      'sellAmount': sellAmount,
-      'sellAverage': sellAverage,
-    };
-  }
-
   /// 從 JSON 建立物件
   factory KingdomUserTradingsNote.fromJson(Map<String, dynamic>? json) {
     return KingdomUserTradingsNote._(
@@ -370,10 +315,43 @@ class KingdomUserAdInfo {
       count: 0,
     );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'count': count
-    };
+class KingdomUserPray {
+  final int count;
+  final DateTime? simpleAt;
+  final DateTime? advanceAt;
+  final PendingPrayRewards? pending;
+
+  KingdomUserPray._({
+    required this.count,
+    this.simpleAt,
+    this.advanceAt,
+    this.pending,
+  });
+
+  factory KingdomUserPray.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return KingdomUserPray._(
+        count: 0,
+        simpleAt: null,
+        advanceAt: null,
+        pending: null,
+      );
+    }
+
+    return KingdomUserPray._(
+      count: json['count'] is int
+          ? json['count'] as int
+          : int.tryParse(json['count'].toString()) ?? 0,
+      simpleAt: toDateTime(json['simpleAt']),
+      advanceAt: toDateTime(json['advanceAt']),
+      pending: json['pending'] == null
+          ? null
+          : PendingPrayRewards.fromJson(
+        json['pending'] as Map<String, dynamic>,
+      ),
+    );
   }
 }
+

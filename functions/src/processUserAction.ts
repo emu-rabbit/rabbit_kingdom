@@ -6,7 +6,7 @@ import {logger} from "firebase-functions";
 import {admin} from "./admin";
 import GraphemeSplitter = require("grapheme-splitter");
 import {AppConfig, fetchConfig} from "./appConfig";
-import {applyTradingRecord, getDrinkFullyDecay, getTodayEffectiveStart} from "./utils";
+import {applyTradingRecord, drawFromPrayPool, getDrinkFullyDecay, getTodayEffectiveStart} from "./utils";
 
 export async function processUserAction(request: CallableRequest<any>) {
   const uid = request.auth?.uid;
@@ -25,6 +25,17 @@ export async function processUserAction(request: CallableRequest<any>) {
   const prefix = env === "debug" ? "dev_": "";
 
   logger.info(`User: ${uid} with action ${action} in ${env}`, {payload});
+
+  await admin
+    .firestore()
+    .collection(`${prefix}logs`)
+    .doc(uid)
+    .collection("actions")
+    .add({
+      action: action,
+      time: admin.firestore.Timestamp.now(),
+      payload: payload,
+    });
 
   switch (action) {
   case "CREATE_USER":
@@ -45,6 +56,8 @@ export async function processUserAction(request: CallableRequest<any>) {
     return await handleAdWatched(prefix, uid);
   case "REACT_NEWS":
     return await handleReactNews(prefix, uid, payload);
+  case "MAKE_PRAY":
+    return await handleMakePray(prefix, uid, payload);
   default:
     throw new HttpsError("invalid-argument", "NO_ACTION");
   }
@@ -533,5 +546,53 @@ async function handleReactNews(prefix: string, uid: string, payload: any) {
     }
 
     return {success: true, message: "回應成功！"};
+  });
+}
+
+async function handleMakePray(prefix: string, uid: string, payload: any) {
+  const {type} = payload;
+
+  // 1. 驗證傳入參數
+  if (!type || typeof type !== "string" || !["simple", "advance"].includes(type)) {
+    throw new HttpsError("invalid-argument", "INVALID_ARGUMENTS");
+  }
+
+  let config: AppConfig;
+  try {
+    // 這裡需要一個更完整的配置，包含所有任務的資料
+    config = await fetchConfig(prefix);
+  } catch (e) {
+    throw new HttpsError("internal", "CONFIG_NOT_FOUND");
+  }
+
+  const pool = type === "simple" ? config.pray_pool.simple : config.pray_pool.advance;
+
+  return admin.firestore().runTransaction(async (transaction) => {
+    const userRef = admin.firestore().collection(`${prefix}user`).doc(uid);
+    const userDoc = await transaction.get(userRef);
+
+    const userData = userDoc.data();
+    if (!userData) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+
+    if (userData.pray?.pending) {
+      throw new HttpsError("already-exists", "Pending pray exist");
+    }
+
+    const rewardA = drawFromPrayPool(pool);
+    const rewardB = drawFromPrayPool(pool);
+    if (!rewardA || !rewardB) {
+      throw new HttpsError("internal", "POOL_DRAW_ERROR");
+    }
+
+    transaction.update(userRef, {
+      "pray.pending": {
+        rewardA: rewardA,
+        rewardB: rewardB,
+      },
+    });
+
+    return {success: true, message: "成功抽選"};
   });
 }

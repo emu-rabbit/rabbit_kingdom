@@ -6,6 +6,8 @@ import 'package:rabbit_kingdom/widgets/r_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_space.dart';
 import 'package:rabbit_kingdom/widgets/r_text.dart';
 
+import '../helpers/screen.dart';
+
 class BudgetPopup extends StatelessWidget {
   const BudgetPopup({super.key});
 
@@ -13,18 +15,24 @@ class BudgetPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return RPopup(
       title: "安全感小錢包",
+      width: vw(75) * deviceFactor(),
       child: GetBuilder<UserController>(
         builder: (userController) {
-          return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _BudgetRow(imagePath: "lib/assets/images/money_bag.png", name: "總資產", value: userController.user?.budget.property ?? 0),
-                RSpace(),
-                _BudgetRow(imagePath: "lib/assets/images/rabbit_coin.png", name: "兔兔幣", value: userController.user?.budget.coin ?? 0),
-                RSpace(),
-                _BudgetRow(imagePath: "lib/assets/images/empire_poop.png", name: "兔兔精華", value: userController.user?.budget.poop ?? 0),
-              ]
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: vw(3)),
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _BudgetRow(imagePath: "lib/assets/images/money_bag.png", name: "總資產", value: userController.user?.budget.property ?? 0),
+                  RSpace(),
+                  _BudgetRow(imagePath: "lib/assets/images/rabbit_coin.png", name: "兔兔幣", value: userController.user?.budget.coin ?? 0),
+                  RSpace(),
+                  _BudgetRow(imagePath: "lib/assets/images/empire_poop.png", name: "兔兔精華", value: userController.user?.budget.poop ?? 0),
+                  RSpace(),
+                  _BudgetRow(imagePath: "lib/assets/images/drink_ticket.png", name: "喝酒券", value: userController.user?.budget.drink ?? 0),
+                ]
+            ),
           );
         },
       )
@@ -50,7 +58,9 @@ class _BudgetRow extends StatelessWidget {
           height: 20,
         ),
         RSpace(type: RSpaceType.small,),
-        RText.bodyMedium("($name): $value", color: AppColors.onSecondary,),
+        RText.bodyMedium("($name):", color: AppColors.onSecondary,),
+        Expanded(child: SizedBox()),
+        RText.bodyMedium("$value", color: AppColors.onSecondary,),
       ],
     );
   }

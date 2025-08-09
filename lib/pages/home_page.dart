@@ -10,6 +10,7 @@ import 'package:rabbit_kingdom/extensions/get_interface.dart';
 import 'package:rabbit_kingdom/helpers/ad.dart';
 import 'package:rabbit_kingdom/helpers/app_colors.dart';
 import 'package:rabbit_kingdom/helpers/screen.dart';
+import 'package:rabbit_kingdom/pages/building_fountain_page.dart';
 import 'package:rabbit_kingdom/pages/building_house_page.dart';
 import 'package:rabbit_kingdom/pages/building_tavern_page.dart';
 import 'package:rabbit_kingdom/pages/building_town_hall_page.dart';
@@ -182,7 +183,9 @@ class _KingdomView extends StatelessWidget {
           (name: "Tavern", x: 283.0, y: 600.0, width: 196.0, height: 260.0, onPress: () {
             Get.to(() => BuildingTavernPage());
           }),
-          (name: "Fountain", x: 58.0, y: 780.0, width: 146.0, height: 190.0, onPress: () {}),
+          (name: "Fountain", x: 58.0, y: 780.0, width: 146.0, height: 190.0, onPress: () {
+            Get.to(() => BuildingFountainPage());
+          }),
         ],
         );
 
