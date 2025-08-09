@@ -103,7 +103,7 @@ class KingdomAnnouncement {
 }
 
 enum AnnounceSticker {
-  happy, angry, sad, tired, excited, shy, cool;
+  happy, angry, sad, tired, excited, shocked, shy, cool;
 
   String get imagePath => "lib/assets/images/sticker_$name.png";
 
