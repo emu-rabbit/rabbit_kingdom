@@ -9,6 +9,7 @@ import 'package:rabbit_kingdom/pages/ranks_page.dart';
 import 'package:rabbit_kingdom/pages/tasks_page.dart';
 import 'package:rabbit_kingdom/values/kingdom_tasks.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
+import 'package:rabbit_kingdom/widgets/r_fade_in_column.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_money.dart';
 import 'package:rabbit_kingdom/widgets/r_popup.dart';
@@ -25,12 +26,12 @@ class BuildingTavernPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final config = Get.find<AppConfigController>().config;
-    final priceDrink = config?.priceDrink ?? 75;
+    final priceDrink = config.priceDrink;
     return RLayoutWithHeader(
         "",
         topRight: RMoney(types: [MoneyType.coin],),
         child: SingleChildScrollView(
-          child: Column(
+          child: RFadeInColumn(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               RText.headlineLarge("酒館的門咿呀的一聲開了"),

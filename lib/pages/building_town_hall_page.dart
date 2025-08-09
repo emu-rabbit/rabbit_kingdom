@@ -13,6 +13,7 @@ import 'package:rabbit_kingdom/pages/newest_announce_page.dart';
 import 'package:rabbit_kingdom/popups/release_note_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
+import 'package:rabbit_kingdom/widgets/r_fade_in_column.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 
 import '../helpers/screen.dart';
@@ -27,7 +28,7 @@ class BuildingTownHallPage extends StatelessWidget {
     return RLayoutWithHeader(
       "",
       child: SingleChildScrollView(
-        child: Column(
+        child: RFadeInColumn(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             RText.headlineLarge("你進到了王國的市政廳"),

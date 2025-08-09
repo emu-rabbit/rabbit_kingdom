@@ -5,6 +5,7 @@ import 'package:rabbit_kingdom/controllers/auth_controller.dart';
 import 'package:rabbit_kingdom/controllers/user_controller.dart';
 import 'package:rabbit_kingdom/helpers/cloud_functions.dart';
 import 'package:rabbit_kingdom/widgets/r_button.dart';
+import 'package:rabbit_kingdom/widgets/r_fade_in_column.dart';
 import 'package:rabbit_kingdom/widgets/r_layout_with_header.dart';
 import 'package:rabbit_kingdom/widgets/r_loading.dart';
 import 'package:rabbit_kingdom/widgets/r_money.dart';
@@ -32,7 +33,7 @@ class ModifyNamePage extends StatelessWidget {
       topRight: RMoney(types: [MoneyType.coin],),
       child: Center(
         child: SingleChildScrollView(
-          child: Column(
+          child: RFadeInColumn(
             mainAxisSize: MainAxisSize.min,
             children: [
               Obx((){

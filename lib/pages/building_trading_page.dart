@@ -7,6 +7,7 @@ import 'package:rabbit_kingdom/pages/trading_page.dart';
 import 'package:rabbit_kingdom/popups/trading_info_popup.dart';
 import 'package:rabbit_kingdom/popups/trading_note_popup.dart';
 import 'package:rabbit_kingdom/widgets/r_button_group.dart';
+import 'package:rabbit_kingdom/widgets/r_fade_in_column.dart';
 import 'package:rabbit_kingdom/widgets/r_icon_button.dart';
 
 import '../helpers/screen.dart';
@@ -26,7 +27,7 @@ class BuildingTradingPage extends StatelessWidget {
           onPress: (){ Get.rPopup(TradingInfoPopup()); }
         ),
         child: SingleChildScrollView(
-          child: Column(
+          child: RFadeInColumn(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               RText.headlineLarge("你靠近了一個巨大的水晶"),
