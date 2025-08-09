@@ -132,17 +132,17 @@ class KingdomUserExp {
   }
 
   int _calculateLevel(int exp) {
-    int level = 0;
-    int required = 100;
-    int totalNeeded = 0;
-
-    while (exp >= totalNeeded + required) {
-      totalNeeded += required;
-      required += 100; // 每級比前一級多 100
-      level++;
+    // 處理 exp 小於 0 的情況，直接返回等級 1
+    if (exp < 0) {
+      return 1;
     }
 
-    return level + 1; // Lv.1 從 0 exp 開始
+    // 應用公式：L = (5 + sqrt(25 + 2 * exp)) / 10
+    // sqrt 函數需要一個 num 類型的參數
+    final level = (5 + sqrt(25 + 2 * exp)) / 10;
+
+    // 對結果取底 (floor)，得到當前實際等級
+    return level.floor();
   }
 
   factory KingdomUserExp.fromInt(int? raw) {

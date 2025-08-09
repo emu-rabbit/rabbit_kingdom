@@ -26,6 +26,27 @@ class PrayReward {
           : int.tryParse(json['amount'].toString()) ?? 0,
     );
   }
+
+  String getImagePath() {
+    return switch(type) {
+      RewardType.coin => "lib/assets/images/rabbit_coin.png",
+      RewardType.poop => "lib/assets/images/empire_poop.png",
+      RewardType.drink => "lib/assets/images/drink_ticket.png",
+      RewardType.exp => "lib/assets/images/exp.png",
+      RewardType.unknown => "lib/assets/images/unknown.png",
+    };
+  }
+
+  String toDisplayString() {
+    String name = switch(type) {
+      RewardType.coin => "兔兔幣",
+      RewardType.poop => "兔兔精華",
+      RewardType.drink => "喝酒券",
+      RewardType.exp => "經驗值",
+      RewardType.unknown => "未知",
+    };
+    return "$name+$amount";
+  }
 }
 
 class PendingPrayRewards {

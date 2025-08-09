@@ -208,3 +208,16 @@ export function drawFromPrayPool(entries: PrayPoolEntry[]): PrayReward | null {
   const rewardIndex = Math.floor(Math.random() * selectedEntry.rewards.length);
   return selectedEntry.rewards[rewardIndex];
 }
+
+export function calculateLevel(exp: number): number {
+  // 處理 exp 小於 0 的情況，直接返回等級 1
+  if (exp < 0) {
+    return 1;
+  }
+
+  // 應用公式：L = (5 + sqrt(25 + 2 * exp)) / 10
+  const level = (5 + Math.sqrt(25 + 2 * exp)) / 10;
+
+  // 對結果取底，得到當前實際等級
+  return Math.floor(level);
+}

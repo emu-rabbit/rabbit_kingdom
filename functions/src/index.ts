@@ -81,6 +81,6 @@ export const onUserAction = onCall(
     maxInstances: 4,
   },
   async (request) => {
-    await processUserAction(request);
+    return await processUserAction(request);
   }
 );

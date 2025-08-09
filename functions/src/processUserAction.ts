@@ -6,7 +6,7 @@ import {logger} from "firebase-functions";
 import {admin} from "./admin";
 import GraphemeSplitter = require("grapheme-splitter");
 import {AppConfig, fetchConfig} from "./appConfig";
-import {applyTradingRecord, drawFromPrayPool, getDrinkFullyDecay, getTodayEffectiveStart} from "./utils";
+import {applyTradingRecord, calculateLevel, drawFromPrayPool, getDrinkFullyDecay, getTodayEffectiveStart} from "./utils";
 
 export async function processUserAction(request: CallableRequest<any>) {
   const uid = request.auth?.uid;
@@ -58,6 +58,8 @@ export async function processUserAction(request: CallableRequest<any>) {
     return await handleReactNews(prefix, uid, payload);
   case "MAKE_PRAY":
     return await handleMakePray(prefix, uid, payload);
+  case "SELECT_PRAY_REWARD":
+    return await handleSelectPrayReward(prefix, uid, payload);
   default:
     throw new HttpsError("invalid-argument", "NO_ACTION");
   }
@@ -503,7 +505,7 @@ async function handleAdWatched(prefix: string, uid: string) {
   const userRef = admin.firestore().doc(`${prefix}user/${uid}`);
   return userRef.update({
     "ad.count": admin.firestore.FieldValue.increment(1),
-  });
+  }).then(() => ({success: true, message: "成功寫入"}));
 }
 
 async function handleReactNews(prefix: string, uid: string, payload: any) {
@@ -577,7 +579,16 @@ async function handleMakePray(prefix: string, uid: string, payload: any) {
     }
 
     if (userData.pray?.pending) {
-      throw new HttpsError("already-exists", "Pending pray exist");
+      throw new HttpsError("already-exists", "PENDING_ALREADY_EXIST");
+    }
+
+    const lastDrawAt = type === "simple" ? userData.pray.simpleAt: userData.pray.advanceAt;
+    if (
+      lastDrawAt &&
+      lastDrawAt instanceof admin.firestore.Timestamp &&
+      lastDrawAt.toMillis() > getTodayEffectiveStart(new Date()).getTime()
+    ) {
+      throw new HttpsError("failed-precondition", "ALREADY_PRAY_TODAY");
     }
 
     const rewardA = drawFromPrayPool(pool);
@@ -588,11 +599,98 @@ async function handleMakePray(prefix: string, uid: string, payload: any) {
 
     transaction.update(userRef, {
       "pray.pending": {
+        type: type,
         rewardA: rewardA,
         rewardB: rewardB,
       },
     });
 
     return {success: true, message: "成功抽選"};
+  });
+}
+
+async function handleSelectPrayReward(prefix: string, uid: string, payload: any) {
+  const {id} = payload;
+
+  // 1. 驗證傳入參數
+  if (!id || typeof id !== "string" || !["A", "B"].includes(id)) {
+    throw new HttpsError("invalid-argument", "INVALID_ARGUMENTS");
+  }
+
+  return admin.firestore().runTransaction(async (transaction) => {
+    const userRef = admin.firestore().collection(`${prefix}user`).doc(uid);
+    const userDoc = await transaction.get(userRef);
+
+    const userData = userDoc.data();
+    if (!userData) {
+      throw new HttpsError("not-found", "USER_NOT_FOUND");
+    }
+
+    if (!userData.pray?.pending) {
+      throw new HttpsError("not-found", "PENDING_NOT_EXIST");
+    }
+
+    const type = userData.pray.pending.type;
+    if (!["simple", "advance"].includes(type)) {
+      throw new HttpsError("internal", "TYPE_UNMATCHED");
+    }
+
+    const exp = userData.exp;
+    if (!exp || typeof exp !== "number") {
+      throw new HttpsError("not-found", "EXP_NOT_FOUND");
+    }
+    const level = calculateLevel(exp);
+    const effectiveLevel = Math.min(level, 50);
+    const prob = Math.random() * 100;
+    const success = prob < effectiveLevel;
+
+    const rewardA = userData.pray.pending.rewardA;
+    const rewardB = userData.pray.pending.rewardB;
+    if (!rewardA || !rewardB) {
+      throw new HttpsError("not-found", "REWARD_NOT_FOUND");
+    }
+    const rewards = success ? [rewardA, rewardB] : id === "A" ? [rewardA]: [rewardB];
+
+    const increments = {
+      "budget.coin": 0,
+      "budget.poop": 0,
+      "budget.drink": 0,
+      "exp": 0,
+    };
+
+    rewards.forEach((reward) => {
+      switch (reward.type) {
+      case "coin":
+        increments["budget.coin"] += reward.amount;
+        break;
+      case "poop":
+        increments["budget.poop"] += reward.amount;
+        break;
+      case "drink":
+        increments["budget.drink"] += reward.amount;
+        break;
+      case "exp":
+        increments["exp"] += reward.amount;
+        break;
+      }
+    });
+
+    Object.entries(increments).forEach(([key, amount]) => {
+      if (amount !== 0) {
+        transaction.update(userRef, {[key]: admin.firestore.FieldValue.increment(amount)});
+      }
+    });
+
+    transaction.update(userRef, {"pray.pending": null});
+    if (userData.pray.pending.type === "simple") {
+      transaction.update(userRef, {"pray.simpleAt": admin.firestore.Timestamp.now()});
+    } else {
+      transaction.update(userRef, {"pray.advanceAt": admin.firestore.Timestamp.now()});
+    }
+    return {
+      success: true,
+      message: "成功抽選",
+      data: rewards,
+    };
   });
 }

@@ -103,4 +103,14 @@ class CloudFunctions {
       }
     });
   }
+
+  static Future<HttpsCallableResult<dynamic>> selectPrayReward(String id) async {
+    return await userAction.call({
+      'env': env,
+      'action': "SELECT_PRAY_REWARD",
+      'payload': {
+        'id': id
+      }
+    });
+  }
 }
